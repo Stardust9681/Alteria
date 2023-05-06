@@ -346,6 +346,140 @@ namespace CombatPlus.Common.ChangeNPC
         }
         #endregion
 
+        #region Demon Eye AI
+        //Executed at daytime
+        string? EyeDaytime(NPC npc, int timer)
+        {
+            npc.GetGlobalNPC<CombatNPC>().allowContactDmg = false;
+            //Find target
+            bool npcTarget = FindTarget(npc);
+            Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
+            //Find target direction
+            Vector2 targetDir = npc.DirectionTo(target.position);
+            //Change velocity to move away from target (account for confusion)
+            npc.velocity -= targetDir * (npc.confused ? -.14f : .14f);
+            //Never move on from this AI (I'm not all too concerned about it having weird behaviour when it cycles to nighttime again)
+            return null;
+        }
+        string? EyeWet(NPC npc, int timer)
+        {
+            if (Main.dayTime)
+            {
+                return nameof(EyeDaytime);
+            }
+            //If NPC is no longer wet change to different phase
+            if (!(npc.wet || npc.honeyWet || npc.lavaWet || npc.shimmerWet))
+            {
+                return nameof(EyeAttack1);
+            }
+            npc.GetGlobalNPC<CombatNPC>().allowContactDmg = false;
+            npc.velocity.Y -= .048f;
+            npc.velocity.X *= .98f;
+            return null;
+        }
+        string? EyeAttack1(NPC npc, int timer)
+        {
+            if (Main.dayTime)
+            {
+                return nameof(EyeDaytime);
+            }
+            if (npc.wet || npc.honeyWet || npc.lavaWet || npc.shimmerWet)
+            {
+                return nameof(EyeWet);
+            }
+            bool npcTarget = FindTarget(npc);
+            Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
+            float dist = AppxDistanceToTarget(npc, npcTarget);
+            //If target is far enough, move to charge attack
+            if (dist > 800)
+            {
+                return nameof(EyeAttack2);
+            }
+            int targetDir = target.position.X < npc.position.X ? -1 : 1 * (npc.confused ? -1 : 1);
+            npc.velocity.X += targetDir * .07f;
+            int moveDir = npc.velocity.X < 0 ? -1 : 1;
+            if (targetDir == moveDir)
+            {
+                npc.velocity.Y = MathHelper.Lerp(npc.velocity.Y, (npc.position.Y - target.Center.Y) * .008f, .05f);
+            }
+            else
+            {
+                npc.velocity.Y = MathHelper.Lerp(npc.velocity.Y, (target.Center.Y - npc.position.Y) * .012f, .05f);
+            }
+            npc.GetGlobalNPC<CombatNPC>().allowContactDmg = targetDir == moveDir && (MathF.Abs(npc.velocity.X) + MathF.Abs(npc.velocity.Y)) > 6.5f;
+            if (npc.collideX)
+            {
+                npc.velocity.X = -npc.oldVelocity.X;
+            }
+            if (npc.collideY)
+            {
+                if (MathF.Abs(npc.oldVelocity.Y) > 4)
+                    npc.velocity.Y = -npc.oldVelocity.Y;
+                else
+                {
+                    npc.velocity.Y = npc.oldVelocity.Y < 0 ? -4.5f : 4.5f;
+                }
+            }
+            return null;
+        }
+        string? EyeAttack2(NPC npc, int timer)
+        {
+            if (Main.dayTime)
+            {
+                return nameof(EyeDaytime);
+            }
+            if (npc.wet || npc.honeyWet || npc.lavaWet || npc.shimmerWet)
+            {
+                return nameof(EyeWet);
+            }
+            npc.GetGlobalNPC<CombatNPC>().allowContactDmg = false;
+            bool npcTarget = FindTarget(npc);
+            Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
+            if (npc.collideX)
+            {
+                npc.velocity.X = -npc.oldVelocity.X;
+            }
+            if (npc.collideY)
+            {
+                if (MathF.Abs(npc.oldVelocity.Y) > 4)
+                    npc.velocity.Y = -npc.oldVelocity.Y;
+                else
+                {
+                    npc.velocity.Y = npc.oldVelocity.Y < 0 ? -4.5f : 4.5f;
+                }
+            }
+            if (timer > 180)
+            {
+                if (timer == 181)
+                {
+                    npc.velocity *= 4f;
+                }
+                npc.GetGlobalNPC<CombatNPC>().allowContactDmg = true;
+                if (npc.velocity.LengthSquared() < 49f)
+                {
+                    npc.velocity += npc.DirectionTo(target.position).RotatedByRandom(.262f) * .35f;
+                }
+                else
+                {
+                    npc.velocity *= .986f;
+                }
+                float dist = AppxDistanceToTarget(npc, npcTarget);
+                if (dist < timer * 3f && timer > 270)
+                {
+                    return nameof(EyeAttack1);
+                }
+                return null;
+            }
+            else
+            {
+                npc.velocity *= .15f;
+                npc.velocity += npc.DirectionTo(target.position);
+                npc.rotation = npc.velocity.ToRotation();
+            }
+            return null;
+        }
+        #endregion
+
         /// <summary>
         /// Demon Eye AI - rewritten
         /// </summary>

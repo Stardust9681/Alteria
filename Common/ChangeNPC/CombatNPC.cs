@@ -36,6 +36,11 @@ namespace CombatPlus.Common.ChangeNPC
             Behaviours[NPCID.SpikedIceSlime].Add(SlimeShoot1, nameof(SlimeShoot1));
             Behaviours[NPCID.SpikedIceSlime].Add(SlimeShoot2, nameof(SlimeShoot2));
             Behaviours[NPCID.SpikedIceSlime].Add(SlimeWet, nameof(SlimeWet));
+
+            Behaviours[NPCID.DemonEye].Add(EyeAttack1, nameof(EyeAttack1));
+            Behaviours[NPCID.DemonEye].Add(EyeAttack2, nameof(EyeAttack2));
+            Behaviours[NPCID.DemonEye].Add(EyeWet, nameof(EyeWet));
+            Behaviours[NPCID.DemonEye].Add(EyeDaytime, nameof(EyeDaytime));
         }
         public override void SetDefaults(NPC npc)
         {
@@ -90,6 +95,19 @@ namespace CombatPlus.Common.ChangeNPC
             if (npc.aiStyle == NPCAIStyleID.Slime)
             {
                 Behaviours[npc.netID].Update(npc, ref phase, ref timer);
+                npc.ai[0] = timer;
+                return false;
+            }
+            if (npc.aiStyle == NPCAIStyleID.DemonEye)
+            {
+                try
+                {
+                    Behaviours[npc.netID].Update(npc, ref phase, ref timer);
+                }
+                catch (Exception e)
+                {
+                    Main.NewText(phase + ", " + e.Message);
+                }
                 npc.ai[0] = timer;
                 return false;
             }
