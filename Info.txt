@@ -1,0 +1,81 @@
+Design Plans:
+NO CONTENT WILL BE ADDED in the form of Items, NPCs, Projectiles, Tiles, and the like.
+All modifications will be behavioural (how does an item behave, how do NPCs behave) and API-based (which NPCs shoot projectiles, which ones fly, etc)
+
+Community Input:
+- Remove Projectiles from most melee weapons
+- Make early temple entry work (seriously, you can just have platforms and it works, but RoD is illegal???)
+- Fix "shimmer" exploits legitimately (none of this halfsies bullshit)
+- Remove or rework whips
+- Dodge roll? Reload? Draw bowstring?
+
+Interpretation:
+- Reduce melee AoE and some damage, remove NPCs' constant hitbox
+- IL or Detour early temple nonsense
+- Custom "shimmer" rules, probably have to IL or Detour
+- Retaining whips, client-side rework to minions that, on staff right click, all minions of that type perform a unique attack, at the cost of mana per minion
+- Optional reload and bow mechanics, server-side
+
+
+
+Other Ideas:
+- Melee swings suck, add a couple usestyles (directional swings, maybe throw[?], charged jabs/strikes[?])
+- Enemy AI rewrite (accomodate lost constant hitboxes, allow both friendly AND hostile targetting)
+- NPC data (flying, swiming, etc) + Mod.Call to add to data
+- Element system[?], weaknesses, resistances/strengths {Blood:Crimson, Curse:Corruption/Dungeon, Holy:Hallow, Ice:Tundra, Fire:Hell, Earth:Jungle/Caverns, Wind:Sky/Space}
+
+NPC Changes:
+- NPC AI Rewrite (to include confusion behaviour, hostile/friendly targetting, dynamic movement, add enemy grief to some AI)
+- Constant Hitbox -> Situational Hitbox
+- IgnoresWater, ShootsProjectile, SpawnsNPC, Flies, TargetsNPCs, ...
+- Gradually increase item droprates by some function as a given NPC type is killed, reset when item is dropped
+
+Item Changes:
+- Sword Swings
+- Reworking Melee Projectiles (removing several, reducing effective area of several, making ranged-melee an actual rarity)
+- Melee Speed (melee speed strong stat, and instead of making it arbitrarily not affect some things, it should not be possible to achieve exploitative values)
+- Bow Draw
+- Ranged Ammo Qty (more difficult to get effectively infinite ammunition)
+- Summoning-Staff Alt-Use
+- Summon Balance (damage, AI, etc)
+- Fixed stack size (none of this 9999 stack bullshit)
+- Recover Potion Rework (recovery over time, or diminishing returns on use but no strong cooldown)
+- Ancient Cloth Vanity to Whip Set (obsidian outlaw went from vanity to nontype defence to whip set, so I think change recipes on this set and make it a hardmode whip set)
+- Worm Scarf adjusted from 17% DR -> 10% DR
+- Brain of Confusion adjusted from 16.67% dodge to 12% dodge
+- Black Belt adjusted from 10% dodge -> 15% dodge
+
+Buff Changes:
+- Effects are consistent when applied to NPCs and when applied to Player (see: Venom 30 dps against NPCs vs 15 dps against Players)
+- Buffs with similar hardmode variants (On Fire, Frostburn, 
+- Venom changed to have -10 def effect, and adjusted to 10 dps
+- Ichor adjusted to -20 def effect
+- Cursed Inferno adjusted to 20 dps
+- Confused applies to more enemies
+
+UI Changes:
+- Accessibility Toggle for Info Accessories (client-side config, disable colour alteration)
+- Drop-Down for Ammo Display Style (client-side config, all|next to cursor|next to item|none)
+
+Mechanical Changes:
+- Mana Rework (+max mana, -regen, stronger effect from applicable accessories, mana regen pot needs slight nerf, mana should feel like a much more substantial resource)
+- Uncraft Liquid Fix (revert Relogic changes, implement ones that make sense and are consistent)
+- Early Temple (allow teleporter, RoD/RoH, actuator, etc, allow wire modification)
+- Dodge Functionality (dodges either WORK or they DON'T WORK, none of this halfsies bullshit -- making dodges work, but reducing times/chances)
+- Loadout Cooldown (seriously, swapping between them SHOULD NOT be completely free, NO, they aren't the same as just autopause because you don't sacrifice inventory slots)
+
+Config [Default]:
+- Allow Enemy Grief (server-side, enemies with applicable AI can break or change tiles) [On]
+- Usestyle Alts (server-side, enables/disables usestyle changes, enables changing other options which may further customise which ones are applied) [On]
+    #Should be able to make this one client-sided?
+- DST Content Disabler (server-side, disables dst content, items turn to air, boss never spawns, world doesn't do shit, etc) [On]
+- AI Alts (server-side, enables/disables AI changes, enables changing other options which may further customise which ones are applied) [On]
+- Liquid Balance (server-side, enables/disables liquid changes, will affect item costs)
+- Void Bag (client-side, enable/disable craft from + consume ammo/potions from + etc) [Off]
+- Show Damage Numbers (client-side, enable/disable numbers from damage, may improve performance)
+- 1.4.4 Item Stacks (server-side, enable/disable) [Off]
+
+API:
+- Require Config (specifies that a mod requires a specific config setting at a certain value, and will warn the user if they try to it, conflicts should be discussed between mod teams)
+- Change Config (allows other mods to change this mod's config based on conditions, abides by config requirements)
+- Read/Write Entity Data (other mods may add their content to this mod's entity database or information)

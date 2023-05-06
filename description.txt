@@ -1,0 +1,12 @@
+Combat+ is an ambitious mod, which strives to rework almost all of Terraria's combat system.
+NPCs will have more interesting combat techniques, and will no longer maintain constant hitboxes.
+Bows will have a delay from their drawstring, Repeaters will need to be reloaded, guns will have a magazine, rocket launchers will need to be reloaded. Other launchers will vary.
+Mages' spells have a proper cast time, and mana will be much more of a significant resource.
+- Cast-time stagger from damage
+Melee gets an indirect buff from non-constant NPC hitboxes, but will also be made more viable in other ways from NPC ai.
+Minions will be given an explicit attack animation, rather than contact damage.
+Critical stats are more fleshed out -- lower chances, higher/more dramatic effect, variable crit damage multiplier
+Gone are the days of Terraria's old combat system.
+Welcome new challenging AI for enemies.
+Welcome new mechanics for existing classes.
+Welcome new and correct balancing.
