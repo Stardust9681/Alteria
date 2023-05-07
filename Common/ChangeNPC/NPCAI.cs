@@ -615,6 +615,364 @@ namespace CombatPlus.Common.ChangeNPC
         }
         #endregion
 
+        #region EoC AI
+        //Move above player
+        static string? EOCMove1(NPC npc, int timer)
+        {
+            if (Main.dayTime)
+            {
+                return nameof(EOCMove3);
+            }
+            Vector2 npcCenter = npc.Center;
+            CombatNPC gNPC = npc.GetGlobalNPC<CombatNPC>();
+            bool npcTarget = FindTarget(npc);
+            Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
+            Vector2 targetCenter = target.Center;
+            int targetDir = targetCenter.X < npcCenter.X ? -1 : 1 * (npc.confused ? -1 : 1);
+            gNPC.allowContactDmg = false;
+            npc.rotation = (targetCenter - npcCenter).ToRotation()-MathHelper.PiOver2;
+            Vector2 targetPos = targetCenter + new Vector2(0, -192);
+            npc.velocity.X += targetDir * .07f;
+            bool xReady = false;
+            bool yReady = false;
+            if (MathF.Abs(targetCenter.X - npcCenter.X) < 160)
+            {
+                npc.velocity.X *= .943f;
+                xReady = true;
+            }
+            npc.velocity.Y += (targetPos.Y < npcCenter.Y ? -1 : 1) * (npc.confused ? -1 : 1) * .07f;
+            if (MathF.Abs(targetPos.Y - npcCenter.Y) < 160)
+            {
+                npc.velocity.Y *= .932f;
+                yReady = true;
+            }
+            if (xReady && yReady && timer > 300)
+            {
+                if (npc.life < npc.lifeMax / 2)
+                {
+                    return nameof(EOCPhase2);
+                }
+                npc.velocity *= .5f;
+                return nameof(EOCAttack1);
+            }
+            return null;
+        }
+        //Dash short
+        static string? EOCAttack1(NPC npc, int timer)
+        {
+            if (Main.dayTime)
+            {
+                return nameof(EOCMove3);
+            }
+            if (npc.life < npc.lifeMax / 2)
+            {
+                return nameof(EOCMove1);
+            }
+            CombatNPC gNPC = npc.GetGlobalNPC<CombatNPC>();
+            bool npcTarget = FindTarget(npc);
+            Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
+            int targetDir = target.Center.X < npc.Center.X ? -1 : 1 * (npc.confused ? -1 : 1);
+            gNPC.allowContactDmg = timer > 45;
+            if (timer < 5)
+            {
+                Vector2 targetPos = target.Center + new Vector2(0, Main.rand.NextFloat(-16f, 16f));
+                npc.rotation = Utils.AngleLerp(npc.rotation, (targetPos - npc.Center).ToRotation() - MathHelper.PiOver2, .3f);
+            }
+            if (timer == 35)
+            {
+                npc.velocity = Vector2.UnitX.RotatedBy(npc.rotation + MathHelper.PiOver2) * 9f;
+            }
+            else
+            {
+                if (timer > 35 && npc.velocity.LengthSquared() < 16)
+                {
+                    npc.velocity *= .5f;
+                    return nameof(EOCAttack2);
+                }
+                npc.velocity *= .985f;
+            }
+            if (timer > 150)
+            {
+                npc.velocity *= .8f;
+            }
+            return null;
+        }
+        //Dash med
+        static string? EOCAttack2(NPC npc, int timer)
+        {
+            if (Main.dayTime)
+            {
+                return nameof(EOCMove3);
+            }
+            if (npc.life < npc.lifeMax / 2)
+            {
+                return nameof(EOCMove1);
+            }
+            CombatNPC gNPC = npc.GetGlobalNPC<CombatNPC>();
+            bool npcTarget = FindTarget(npc);
+            Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
+            int targetDir = target.Center.X < npc.Center.X ? -1 : 1 * (npc.confused ? -1 : 1);
+            gNPC.allowContactDmg = timer > 60;
+            if (timer < 5)
+            {
+                Vector2 targetPos = target.Center + new Vector2(0, Main.rand.NextFloat(-32f, 32f));
+                npc.rotation = Utils.AngleLerp(npc.rotation, (targetPos - npc.Center).ToRotation() - MathHelper.PiOver2, .3f);
+            }
+            if (timer == 50)
+            {
+                npc.velocity = Vector2.UnitX.RotatedBy(npc.rotation + MathHelper.PiOver2) * 11f;
+            }
+            else
+            {
+                if (timer > 50 && npc.velocity.LengthSquared() < 20)
+                {
+                    npc.velocity *= .5f;
+                    return nameof(EOCAttack3);
+                }
+                npc.velocity *= .98f;
+            }
+            if (timer > 180)
+            {
+                npc.velocity *= .8f;
+            }
+            return null;
+        }
+        //Dash long
+        static string? EOCAttack3(NPC npc, int timer)
+        {
+            if (Main.dayTime)
+            {
+                return nameof(EOCMove3);
+            }
+            if (npc.life < npc.lifeMax / 2)
+            {
+                return nameof(EOCMove1);
+            }
+            CombatNPC gNPC = npc.GetGlobalNPC<CombatNPC>();
+            bool npcTarget = FindTarget(npc);
+            Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
+            int targetDir = target.Center.X < npc.Center.X ? -1 : 1 * (npc.confused ? -1 : 1);
+            gNPC.allowContactDmg = timer > 90;
+            if (timer < 5)
+            {
+                Vector2 targetPos = target.Center + new Vector2(0, Main.rand.NextFloat(-48f, 48f));
+                npc.rotation = Utils.AngleLerp(npc.rotation, (targetPos - npc.Center).ToRotation() - MathHelper.PiOver2, .3f);
+            }
+            if (timer == 75)
+            {
+                npc.velocity = Vector2.UnitX.RotatedBy(npc.rotation + MathHelper.PiOver2) * 13f;
+            }
+            else
+            {
+                if (timer > 75 && npc.velocity.LengthSquared() < 25)
+                {
+                    return nameof(EOCSpawn1);
+                }
+                npc.velocity *= .975f;
+            }
+            if (timer > 210)
+            {
+                npc.velocity *= .8f;
+            }
+            return null;
+        }
+        //Spawn servants
+        static string? EOCSpawn1(NPC npc, int timer)
+        {
+            CombatNPC gNPC = npc.GetGlobalNPC<CombatNPC>();
+            bool npcTarget = FindTarget(npc);
+            Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
+            int targetDir = target.Center.X < npc.Center.X ? -1 : 1 * (npc.confused ? -1 : 1);
+            gNPC.allowContactDmg = false;
+            npc.rotation = Utils.AngleLerp(npc.rotation, (target.Center - npc.Center).ToRotation() - MathHelper.PiOver2, .1f);
+            npc.velocity *= .9f;
+            if (timer % 30 == 0)
+            {
+                NPC servant = NPC.NewNPCDirect(npc.GetSource_FromAI(), npc.Center, NPCID.ServantofCthulhu, target: npc.target);
+                servant.velocity = Vector2.UnitX * Main.rand.Next(new float[] { -3.6f, 3.6f });
+                servant.friendly = npc.friendly;
+            }
+            if (timer > 90)
+            {
+                return nameof(EOCMove1);
+            }
+            return null;
+        }
+        //Make the transition to phase 2, uses methods below
+        static string? EOCPhase2(NPC npc, int timer)
+        {
+            CombatNPC gNPC = npc.GetGlobalNPC<CombatNPC>();
+            bool npcTarget = FindTarget(npc);
+            Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
+            int targetDir = target.Center.X < npc.Center.X ? -1 : 1 * (npc.confused ? -1 : 1);
+            gNPC.allowContactDmg = false;
+            npc.velocity *= .99f;
+            npc.rotation = ((MathHelper.Pi * MathF.Sin(MathHelper.Pi * timer * .125f)) / 6);
+            if (timer % 25 == 0)
+            {
+                NPC servant = NPC.NewNPCDirect(npc.GetSource_FromAI(), npc.Center, NPCID.ServantofCthulhu, target: npc.target);
+                servant.velocity = Vector2.UnitX * Main.rand.Next(new float[] { -3.6f, 3.6f });
+                servant.friendly = npc.friendly;
+            }
+            if (timer > 300)
+            {
+                //Spawn gores
+                return nameof(EOCAttack4);
+            }
+            return null;
+        }
+        //Phase2 move above player
+        static string? EOCMove2(NPC npc, int timer)
+        {
+            if (Main.dayTime)
+            {
+                return nameof(EOCMove3);
+            }
+            Vector2 npcCenter = npc.Center;
+            CombatNPC gNPC = npc.GetGlobalNPC<CombatNPC>();
+            bool npcTarget = FindTarget(npc);
+            Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
+            Vector2 targetCenter = target.Center;
+            int targetDir = targetCenter.X < npcCenter.X ? -1 : 1 * (npc.confused ? -1 : 1);
+            gNPC.allowContactDmg = false;
+            npc.rotation = (targetCenter - npcCenter).ToRotation() - MathHelper.PiOver2;
+            Vector2 targetPos = targetCenter + new Vector2(0, -160);
+            npc.velocity.X += targetDir * .1f;
+            bool xReady = false;
+            bool yReady = false;
+            if (MathF.Abs(targetCenter.X - npcCenter.X) < 144)
+            {
+                npc.velocity.X *= .92f;
+                xReady = true;
+            }
+            npc.velocity.Y += (targetPos.Y < npcCenter.Y ? -1 : 1) * (npc.confused ? -1 : 1) * .1f;
+            if (MathF.Abs(targetPos.Y - npcCenter.Y) < 144)
+            {
+                npc.velocity.Y *= .84f;
+                yReady = true;
+            }
+            if (xReady && yReady && timer > 180)
+            {
+                npc.velocity *= .5f;
+                return nameof(EOCAttack4);
+            }
+            return null;
+        }
+        //Phase2 dash med
+        static string? EOCAttack4(NPC npc, int timer)
+        {
+            if (Main.dayTime)
+            {
+                return nameof(EOCMove3);
+            }
+            CombatNPC gNPC = npc.GetGlobalNPC<CombatNPC>();
+            bool npcTarget = FindTarget(npc);
+            Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
+            int targetDir = target.Center.X < npc.Center.X ? -1 : 1 * (npc.confused ? -1 : 1);
+            gNPC.allowContactDmg = timer > 90;
+            if (timer == 90)
+            {
+                npc.velocity = Vector2.UnitX.RotatedBy(npc.rotation+MathHelper.PiOver2) * 12f;
+            }
+            else
+            {
+                if (timer < 90)
+                {
+                    npc.rotation = Utils.AngleLerp(npc.rotation, (target.Center - npc.Center).ToRotation() - MathHelper.PiOver2, .1f);
+                }
+                else if (npc.velocity.LengthSquared() < 20)
+                {
+                    npc.velocity *= .5f;
+                    if (Main.expertMode || Main.masterMode)
+                    {
+                        return nameof(EOCAttack5);
+                    }
+                    else
+                    {
+                        return nameof(EOCSpawn2);
+                    }
+                }
+                npc.velocity *= .985f;
+            }
+            if (timer > 210)
+            {
+                npc.velocity *= .8f;
+            }
+            return null;
+        }
+        //Phase2 hyperdash
+        static string? EOCAttack5(NPC npc, int timer)
+        {
+            CombatNPC gNPC = npc.GetGlobalNPC<CombatNPC>();
+            bool npcTarget = FindTarget(npc);
+            Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
+            int targetDir = target.Center.X < npc.Center.X ? -1 : 1 * (npc.confused ? -1 : 1);
+            gNPC.allowContactDmg = timer > 30;
+            if (timer == 1)
+            {
+                Vector2 targetPos = target.Center + new Vector2(Main.rand.NextFloat(-32f, 32f), Main.rand.NextFloat(-120f, 120f));
+                npc.rotation = Utils.AngleLerp(npc.rotation, (targetPos - npc.Center).ToRotation() - MathHelper.PiOver2, .8f);
+            }
+            if (timer == 20)
+            {
+                npc.velocity = Vector2.UnitX.RotatedBy(npc.rotation + MathHelper.PiOver2) * 16f;
+            }
+            else
+            {
+                if (timer > 20 && npc.velocity.LengthSquared() < 25)
+                {
+                    npc.velocity *= .5f;
+                    if (Main.expertMode || Main.masterMode)
+                    {
+                        if (Main.rand.NextFloat() > (float)npc.life / (float)npc.lifeMax)
+                            return nameof(EOCAttack5);
+                        return nameof(EOCSpawn2);
+                    }
+                    else
+                    {
+                        return nameof(EOCSpawn2);
+                    }
+                }
+                npc.velocity *= .975f;
+            }
+            if (timer > 90)
+            {
+                npc.velocity *= .8f;
+            }
+            return null;
+        }
+        //Phase2 spawn servants
+        static string? EOCSpawn2(NPC npc, int timer)
+        {
+            CombatNPC gNPC = npc.GetGlobalNPC<CombatNPC>();
+            bool npcTarget = FindTarget(npc);
+            Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
+            int targetDir = target.Center.X < npc.Center.X ? -1 : 1 * (npc.confused ? -1 : 1);
+            gNPC.allowContactDmg = false;
+            npc.rotation = Utils.AngleLerp(npc.rotation, (target.Center - npc.Center).ToRotation() - MathHelper.PiOver2, .1f);
+            npc.velocity *= .9f;
+            if (NPC.CountNPCS(NPCID.DemonEye) > 2 || timer > 90)
+            {
+                return nameof(EOCAttack4);
+            }
+            if (timer % 45 == 0)
+            {
+                NPC servant = NPC.NewNPCDirect(npc.GetSource_FromAI(), npc.Center, NPCID.DemonEye, target: npc.target);
+                servant.velocity = Vector2.UnitX.RotatedBy(npc.rotation) * (npc.confused ? -1 : 1);
+                servant.friendly = npc.friendly;
+                servant.AddBuff(BuffID.BloodButcherer, 36000);
+                servant.SpawnedFromStatue = true;
+            }
+            return null;
+        }
+        //Daytime
+        static string? EOCMove3(NPC npc, int timer)
+        {
+            npc.velocity.Y -= .1f;
+            return null;
+        }
+        #endregion
+
         /// <summary>
         /// Fighter AI - rewritten
         /// </summary>

@@ -50,6 +50,18 @@ namespace CombatPlus.Common.ChangeNPC
                 if (i > 0 && i < Behaviours.Length)
                     RegisterBat(i);
             }
+
+            Behaviours[NPCID.EyeofCthulhu].Add(EOCMove1, nameof(EOCMove1));
+            Behaviours[NPCID.EyeofCthulhu].Add(EOCMove2, nameof(EOCMove2));
+            Behaviours[NPCID.EyeofCthulhu].Add(EOCMove3, nameof(EOCMove3));
+            Behaviours[NPCID.EyeofCthulhu].Add(EOCAttack1, nameof(EOCAttack1));
+            Behaviours[NPCID.EyeofCthulhu].Add(EOCAttack2, nameof(EOCAttack2));
+            Behaviours[NPCID.EyeofCthulhu].Add(EOCAttack3, nameof(EOCAttack3));
+            Behaviours[NPCID.EyeofCthulhu].Add(EOCAttack4, nameof(EOCAttack4));
+            Behaviours[NPCID.EyeofCthulhu].Add(EOCAttack5, nameof(EOCAttack5));
+            Behaviours[NPCID.EyeofCthulhu].Add(EOCPhase2, nameof(EOCPhase2));
+            Behaviours[NPCID.EyeofCthulhu].Add(EOCSpawn1, nameof(EOCSpawn1));
+            Behaviours[NPCID.EyeofCthulhu].Add(EOCSpawn2, nameof(EOCSpawn2));
         }
         public override void SetDefaults(NPC npc)
         {
@@ -121,6 +133,12 @@ namespace CombatPlus.Common.ChangeNPC
                 return false;
             }
             if (npc.aiStyle == NPCAIStyleID.Bat)
+            {
+                Behaviours[npc.netID].Update(npc, ref phase, ref timer);
+                npc.ai[0] = timer;
+                return false;
+            }
+            if (npc.aiStyle == NPCAIStyleID.EyeOfCthulhu)
             {
                 Behaviours[npc.netID].Update(npc, ref phase, ref timer);
                 npc.ai[0] = timer;

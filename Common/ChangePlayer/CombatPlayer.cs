@@ -18,14 +18,9 @@ namespace CombatPlus.Common.ChangePlayer
         public short manaTimer;
         public int mana;
 
-        public override void GetHealLife(Item item, bool quickHeal, ref int healValue)
+        public void SetHeal(int healValue)
         {
-            if (quickHeal)
-            {
-                heal = healValue;
-                healTimer = 1;
-                healValue = 0;
-            }
+
         }
         public override void UpdateLifeRegen()
         {
@@ -66,12 +61,12 @@ namespace CombatPlus.Common.ChangePlayer
         }
         public override void GetHealMana(Item item, bool quickHeal, ref int healValue)
         {
-            if (quickHeal)
+            /*if (quickHeal)
             {
                 mana = healValue;
                 manaTimer = 1;
                 healValue = 0;
-            }
+            }*/
         }
     }
 }
