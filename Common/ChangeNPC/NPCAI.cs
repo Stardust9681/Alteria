@@ -672,22 +672,30 @@ namespace CombatPlus.Common.ChangeNPC
             bool npcTarget = FindTarget(npc);
             Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
             int targetDir = target.Center.X < npc.Center.X ? -1 : 1 * (npc.confused ? -1 : 1);
-            gNPC.allowContactDmg = timer > 45;
+            gNPC.allowContactDmg = timer > 30;
             if (timer < 5)
             {
                 Vector2 targetPos = target.Center + new Vector2(0, Main.rand.NextFloat(-16f, 16f));
                 npc.rotation = Utils.AngleLerp(npc.rotation, (targetPos - npc.Center).ToRotation() - MathHelper.PiOver2, .3f);
             }
-            if (timer == 35)
+            if (timer == 30)
             {
                 npc.velocity = Vector2.UnitX.RotatedBy(npc.rotation + MathHelper.PiOver2) * 9f;
             }
             else
             {
-                if (timer > 35 && npc.velocity.LengthSquared() < 16)
+                if (timer > 30 && npc.velocity.LengthSquared() < 16)
                 {
                     npc.velocity *= .5f;
-                    return nameof(EOCAttack2);
+                    float dist = AppxDistanceToTarget(npc, npcTarget);
+                    if (dist < 250)
+                        return nameof(EOCSpawn1);
+                    if (dist > 250 && dist < 400)
+                        return nameof(EOCAttack1);
+                    if (dist > 400 && dist < 600)
+                        return nameof(EOCAttack2);
+                    else
+                        return nameof(EOCAttack3);
                 }
                 npc.velocity *= .985f;
             }
@@ -712,22 +720,30 @@ namespace CombatPlus.Common.ChangeNPC
             bool npcTarget = FindTarget(npc);
             Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
             int targetDir = target.Center.X < npc.Center.X ? -1 : 1 * (npc.confused ? -1 : 1);
-            gNPC.allowContactDmg = timer > 60;
+            gNPC.allowContactDmg = timer > 45;
             if (timer < 5)
             {
                 Vector2 targetPos = target.Center + new Vector2(0, Main.rand.NextFloat(-32f, 32f));
-                npc.rotation = Utils.AngleLerp(npc.rotation, (targetPos - npc.Center).ToRotation() - MathHelper.PiOver2, .3f);
+                npc.rotation = Utils.AngleLerp(npc.rotation, (targetPos - npc.Center).ToRotation() - MathHelper.PiOver2, .5f);
             }
-            if (timer == 50)
+            if (timer == 45)
             {
                 npc.velocity = Vector2.UnitX.RotatedBy(npc.rotation + MathHelper.PiOver2) * 11f;
             }
             else
             {
-                if (timer > 50 && npc.velocity.LengthSquared() < 20)
+                if (timer > 45 && npc.velocity.LengthSquared() < 20)
                 {
                     npc.velocity *= .5f;
-                    return nameof(EOCAttack3);
+                    float dist = AppxDistanceToTarget(npc, npcTarget);
+                    if (dist < 250)
+                        return nameof(EOCSpawn1);
+                    if (dist > 250 && dist < 400)
+                        return nameof(EOCAttack1);
+                    if (dist > 400 && dist < 600)
+                        return nameof(EOCAttack2);
+                    else
+                        return nameof(EOCAttack3);
                 }
                 npc.velocity *= .98f;
             }
@@ -752,21 +768,30 @@ namespace CombatPlus.Common.ChangeNPC
             bool npcTarget = FindTarget(npc);
             Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
             int targetDir = target.Center.X < npc.Center.X ? -1 : 1 * (npc.confused ? -1 : 1);
-            gNPC.allowContactDmg = timer > 90;
+            gNPC.allowContactDmg = timer > 65;
             if (timer < 5)
             {
                 Vector2 targetPos = target.Center + new Vector2(0, Main.rand.NextFloat(-48f, 48f));
-                npc.rotation = Utils.AngleLerp(npc.rotation, (targetPos - npc.Center).ToRotation() - MathHelper.PiOver2, .3f);
+                npc.rotation = Utils.AngleLerp(npc.rotation, (targetPos - npc.Center).ToRotation() - MathHelper.PiOver2, .5f);
             }
-            if (timer == 75)
+            if (timer == 65)
             {
                 npc.velocity = Vector2.UnitX.RotatedBy(npc.rotation + MathHelper.PiOver2) * 13f;
             }
             else
             {
-                if (timer > 75 && npc.velocity.LengthSquared() < 25)
+                if (timer > 65 && npc.velocity.LengthSquared() < 25)
                 {
-                    return nameof(EOCSpawn1);
+                    npc.velocity *= .5f;
+                    float dist = AppxDistanceToTarget(npc, npcTarget);
+                    if (dist < 250)
+                        return nameof(EOCSpawn1);
+                    if (dist > 250 && dist < 400)
+                        return nameof(EOCAttack1);
+                    if (dist > 400 && dist < 600)
+                        return nameof(EOCAttack2);
+                    else
+                        return nameof(EOCAttack3);
                 }
                 npc.velocity *= .975f;
             }
@@ -908,18 +933,20 @@ namespace CombatPlus.Common.ChangeNPC
             Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
             int targetDir = target.Center.X < npc.Center.X ? -1 : 1 * (npc.confused ? -1 : 1);
             gNPC.allowContactDmg = timer > 30;
-            if (timer == 1)
+            if (timer < 5)
             {
-                Vector2 targetPos = target.Center + new Vector2(Main.rand.NextFloat(-32f, 32f), Main.rand.NextFloat(-120f, 120f));
-                npc.rotation = Utils.AngleLerp(npc.rotation, (targetPos - npc.Center).ToRotation() - MathHelper.PiOver2, .8f);
+                float randFactor = 1 - ((float)npc.life / (float)npc.lifeMax * 2f);
+                Vector2 targetPos = target.Center + new Vector2(Main.rand.NextFloat(-32f, 32f)*randFactor, Main.rand.NextFloat(-120f, 120f)*randFactor);
+                npc.rotation = Utils.AngleLerp(npc.rotation, (targetPos - npc.Center).ToRotation() - MathHelper.PiOver2, .3f);
             }
-            if (timer == 20)
+            int pauseDur = (int)MathHelper.Lerp(5, 35, (float)npc.life / (float)npc.lifeMax * 2);
+            if (timer == pauseDur)
             {
-                npc.velocity = Vector2.UnitX.RotatedBy(npc.rotation + MathHelper.PiOver2) * 16f;
+                npc.velocity = Vector2.UnitX.RotatedBy(npc.rotation + MathHelper.PiOver2) * 24f;
             }
             else
             {
-                if (timer > 20 && npc.velocity.LengthSquared() < 25)
+                if (timer > pauseDur && npc.velocity.LengthSquared() < 25)
                 {
                     npc.velocity *= .5f;
                     if (Main.expertMode || Main.masterMode)

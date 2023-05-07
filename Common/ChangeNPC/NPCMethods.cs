@@ -124,7 +124,7 @@ namespace CombatPlus.Common.ChangeNPC
         public static float AppxDistanceToTarget(NPC npc, bool isNPC = false)
         {
             Entity target = isNPC ? Main.npc[npc.target] : Main.player[npc.target];
-            return Math.Abs(npc.position.X - target.position.X) + Math.Abs(npc.position.Y - target.position.Y);
+            return Math.Abs(npc.Center.X - target.Center.X) + Math.Abs(npc.Center.Y - target.Center.Y);
         }
     }
 }
