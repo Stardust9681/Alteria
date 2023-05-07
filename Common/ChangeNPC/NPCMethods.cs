@@ -32,6 +32,29 @@ namespace CombatPlus.Common.ChangeNPC
         public static void SetSpawnedNPCs()
         {
         }
+        public static void RegisterSlime(int type)
+        {
+            Behaviours[type].Add(SlimeJump1, nameof(SlimeJump1));
+            Behaviours[type].Add(SlimeJump2, nameof(SlimeJump2));
+            Behaviours[type].Add(SlimeJump3, nameof(SlimeJump3));
+            Behaviours[type].Add(SlimeShoot1, nameof(SlimeShoot1));
+            Behaviours[type].Add(SlimeShoot2, nameof(SlimeShoot2));
+            Behaviours[type].Add(SlimeWet, nameof(SlimeWet));
+        }
+        public static void RegisterEye(int type)
+        {
+            Behaviours[type].Add(EyeAttack1, nameof(EyeAttack1));
+            Behaviours[type].Add(EyeAttack2, nameof(EyeAttack2));
+            Behaviours[type].Add(EyeAttack3, nameof(EyeAttack3));
+            Behaviours[type].Add(EyeWet, nameof(EyeWet));
+            Behaviours[type].Add(EyeDaytime, nameof(EyeDaytime));
+        }
+        public static void RegisterBat(int type)
+        {
+            Behaviours[type].Add(BatMove1, nameof(BatMove1));
+            Behaviours[type].Add(BatAttack1, nameof(BatAttack1));
+            Behaviours[type].Add(BatAttack2, nameof(BatAttack2));
+        }
 
         /// <summary>
         /// 

@@ -10,6 +10,7 @@ using static CombatPlus.Core.Util.Utils;
 
 namespace CombatPlus.Common.ChangeNPC
 {
+#nullable enable
     //Splitting GlobalX into partial X_Info files, moving to Common.ChangeX
     public partial class CombatNPC : GlobalNPC
     {
@@ -22,7 +23,7 @@ namespace CombatPlus.Common.ChangeNPC
         //Jump-time average should come to around current times, to keep movement somewhat consistent
 
         #region Slime AI
-        string? SlimeWet(NPC npc, int timer)
+        static string? SlimeWet(NPC npc, int timer)
         {
             //Move to slime jump AI if NPC is no longer wet.
             if (!(npc.wet || npc.honeyWet || npc.lavaWet || npc.shimmerWet))
@@ -51,7 +52,7 @@ namespace CombatPlus.Common.ChangeNPC
             return null;
         }
         //Same logic as SlimeJump2 and SlimeJump3, read comments here for both
-        string? SlimeJump1(NPC npc, int timer)
+        static string? SlimeJump1(NPC npc, int timer)
         {
             //Move to wet AI if NPC is wet
             if (npc.wet || npc.honeyWet || npc.lavaWet || npc.shimmerWet)
@@ -136,7 +137,7 @@ namespace CombatPlus.Common.ChangeNPC
             return null;
         }
         //Comments in SlimeJump1
-        string? SlimeJump2(NPC npc, int timer)
+        static string? SlimeJump2(NPC npc, int timer)
         {
             if (npc.wet || npc.honeyWet || npc.lavaWet || npc.shimmerWet)
             {
@@ -204,7 +205,7 @@ namespace CombatPlus.Common.ChangeNPC
             return null;
         }
         //Comments in SlimeJump1
-        string? SlimeJump3(NPC npc, int timer)
+        static string? SlimeJump3(NPC npc, int timer)
         {
             if (npc.wet || npc.honeyWet || npc.lavaWet || npc.shimmerWet)
             {
@@ -272,7 +273,7 @@ namespace CombatPlus.Common.ChangeNPC
             return null;
         }
         //Same logic as SlimeShoot2, read comments here for it
-        string? SlimeShoot1(NPC npc, int timer)
+        static string? SlimeShoot1(NPC npc, int timer)
         {
             //If NPC is wet, move to wet AI
             if (npc.wet || npc.honeyWet || npc.lavaWet || npc.shimmerWet)
@@ -310,7 +311,7 @@ namespace CombatPlus.Common.ChangeNPC
             return null;
         }
         //Comments in SlimeShoot1
-        string? SlimeShoot2(NPC npc, int timer)
+        static string? SlimeShoot2(NPC npc, int timer)
         {
             if (npc.wet || npc.honeyWet || npc.lavaWet || npc.shimmerWet)
             {
@@ -348,7 +349,7 @@ namespace CombatPlus.Common.ChangeNPC
 
         #region Demon Eye AI
         //Executed at daytime
-        string? EyeDaytime(NPC npc, int timer)
+        static string? EyeDaytime(NPC npc, int timer)
         {
             npc.GetGlobalNPC<CombatNPC>().allowContactDmg = false;
             //Find target
@@ -361,7 +362,7 @@ namespace CombatPlus.Common.ChangeNPC
             //Never move on from this AI (I'm not all too concerned about it having weird behaviour when it cycles to nighttime again)
             return null;
         }
-        string? EyeWet(NPC npc, int timer)
+        static string? EyeWet(NPC npc, int timer)
         {
             if (Main.dayTime)
             {
@@ -377,7 +378,7 @@ namespace CombatPlus.Common.ChangeNPC
             npc.velocity.X *= .98f;
             return null;
         }
-        string? EyeAttack1(NPC npc, int timer)
+        static string? EyeAttack1(NPC npc, int timer)
         {
             if (Main.dayTime)
             {
@@ -400,11 +401,11 @@ namespace CombatPlus.Common.ChangeNPC
             int moveDir = npc.velocity.X < 0 ? -1 : 1;
             if (targetDir == moveDir)
             {
-                npc.velocity.Y = MathHelper.Lerp(npc.velocity.Y, (npc.position.Y - target.Center.Y) * .008f, .05f);
+                npc.velocity.Y = MathHelper.Lerp(npc.velocity.Y, ((npc.Center.Y - target.Center.Y)*(npc.confused?-1:1)) * .008f, .05f);
             }
             else
             {
-                npc.velocity.Y = MathHelper.Lerp(npc.velocity.Y, (target.Center.Y - npc.position.Y) * .012f, .05f);
+                npc.velocity.Y = MathHelper.Lerp(npc.velocity.Y, ((target.Center.Y - npc.Center.Y) * (npc.confused ? -1 : 1)) * .012f, .05f);
             }
             npc.GetGlobalNPC<CombatNPC>().allowContactDmg = targetDir == moveDir && (MathF.Abs(npc.velocity.X) + MathF.Abs(npc.velocity.Y)) > 6.5f;
             if (npc.collideX)
@@ -422,7 +423,40 @@ namespace CombatPlus.Common.ChangeNPC
             }
             return null;
         }
-        string? EyeAttack2(NPC npc, int timer)
+        static string? EyeAttack2(NPC npc, int timer)
+        {
+            if (Main.dayTime)
+            {
+                return nameof(EyeDaytime);
+            }
+            if (npc.wet || npc.honeyWet || npc.lavaWet || npc.shimmerWet)
+            {
+                return nameof(EyeWet);
+            }
+            bool npcTarget = FindTarget(npc);
+            Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
+            CombatNPC gNPC = npc.GetGlobalNPC<CombatNPC>();
+            //Disable contact damage on ground
+            gNPC.allowContactDmg = false;
+            //Check if NPC can shoot projectiles
+            bool canShoot = gNPC.shootProj != null && gNPC.shootProj.Length > 0 && gNPC.shootProj[0] != 0;
+            npc.velocity += npc.DirectionTo(target.position) * .5f;
+            npc.velocity *= .9f;
+            if (!canShoot || timer > 90)
+            {
+                return nameof(EyeAttack3);
+            }
+            else if (timer != 0 && timer % 30 == 0)
+            {
+                Vector2 vel = npc.DirectionTo(target.position).RotatedBy(MathHelper.ToRadians(((timer / 30) - 2) * 10)) * (npc.confused ? -5.4f : 5.4f);
+                Projectile proj = Projectile.NewProjectileDirect(npc.GetSource_FromAI(), npc.Center, vel, Main.rand.Next(gNPC.shootProj), npc.damage / 2, 0f, Main.myPlayer);
+                proj.friendly = npc.friendly;
+                proj.hostile = !npc.friendly;
+                npc.position -= vel;
+            }
+            return null;
+        }
+        static string? EyeAttack3(NPC npc, int timer)
         {
             if (Main.dayTime)
             {
@@ -457,7 +491,7 @@ namespace CombatPlus.Common.ChangeNPC
                 npc.GetGlobalNPC<CombatNPC>().allowContactDmg = true;
                 if (npc.velocity.LengthSquared() < 49f)
                 {
-                    npc.velocity += npc.DirectionTo(target.position).RotatedByRandom(.262f) * .35f;
+                    npc.velocity += npc.DirectionTo(target.position).RotatedByRandom(.262f) * (npc.confused ? -.35f : .35f);
                 }
                 else
                 {
@@ -472,122 +506,114 @@ namespace CombatPlus.Common.ChangeNPC
             }
             else
             {
+                npc.velocity += npc.DirectionTo(target.position) * (npc.confused ? -1 : 1);
                 npc.velocity *= .15f;
-                npc.velocity += npc.DirectionTo(target.position);
                 npc.rotation = npc.velocity.ToRotation();
             }
             return null;
         }
         #endregion
+        #region Flying AI
 
-        /// <summary>
-        /// Demon Eye AI - rewritten
-        /// </summary>
-        /// <param name="npc"></param>
-        void AI2(NPC npc)
+        #endregion
+
+        #region Bat AI
+        static string? BatMove1(NPC npc, int timer)
         {
-            //Idea for Demon Eye AI:
-            //Do an EoC charge as primary attack, with a proper windup
-            //After charge, bounce around a bit until velocity is very slow (lenSQ()<6.5 I think is fair)
-            //Each bounce slows NPC a bit
-            //Bounce off water unless `npc.ignoreWater` is true or w/e
-            //NPC can only damage during charge attack, or when moving a certain speed from standard accelleration
-
-            //Target entity
-            Entity target = npc;
-            //Allow friendly and hostile targetting
-            if (!npc.friendly)
+            if (!npc.noGravity)
+                npc.noGravity = true;
+            //Find a target, true if NPC found
+            bool npcTarget = FindTarget(npc);
+            Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
+            //Direction to target (account for confusion)
+            int targetDir = target.position.X < npc.position.X ? -1 : 1 * (npc.confused ? -1 : 1);
+            npc.GetGlobalNPC<CombatNPC>().allowContactDmg = false;
+            float targetX = target.position.X - (targetDir * 96f);
+            if (npc.position.X > targetX)
             {
-                npc.TargetClosest(false);
-                target = Main.player[npc.target];
+                npc.velocity.X -= .08f;
             }
             else
             {
-                float dSq = float.MaxValue;
-                for (int i = 0; i < Main.maxNPCs; i++)
-                {
-                    NPC other = Main.npc[i];
-                    float otherDSq = npc.DistanceSQ(other.position);
-                    if (other.active && !other.friendly && !other.immortal && otherDSq < dSq)
-                    {
-                        dSq = otherDSq;
-                        npc.target = i;
-                        target = other;
-                    }
-                }
+                npc.velocity.X += .08f;
             }
-            //+/- direction of the target entity
-            int direction = npc.position.X > target.position.X ? -1 : 1;
-            int conf = npc.confused ? -1 : 1;
-            direction *= conf;
-            //X,Y distance from target
-            Vector2 dist = new Vector2(MathF.Abs(npc.position.X - target.position.X), MathF.Abs(npc.position.Y - target.position.Y));
-
-            npc.velocity *= 1.25f;
-            npc.velocity.Y *= 1.1111f;
-
-            if (npc.ai[0] < 0)
+            if (MathF.Abs(npc.position.X - targetX) < 64)
+                npc.velocity.X *= .95f;
+            float targetY = target.position.Y - 320;
+            if (npc.position.Y > targetY)
             {
-                npc.velocity *= .942f;
-                //npc.rotation = MathHelper.Lerp(npc.rotation, (target.position - npc.position).ToRotation(), .12f);
-                if (npc.ai[1] < 0)
+                npc.velocity.Y -= .06f;
+            }
+            else
+            {
+                npc.velocity.Y += .06f;
+            }
+            if (MathF.Abs(npc.position.Y - targetY) < 64)
+                npc.velocity.Y *= .98f;
+            if (AppxDistanceToTarget(npc, npcTarget) < 400)
+            {
+                npc.velocity *= .987f;
+            }
+            if (npc.DistanceSQ(new Vector2(targetX, targetY)) < npc.Size.LengthSquared() || (npc.collideY && npc.oldVelocity.Y < 0))
+            {
+                return nameof(BatAttack1);
+            }
+            return null;
+        }
+        static string? BatAttack1(NPC npc, int timer)
+        {
+            //Find a target, true if NPC found
+            bool npcTarget = FindTarget(npc);
+            Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
+            //Direction to target (account for confusion)
+            int targetDir = target.position.X < npc.position.X ? -1 : 1 * (npc.confused ? -1 : 1);
+            if (npc.velocity.Y < 1)
+            {
+                npc.velocity.Y = 7.4f;
+            }
+            npc.GetGlobalNPC<CombatNPC>().allowContactDmg = true;
+            npc.velocity = Vector2.Lerp(npc.velocity, npc.DirectionTo(target.position) * 4f, .018f);
+            if (AppxDistanceToTarget(npc, npcTarget) > 600)
+            {
+                npc.velocity *= .987f;
+            }
+            if (((npc.velocity.X < 0 ? -1 : 1) != targetDir) || npc.position.Y > target.position.Y)
+                return nameof(BatAttack2);
+            return null;
+        }
+        static string? BatAttack2(NPC npc, int timer)
+        {
+            //Disable contact damage
+            CombatNPC gNPC = npc.GetGlobalNPC<CombatNPC>();
+            if (gNPC.shootProj == null || gNPC.shootProj.Length == 0 || gNPC.shootProj[0] == 0)
+                return nameof(BatMove1);
+            gNPC.allowContactDmg = false;
+            //Find a target
+            bool npcTarget = FindTarget(npc);
+            Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
+            npc.velocity *= .9f;
+            //If timer is past a value, shoot projectile(s)
+            if (timer > 70)
+            {
+                Projectile proj = Projectile.NewProjectileDirect(npc.GetSource_FromAI(), npc.Center, npc.DirectionTo(target.Center) * 8.4f, Main.rand.Next(gNPC.shootProj), npc.damage / 3, npc.knockBackResist * 2f, Main.myPlayer);
+                proj.friendly = npc.friendly;
+                proj.hostile = !npc.friendly;
+
+                float dist = AppxDistanceToTarget(npc, npcTarget);
+                //Determine if player is close enough to move to Shoot2
+                if (dist < 600)
                 {
-                    npc.velocity = (target.position - npc.position).SafeNormalize(Vector2.Zero) * MathHelper.Clamp(npc.defense * .48f, 4f, 10f) * conf;
-                    npc.ai[0] = MathHelper.Clamp(npc.damage * 12f, 120, 720);
-                    npc.ai[1] = npc.ai[0] * .25f;
-                    switch (npc.netID)
-                    {
-                        case NPCID.PigronCorruption:
-                        case NPCID.PigronCrimson:
-                        case NPCID.PigronHallow:
-                            npc.noTileCollide = true;
-                            break;
-                    }
+                    if (Main.rand.NextBool())
+                        return nameof(BatAttack2);
+                    else
+                        return nameof(BatMove1);
                 }
                 else
-                {
-                    npc.ai[1]--;
-                    npc.velocity.Y -= .014f;
-                }
+                    return nameof(BatMove1);
             }
-            else
-            {
-                npc.ai[0]--;
-                npc.velocity.X += (target.position.X < npc.position.X ? -.096f : .096f) * conf;
-                npc.velocity.Y += (target.position.Y < npc.position.Y ? -.024f : .024f) * conf;
-            }
-            if (dist.X + dist.Y > 600)
-                npc.ai[0] -= 5;
-            if (dist.X + dist.Y < 160)
-            {
-                switch (npc.netID)
-                {
-                    case NPCID.PigronCorruption:
-                    case NPCID.PigronCrimson:
-                    case NPCID.PigronHallow:
-                        npc.noTileCollide = false;
-                        break;
-                }
-            }
-
-            if (!npc.noTileCollide)
-            {
-                if (npc.collideX)
-                    npc.velocity.X *= -1.25f;
-                if (npc.collideY)
-                    npc.velocity.Y *= -1.25f;
-            }
-            npc.velocity *= .998f;
-            npc.spriteDirection = npc.velocity.X < 0 ? -1 : 1;
-
-            if (npc.wet)
-                npc.velocity.Y -= MathHelper.Clamp(npc.velocity.Y - .028f, -6, 6);
-
-            npc.velocity.Y *= .9f;
-            npc.velocity *= .8f;
-
-            npc.rotation = MathHelper.Lerp(npc.rotation, npc.velocity.ToRotation(), .15f);
+            return null;
         }
+        #endregion
 
         /// <summary>
         /// Fighter AI - rewritten
@@ -595,7 +621,7 @@ namespace CombatPlus.Common.ChangeNPC
         /// <param name="npc"></param>
         void AI3(NPC npc)
         {
-
+            
         }
 
         /// <summary>
@@ -745,4 +771,5 @@ namespace CombatPlus.Common.ChangeNPC
             }
         }
     }
+#nullable disable
 }

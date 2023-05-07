@@ -23,6 +23,7 @@ Other Ideas:
 - Enemy AI rewrite (accomodate lost constant hitboxes, allow both friendly AND hostile targetting)
 - NPC data (flying, swiming, etc) + Mod.Call to add to data
 - Element system[?], weaknesses, resistances/strengths {Blood:Crimson, Curse:Corruption/Dungeon, Holy:Hallow, Ice:Tundra, Fire:Hell, Earth:Jungle/Caverns, Wind:Sky/Space}
+- Revert stupid seed changes (DST seed having filter on 24/7, some items not being able to be purchased, etc)
 
 NPC Changes:
 - NPC AI Rewrite (to include confusion behaviour, hostile/friendly targetting, dynamic movement, add enemy grief to some AI)

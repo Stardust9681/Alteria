@@ -12,10 +12,6 @@ namespace CombatPlus.Common.ChangePlayer
 {
     public class CombatPlayer : ModPlayer
     {
-
-        //ModifyHitByX -> ModifyHurt
-        //Change this back, fuck Terraria, fuck tMod API, y'all dipshits.
-
         public short healTimer;
         public int heal;
 
@@ -24,7 +20,12 @@ namespace CombatPlus.Common.ChangePlayer
 
         public override void GetHealLife(Item item, bool quickHeal, ref int healValue)
         {
-            healValue = 0;
+            if (quickHeal)
+            {
+                heal = healValue;
+                healTimer = 1;
+                healValue = 0;
+            }
         }
         public override void UpdateLifeRegen()
         {
@@ -65,9 +66,12 @@ namespace CombatPlus.Common.ChangePlayer
         }
         public override void GetHealMana(Item item, bool quickHeal, ref int healValue)
         {
-            mana = healValue;
-            manaTimer = 1;
-            healValue = 0;
+            if (quickHeal)
+            {
+                mana = healValue;
+                manaTimer = 1;
+                healValue = 0;
+            }
         }
     }
 }
