@@ -69,7 +69,10 @@ namespace CombatPlus.Common.ChangeNPC
                 npc.noGravity = true;
             if (npc.type == NPCID.Harpy)
                 npc.noGravity = true;
-
+            if (npc.type == NPCID.EyeofCthulhu)
+            {
+                npc.GetGlobalNPC<CombatNPC>().spawnNPC = new int[] { NPCID.ServantofCthulhu, NPCID.DemonEye };
+            }
             SetVanillaDefaults(npc);
         }
         public override bool CanHitPlayer(NPC npc, Player target, ref int cooldownSlot)
@@ -145,6 +148,26 @@ namespace CombatPlus.Common.ChangeNPC
                 return false;
             }
             return base.PreAI(npc);
+        }
+        public override void FindFrame(NPC npc, int frameHeight)
+        {
+            if (npc.aiStyle == NPCAIStyleID.EyeOfCthulhu)
+            {
+                npc.frameCounter++;
+                frameHeight = 166;
+                if (npc.life > npc.lifeMax * .5f)
+                {
+                    npc.frame = new Rectangle(0, (((int)npc.frameCounter%24)/24)*frameHeight, 110, frameHeight);
+                }
+                else
+                {
+                    npc.frame = new Rectangle(0, (3+(((int)npc.frameCounter % 24) / 24)) * frameHeight, 110, frameHeight);
+                }
+                if (npc.frameCounter == 24)
+                    npc.frameCounter = 0;
+                return;
+            }
+            base.FindFrame(npc, frameHeight);
         }
     }
 }
