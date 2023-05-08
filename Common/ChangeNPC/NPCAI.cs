@@ -664,9 +664,9 @@ namespace CombatPlus.Common.ChangeNPC
             {
                 return nameof(EOCMove3);
             }
-            if (npc.life < npc.lifeMax * .625f)
+            if (npc.life < npc.lifeMax * .5f)
             {
-                return nameof(EOCMove1);
+                return nameof(EOCPhase2);
             }
             CombatNPC gNPC = npc.GetGlobalNPC<CombatNPC>();
             bool npcTarget = FindTarget(npc);
@@ -712,9 +712,9 @@ namespace CombatPlus.Common.ChangeNPC
             {
                 return nameof(EOCMove3);
             }
-            if (npc.life < npc.lifeMax * .625f)
+            if (npc.life < npc.lifeMax * .5f)
             {
-                return nameof(EOCMove1);
+                return nameof(EOCPhase2);
             }
             CombatNPC gNPC = npc.GetGlobalNPC<CombatNPC>();
             bool npcTarget = FindTarget(npc);
@@ -760,9 +760,9 @@ namespace CombatPlus.Common.ChangeNPC
             {
                 return nameof(EOCMove3);
             }
-            if (npc.life < npc.lifeMax * .625f)
+            if (npc.life < npc.lifeMax * .5f)
             {
-                return nameof(EOCMove1);
+                return nameof(EOCPhase2);
             }
             CombatNPC gNPC = npc.GetGlobalNPC<CombatNPC>();
             bool npcTarget = FindTarget(npc);
@@ -955,9 +955,9 @@ namespace CombatPlus.Common.ChangeNPC
                 Vector2 targetPos = target.Center + new Vector2(Main.rand.NextFloat(-128f, 128f)*(1-(2*healthFactor)), Main.rand.NextFloat(-256f, 256f)*(1-(2*healthFactor)));
                 npc.rotation = Utils.AngleLerp(npc.rotation, (targetPos - npc.Center).ToRotation() - MathHelper.PiOver2, MathHelper.Clamp((1-(healthFactor))*.8f, 0, 1));
             }
-            int pauseDur = (int)MathHelper.Lerp(3, 40, healthFactor);
+            int pauseDur = (int)MathHelper.Lerp(5, 30, healthFactor * 2f);
             gNPC.allowContactDmg = timer > pauseDur;
-            float velMult = MathHelper.Lerp(22, 36, 1 - (2 * healthFactor));
+            float velMult = MathHelper.Lerp(20, 30, 1 - (2 * healthFactor));
             if (timer == pauseDur)
             {
                 npc.velocity = Vector2.UnitX.RotatedBy(npc.rotation + MathHelper.PiOver2) * velMult;
@@ -967,6 +967,8 @@ namespace CombatPlus.Common.ChangeNPC
                 if (timer > pauseDur && npc.velocity.LengthSquared() < velMult*2f)
                 {
                     npc.velocity *= .5f;
+                    if (AppxDistanceToTarget(npc, npcTarget) < 125)
+                        return nameof(EOCMove2);
                     if (Main.expertMode || Main.masterMode)
                     {
                         if (Main.rand.NextFloat() > 1.33f*healthFactor)
