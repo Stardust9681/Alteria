@@ -57,7 +57,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
                 return nameof(SlimeJump1);
             }
             //Turn on hitbox, slimes causing contact damage in water is fine by me, and discourages exploits with water buckets
-            npc.GetGlobalNPC<CombatNPC>().allowContactDmg = true;
+            npc.GetGlobalNPC<OtherworldNPC>().allowContactDmg = true;
             //Find a target, true if NPC found
             bool npcTarget = FindTarget(npc);
             Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
@@ -97,7 +97,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
                 {
                     //Stop moving
                     npc.velocity.X = 0;
-                    CombatNPC gNPC = npc.GetGlobalNPC<CombatNPC>();
+                    OtherworldNPC gNPC = npc.GetGlobalNPC<OtherworldNPC>();
                     //Disable contact damage on ground
                     gNPC.allowContactDmg = false;
                     //Check if NPC can shoot projectiles
@@ -153,7 +153,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
                 {
                     if (npc.velocity.Y < 32)
                         npc.velocity.Y *= 1.14f;
-                    npc.GetGlobalNPC<CombatNPC>().allowContactDmg = true;
+                    npc.GetGlobalNPC<OtherworldNPC>().allowContactDmg = true;
                 }
                 //If NPC stopped moving horizontally, try to maintain movement
                 if (npc.velocity.X == 0)
@@ -177,7 +177,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
                 if (npc.velocity.Y > -.04f)
                 {
                     npc.velocity.X = 0;
-                    CombatNPC gNPC = npc.GetGlobalNPC<CombatNPC>();
+                    OtherworldNPC gNPC = npc.GetGlobalNPC<OtherworldNPC>();
                     gNPC.allowContactDmg = false;
                     bool canShoot = gNPC.shootProj != null && gNPC.shootProj.Length > 0 && gNPC.shootProj[0] != 0;
                     if (canShoot)
@@ -222,7 +222,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
                 {
                     if (npc.velocity.Y < 32)
                         npc.velocity.Y *= 1.14f;
-                    npc.GetGlobalNPC<CombatNPC>().allowContactDmg = true;
+                    npc.GetGlobalNPC<OtherworldNPC>().allowContactDmg = true;
                 }
                 if (npc.velocity.X == 0)
                     npc.velocity.X = npc.oldVelocity.X;
@@ -245,7 +245,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
                 if (npc.velocity.Y > -.04f)
                 {
                     npc.velocity.X = 0;
-                    CombatNPC gNPC = npc.GetGlobalNPC<CombatNPC>();
+                    OtherworldNPC gNPC = npc.GetGlobalNPC<OtherworldNPC>();
                     gNPC.allowContactDmg = false;
                     bool canShoot = gNPC.shootProj != null && gNPC.shootProj.Length > 0 && gNPC.shootProj[0] != 0;
                     if (canShoot)
@@ -290,7 +290,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
                 {
                     if (npc.velocity.Y < 32)
                         npc.velocity.Y *= 1.14f;
-                    npc.GetGlobalNPC<CombatNPC>().allowContactDmg = true;
+                    npc.GetGlobalNPC<OtherworldNPC>().allowContactDmg = true;
                 }
                 if (npc.velocity.X == 0)
                     npc.velocity.X = npc.oldVelocity.X;
@@ -307,7 +307,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
                 return nameof(SlimeWet);
             }
             //Disable contact damage
-            npc.GetGlobalNPC<CombatNPC>().allowContactDmg = false;
+            npc.GetGlobalNPC<OtherworldNPC>().allowContactDmg = false;
             //Find a target
             bool npcTarget = FindTarget(npc);
             Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
@@ -315,7 +315,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             //If timer is past a value, shoot projectile(s)
             if (timer > 85)
             {
-                Projectile proj = Projectile.NewProjectileDirect(npc.GetSource_FromAI(), npc.Center, npc.DirectionTo(target.Center) * 6f, Main.rand.Next(npc.GetGlobalNPC<CombatNPC>().shootProj!), npc.damage / 2, npc.knockBackResist * 2f, Main.myPlayer);
+                Projectile proj = Projectile.NewProjectileDirect(npc.GetSource_FromAI(), npc.Center, npc.DirectionTo(target.Center) * 6f, Main.rand.Next(npc.GetGlobalNPC<OtherworldNPC>().shootProj!), npc.damage / 2, npc.knockBackResist * 2f, Main.myPlayer);
                 proj.friendly = npc.friendly;
                 proj.hostile = !npc.friendly;
 
@@ -343,7 +343,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             {
                 return nameof(SlimeWet);
             }
-            npc.GetGlobalNPC<CombatNPC>().allowContactDmg = false;
+            npc.GetGlobalNPC<OtherworldNPC>().allowContactDmg = false;
             bool npcTarget = FindTarget(npc);
             Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
             float dist = AppxDistanceToTarget(npc, npcTarget);
@@ -351,7 +351,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             {
                 for (int i = 0; i < 4; i++)
                 {
-                    Projectile proj = Projectile.NewProjectileDirect(npc.GetSource_FromAI(), npc.Center, new Vector2(0, -1).RotatedByRandom(1.047f) * Main.rand.NextFloat(3f, 5f), Main.rand.Next(npc.GetGlobalNPC<CombatNPC>().shootProj!), npc.damage / 2, npc.knockBackResist * 2f, Main.myPlayer);
+                    Projectile proj = Projectile.NewProjectileDirect(npc.GetSource_FromAI(), npc.Center, new Vector2(0, -1).RotatedByRandom(1.047f) * Main.rand.NextFloat(3f, 5f), Main.rand.Next(npc.GetGlobalNPC<OtherworldNPC>().shootProj!), npc.damage / 2, npc.knockBackResist * 2f, Main.myPlayer);
                     proj.friendly = npc.friendly;
                     proj.hostile = !npc.friendly;
                 }

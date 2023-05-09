@@ -50,7 +50,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             //Direction to target (account for confusion)
             int targetDir = target.position.X < npc.position.X ? -1 : 1 * (npc.confused ? -1 : 1);
             //Disable contact damage
-            npc.GetGlobalNPC<CombatNPC>().allowContactDmg = false;
+            npc.GetGlobalNPC<OtherworldNPC>().allowContactDmg = false;
             //Find and move towards target X position
             float targetX = target.position.X - (targetDir * 96f);
             if (npc.position.X > targetX)
@@ -102,7 +102,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
                 npc.velocity.Y = 7.4f;
             }
             //Allow contact damage
-            npc.GetGlobalNPC<CombatNPC>().allowContactDmg = true;
+            npc.GetGlobalNPC<OtherworldNPC>().allowContactDmg = true;
             //Adjust velocity over time, to slow down and to be more "swoop-like"
             npc.velocity = Vector2.Lerp(npc.velocity, npc.DirectionTo(target.position) * 4f, .018f);
             //If close enough to target, slow down
@@ -117,7 +117,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
         }
         static string? BatAttack2(NPC npc, int timer)
         {
-            CombatNPC gNPC = npc.GetGlobalNPC<CombatNPC>();
+            OtherworldNPC gNPC = npc.GetGlobalNPC<OtherworldNPC>();
             //If NPC does not fire projectiles, go back to first move state
             if (gNPC.shootProj == null || gNPC.shootProj.Length == 0 || gNPC.shootProj[0] == 0)
                 return nameof(BatMove1);

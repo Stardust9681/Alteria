@@ -51,7 +51,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
                 return nameof(EOCMove3);
             }
             Vector2 npcCenter = npc.Center;
-            CombatNPC gNPC = npc.GetGlobalNPC<CombatNPC>();
+            OtherworldNPC gNPC = npc.GetGlobalNPC<OtherworldNPC>();
             bool npcTarget = FindTarget(npc);
             Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
             Vector2 targetCenter = target.Center;
@@ -95,7 +95,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             {
                 return nameof(EOCPhase2);
             }
-            CombatNPC gNPC = npc.GetGlobalNPC<CombatNPC>();
+            OtherworldNPC gNPC = npc.GetGlobalNPC<OtherworldNPC>();
             bool npcTarget = FindTarget(npc);
             Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
             int targetDir = target.Center.X < npc.Center.X ? -1 : 1 * (npc.confused ? -1 : 1);
@@ -143,7 +143,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             {
                 return nameof(EOCPhase2);
             }
-            CombatNPC gNPC = npc.GetGlobalNPC<CombatNPC>();
+            OtherworldNPC gNPC = npc.GetGlobalNPC<OtherworldNPC>();
             bool npcTarget = FindTarget(npc);
             Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
             int targetDir = target.Center.X < npc.Center.X ? -1 : 1 * (npc.confused ? -1 : 1);
@@ -191,7 +191,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             {
                 return nameof(EOCPhase2);
             }
-            CombatNPC gNPC = npc.GetGlobalNPC<CombatNPC>();
+            OtherworldNPC gNPC = npc.GetGlobalNPC<OtherworldNPC>();
             bool npcTarget = FindTarget(npc);
             Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
             int targetDir = target.Center.X < npc.Center.X ? -1 : 1 * (npc.confused ? -1 : 1);
@@ -231,7 +231,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
         //Spawn servants
         static string? EOCSpawn1(NPC npc, int timer)
         {
-            CombatNPC gNPC = npc.GetGlobalNPC<CombatNPC>();
+            OtherworldNPC gNPC = npc.GetGlobalNPC<OtherworldNPC>();
             bool npcTarget = FindTarget(npc);
             Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
             int targetDir = target.Center.X < npc.Center.X ? -1 : 1 * (npc.confused ? -1 : 1);
@@ -266,7 +266,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
         //Make the transition to phase 2, uses methods below
         static string? EOCPhase2(NPC npc, int timer)
         {
-            CombatNPC gNPC = npc.GetGlobalNPC<CombatNPC>();
+            OtherworldNPC gNPC = npc.GetGlobalNPC<OtherworldNPC>();
             bool npcTarget = FindTarget(npc);
             Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
             int targetDir = target.Center.X < npc.Center.X ? -1 : 1 * (npc.confused ? -1 : 1);
@@ -297,7 +297,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
                 return nameof(EOCMove3);
             }
             Vector2 npcCenter = npc.Center;
-            CombatNPC gNPC = npc.GetGlobalNPC<CombatNPC>();
+            OtherworldNPC gNPC = npc.GetGlobalNPC<OtherworldNPC>();
             bool npcTarget = FindTarget(npc);
             Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
             Vector2 targetCenter = target.Center;
@@ -333,7 +333,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             {
                 return nameof(EOCMove3);
             }
-            CombatNPC gNPC = npc.GetGlobalNPC<CombatNPC>();
+            OtherworldNPC gNPC = npc.GetGlobalNPC<OtherworldNPC>();
             bool npcTarget = FindTarget(npc);
             Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
             int targetDir = target.Center.X < npc.Center.X ? -1 : 1 * (npc.confused ? -1 : 1);
@@ -372,7 +372,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
         //Phase2 hyperdash
         static string? EOCAttack5(NPC npc, int timer)
         {
-            CombatNPC gNPC = npc.GetGlobalNPC<CombatNPC>();
+            OtherworldNPC gNPC = npc.GetGlobalNPC<OtherworldNPC>();
             bool npcTarget = FindTarget(npc);
             Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
             int targetDir = target.Center.X < npc.Center.X ? -1 : 1 * (npc.confused ? -1 : 1);
@@ -418,7 +418,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
         //Phase2 spawn servants
         static string? EOCSpawn2(NPC npc, int timer)
         {
-            CombatNPC gNPC = npc.GetGlobalNPC<CombatNPC>();
+            OtherworldNPC gNPC = npc.GetGlobalNPC<OtherworldNPC>();
             bool npcTarget = FindTarget(npc);
             Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
             int targetDir = target.Center.X < npc.Center.X ? -1 : 1 * (npc.confused ? -1 : 1);

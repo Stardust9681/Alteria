@@ -13,7 +13,7 @@ using OtherworldMod.Common.ChangeNPC.AI;
 
 namespace OtherworldMod.Common.ChangeNPC
 {
-    public partial class CombatNPC : GlobalNPC
+    public partial class OtherworldNPC : GlobalNPC
     {
         public override bool InstancePerEntity => true;
         
@@ -31,6 +31,7 @@ namespace OtherworldMod.Common.ChangeNPC
             AIStyle_001.Load();
             AIStyle_002.Load();
             AIStyle_004.Load();
+            AIStyle_005.Load();
             AIStyle_014.Load();
         }
         public override void SetDefaults(NPC npc)
@@ -41,7 +42,7 @@ namespace OtherworldMod.Common.ChangeNPC
                 npc.noGravity = true;
             if (npc.type == NPCID.EyeofCthulhu)
             {
-                npc.GetGlobalNPC<CombatNPC>().spawnNPC = new int[] { NPCID.ServantofCthulhu, NPCID.DemonEye };
+                npc.GetGlobalNPC<OtherworldNPC>().spawnNPC = new int[] { NPCID.ServantofCthulhu, NPCID.DemonEye };
             }
             SetVanillaDefaults(npc);
         }

@@ -12,7 +12,7 @@ using static OtherworldMod.Common.ChangeNPC.Utilities.OtherworldNPCSets;
 namespace OtherworldMod.Common.ChangeNPC
 {
     //Splitting GlobalX into partial X_Info files, moving to Common.ChangeX
-    public partial class CombatNPC : GlobalNPC
+    public partial class OtherworldNPC : GlobalNPC
     {
         //Don't expect these to change
         public int[]? shootProj;
@@ -31,35 +31,35 @@ namespace OtherworldMod.Common.ChangeNPC
         {
             if (npc.type == checkType || npc.netID == checkType)
             {
-                npc.GetGlobalNPC<CombatNPC>().shootProj = projs;
+                npc.GetGlobalNPC<OtherworldNPC>().shootProj = projs;
             }
         }
         private void SetSpawnedNPCs(NPC npc, int checkType, params int[] npcs)
         {
             if (npc.type == checkType || npc.netID == checkType)
             {
-                npc.GetGlobalNPC<CombatNPC>().spawnNPC = npcs;
+                npc.GetGlobalNPC<OtherworldNPC>().spawnNPC = npcs;
             }
         }
         private void SetIgnoreAI(NPC npc, int checkType, bool val)
         {
             if (npc.type == checkType || npc.netID == checkType)
             {
-                npc.GetGlobalNPC<CombatNPC>().ignoreAIChanges = val;
+                npc.GetGlobalNPC<OtherworldNPC>().ignoreAIChanges = val;
             }
         }
         private void SetIgnoreWater(NPC npc, int checkType, bool val)
         {
             if (npc.type == checkType || npc.netID == checkType)
             {
-                npc.GetGlobalNPC<CombatNPC>().ignoreWater = val;
+                npc.GetGlobalNPC<OtherworldNPC>().ignoreWater = val;
             }
         }
         private void SetIgnoreTiles(NPC npc, int checkType, bool val)
         {
             if (npc.type == checkType || npc.netID == checkType)
             {
-                npc.GetGlobalNPC<CombatNPC>().ignoreTiles = val;
+                npc.GetGlobalNPC<OtherworldNPC>().ignoreTiles = val;
             }
         }
 

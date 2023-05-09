@@ -6,7 +6,3 @@ Mages' spells have a proper cast time, and mana will be much more of a significa
 Melee gets an indirect buff from non-constant NPC hitboxes, but will also be made more viable in other ways from NPC ai.
 Minions will be given an explicit attack animation, rather than contact damage.
 Critical stats are more fleshed out -- lower chances, higher/more dramatic effect, variable crit damage multiplier
-Gone are the days of Terraria's old combat system.
-Welcome new challenging AI for enemies.
-Welcome new mechanics for existing classes.
-Welcome new and correct balancing.

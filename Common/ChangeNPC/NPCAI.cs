@@ -12,7 +12,7 @@ namespace OtherworldMod.Common.ChangeNPC
 {
 #nullable enable
     //Splitting GlobalX into partial X_Info files, moving to Common.ChangeX
-    public partial class CombatNPC : GlobalNPC
+    public partial class OtherworldNPC : GlobalNPC
     {
         //Idea for Slime AI:
         //Keep wiggles as warning for bounce + by-threes jump pattern (lo, med, hi, repeat)
@@ -28,7 +28,7 @@ namespace OtherworldMod.Common.ChangeNPC
             //Copied AI2(NPC)
 
             //GlobalNPC
-            CombatNPC gNPC = npc.GetGlobalNPC<CombatNPC>();
+            OtherworldNPC gNPC = npc.GetGlobalNPC<OtherworldNPC>();
             //Target entity
             Entity target = npc;
             //Allow friendly and hostile targetting

@@ -44,7 +44,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
         }
         static string? EyeDaytime(NPC npc, int timer)
         {
-            npc.GetGlobalNPC<CombatNPC>().allowContactDmg = false;
+            npc.GetGlobalNPC<OtherworldNPC>().allowContactDmg = false;
             //Find target
             bool npcTarget = FindTarget(npc);
             Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
@@ -66,7 +66,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             {
                 return nameof(EyeAttack1);
             }
-            npc.GetGlobalNPC<CombatNPC>().allowContactDmg = false;
+            npc.GetGlobalNPC<OtherworldNPC>().allowContactDmg = false;
             npc.velocity.Y -= .048f;
             npc.velocity.X *= .98f;
             return null;
@@ -100,7 +100,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             {
                 npc.velocity.Y = MathHelper.Lerp(npc.velocity.Y, ((target.Center.Y - npc.Center.Y) * (npc.confused ? -1 : 1)) * .012f, .05f);
             }
-            npc.GetGlobalNPC<CombatNPC>().allowContactDmg = targetDir == moveDir && (MathF.Abs(npc.velocity.X) + MathF.Abs(npc.velocity.Y)) > 6.5f;
+            npc.GetGlobalNPC<OtherworldNPC>().allowContactDmg = targetDir == moveDir && (MathF.Abs(npc.velocity.X) + MathF.Abs(npc.velocity.Y)) > 6.5f;
             if (npc.collideX)
             {
                 npc.velocity.X = -npc.oldVelocity.X;
@@ -128,7 +128,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             }
             bool npcTarget = FindTarget(npc);
             Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
-            CombatNPC gNPC = npc.GetGlobalNPC<CombatNPC>();
+            OtherworldNPC gNPC = npc.GetGlobalNPC<OtherworldNPC>();
             //Disable contact damage on ground
             gNPC.allowContactDmg = false;
             //Check if NPC can shoot projectiles
@@ -159,7 +159,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             {
                 return nameof(EyeWet);
             }
-            npc.GetGlobalNPC<CombatNPC>().allowContactDmg = false;
+            npc.GetGlobalNPC<OtherworldNPC>().allowContactDmg = false;
             bool npcTarget = FindTarget(npc);
             Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
             if (npc.collideX)
@@ -181,7 +181,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
                 {
                     npc.velocity *= 4f;
                 }
-                npc.GetGlobalNPC<CombatNPC>().allowContactDmg = true;
+                npc.GetGlobalNPC<OtherworldNPC>().allowContactDmg = true;
                 if (npc.velocity.LengthSquared() < 49f)
                 {
                     npc.velocity += npc.DirectionTo(target.position).RotatedByRandom(.262f) * (npc.confused ? -.35f : .35f);
