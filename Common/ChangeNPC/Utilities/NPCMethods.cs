@@ -6,11 +6,11 @@ using Terraria.ModLoader;
 using Terraria.ID;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using static CombatPlus.Core.Util.Utils;
-using static CombatPlus.Common.ChangeNPC.Utilities.OtherworldNPCSets;
-using static CombatPlus.Common.ChangeNPC.AI.AIStyle_001;
+using static OtherworldMod.Core.Util.Utils;
+using static OtherworldMod.Common.ChangeNPC.Utilities.OtherworldNPCSets;
+using static OtherworldMod.Common.ChangeNPC.AI.AIStyle_001;
 
-namespace CombatPlus.Common.ChangeNPC.Utilities
+namespace OtherworldMod.Common.ChangeNPC.Utilities
 {
     public static class NPCMethods
     {

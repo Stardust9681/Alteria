@@ -7,7 +7,7 @@ using Terraria.ID;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace CombatPlus.Common.ChangeItem
+namespace OtherworldMod.Common.ChangeItem
 {
     public partial class CombatItem : GlobalItem
     {

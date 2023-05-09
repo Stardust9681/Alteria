@@ -6,9 +6,9 @@ using Terraria.ModLoader;
 using Terraria.ID;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using static CombatPlus.Core.Util.Utils;
+using static OtherworldMod.Core.Util.Utils;
 
-namespace CombatPlus.Common.ChangeNPC.Utilities
+namespace OtherworldMod.Common.ChangeNPC.Utilities
 {
     public static class OtherworldNPCSets
     {

@@ -7,7 +7,7 @@ using Terraria.ID;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace CombatPlus.Content
+namespace OtherworldMod.Content
 {
     public class CombatProjectile : GlobalProjectile
     {

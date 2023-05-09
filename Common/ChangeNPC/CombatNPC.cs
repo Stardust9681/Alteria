@@ -6,12 +6,12 @@ using Terraria.ModLoader;
 using Terraria.ID;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using static CombatPlus.Core.Util.Utils;
+using static OtherworldMod.Core.Util.Utils;
 using Terraria.DataStructures;
-using static CombatPlus.Common.ChangeNPC.Utilities.OtherworldNPCSets;
-using CombatPlus.Common.ChangeNPC.AI;
+using static OtherworldMod.Common.ChangeNPC.Utilities.OtherworldNPCSets;
+using OtherworldMod.Common.ChangeNPC.AI;
 
-namespace CombatPlus.Common.ChangeNPC
+namespace OtherworldMod.Common.ChangeNPC
 {
     public partial class CombatNPC : GlobalNPC
     {

@@ -6,7 +6,7 @@ using Terraria;
 using Terraria.ModLoader;
 using Terraria.ID;
 
-namespace CombatPlus.Core.Util
+namespace OtherworldMod.Core.Util
 {
     public static class Utils
     {

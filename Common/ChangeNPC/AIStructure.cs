@@ -6,9 +6,9 @@ using Terraria.ModLoader;
 using Terraria.ID;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using static CombatPlus.Core.Util.Utils;
+using static OtherworldMod.Core.Util.Utils;
 
-namespace CombatPlus.Common.ChangeNPC
+namespace OtherworldMod.Common.ChangeNPC
 {
 #nullable enable
     public class AIStyle
@@ -57,11 +57,11 @@ namespace CombatPlus.Common.ChangeNPC
             }
             catch (ArgumentOutOfRangeException e)
             {
-                Logging.PublicLogger.Error($"[CombatPlus] Tried to modify NPC phase '{key}' out of bounds.", e);
+                Logging.PublicLogger.Error($"[OtherworldMod] Tried to modify NPC phase '{key}' out of bounds.", e);
             }
             catch (Exception e)
             {
-                Logging.PublicLogger.Error("[CombatPlus] Unknown problem", e);
+                Logging.PublicLogger.Error("[OtherworldMod] Unknown problem", e);
             }
         }
         public void Update(NPC npc, ref string phase, ref int timer)

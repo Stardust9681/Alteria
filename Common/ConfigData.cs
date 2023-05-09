@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Terraria.ModLoader;
 using Terraria;
 
-namespace CombatPlus.Common
+namespace OtherworldMod.Common
 {
     //This can maybe be done with IComparer/IComparable, or a Predicate of sorts to determine what fits under the given constraints
     public struct ConfigData<T>
@@ -63,7 +63,7 @@ namespace CombatPlus.Common
                         cData.Req = cReq;
                         if (!ret)
                         {
-                            Logging.PublicLogger.Error("Tried to convert CombatPlus config data to incompatible type");
+                            Logging.PublicLogger.Error("Tried to convert OtherworldMod config data to incompatible type");
                             return false;
                         }
                     }
@@ -77,11 +77,11 @@ namespace CombatPlus.Common
             catch (Exception e)
             {
                 cData = default(ConfigData<X>);
-                Logging.PublicLogger.Error("Tried to convert CombatPlus config data to incompatible type", e);
+                Logging.PublicLogger.Error("Tried to convert OtherworldMod config data to incompatible type", e);
                 return false;
             }
             cData = default(ConfigData<X>);
-            Logging.PublicLogger.Error("Tried to convert CombatPlus config data to incompatible type");
+            Logging.PublicLogger.Error("Tried to convert OtherworldMod config data to incompatible type");
             return false;
         }
 

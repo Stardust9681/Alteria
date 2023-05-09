@@ -9,14 +9,14 @@ using System;
 using Microsoft.Xna.Framework.Graphics;
 using System.ComponentModel;
 using System.Reflection;
-using CombatPlus.Common;
+using OtherworldMod.Common;
 using Terraria.Enums;
-using CombatPlus.Common.ChangeNPC;
-using static CombatPlus.Common.ChangeNPC.Utilities.OtherworldNPCSets;
+using OtherworldMod.Common.ChangeNPC;
+using static OtherworldMod.Common.ChangeNPC.Utilities.OtherworldNPCSets;
 
-namespace CombatPlus
+namespace OtherworldMod
 {
-    public class CombatPlus : Mod
+    public class OtherworldMod : Mod
     {
         //Tuple as (Requirement{Mod,value,Reason},value)
         //Set as value
@@ -31,7 +31,7 @@ namespace CombatPlus
         public ConfigData<bool> UseStyleAlts;
         #endregion
 
-        public static CombatPlus Instance { get; private set; }
+        public static OtherworldMod Instance { get; private set; }
         public override void Load()
         {
             Instance = this;
@@ -180,7 +180,7 @@ namespace CombatPlus
                 if (KVPairs[i].key.Equals(name))
                     return KVPairs[i].key;
             }
-            Logging.PublicLogger.Warn($"[CombatPlus] Could not find config \"{name}\" from {caller.Name}'s request.");
+            Logging.PublicLogger.Warn($"[OtherworldMod] Could not find config \"{name}\" from {caller.Name}'s request.");
             return null;
 
             /*
@@ -195,7 +195,7 @@ namespace CombatPlus
                 string key = keys[i].ToLower();
                 if (key.Equals(name))
                 {
-                    Terraria.ModLoader.Logging.PublicLogger.Debug($"[CombatPlus]: Incorrect config key capitalisation, using fallback, '{key}.'");
+                    Terraria.ModLoader.Logging.PublicLogger.Debug($"[OtherworldMod]: Incorrect config key capitalisation, using fallback, '{key}.'");
                     return AllConfig[keys[i]];
                 }
                 if (key.Contains(name))
@@ -203,10 +203,10 @@ namespace CombatPlus
             }
             if (!maybeKey.Equals(""))
             {
-                Terraria.ModLoader.Logging.PublicLogger.Warn($"[CombatPlus] Warning from <{caller.Name}>: Could not find config key, name, or index, '{name},' using closest match.");
+                Terraria.ModLoader.Logging.PublicLogger.Warn($"[OtherworldMod] Warning from <{caller.Name}>: Could not find config key, name, or index, '{name},' using closest match.");
                 return AllConfig[maybeKey];
             }
-            Terraria.ModLoader.Logging.PublicLogger.Error($"[CombatPlus] Warning from <{caller.Name}>: Could not find config key, name, or index, '{name}.' No match found.");
+            Terraria.ModLoader.Logging.PublicLogger.Error($"[OtherworldMod] Warning from <{caller.Name}>: Could not find config key, name, or index, '{name}.' No match found.");
             return null;
             */
         }
@@ -234,11 +234,11 @@ namespace CombatPlus
 
         public override void OnChanged()
         {
-            if (CombatPlus.Instance != null)
+            if (OtherworldMod.Instance != null)
             {
-                CombatPlus.Instance.NPCGrief.value = enemyGrief;
-                CombatPlus.Instance.DSTXOver.value = dst;
-                CombatPlus.Instance.ItemBalance.value = itemBalance;
+                OtherworldMod.Instance.NPCGrief.value = enemyGrief;
+                OtherworldMod.Instance.DSTXOver.value = dst;
+                OtherworldMod.Instance.ItemBalance.value = itemBalance;
             }
         }
         public override bool AcceptClientChanges(ModConfig pendingConfig, int whoAmI, ref string message)
@@ -263,12 +263,12 @@ namespace CombatPlus
         public bool altUsestyles;
         public override void OnChanged()
         {
-            if(CombatPlus.Instance!=null)
-                CombatPlus.Instance.UseStyleAlts.value = altUsestyles;
+            if(OtherworldMod.Instance!=null)
+                OtherworldMod.Instance.UseStyleAlts.value = altUsestyles;
         }
         public override bool NeedsReload(ModConfig pendingConfig)
         {
-            return CombatPlus.Instance.UseStyleAlts.value != AsThis(pendingConfig).altUsestyles;
+            return OtherworldMod.Instance.UseStyleAlts.value != AsThis(pendingConfig).altUsestyles;
         }
         public override bool AcceptClientChanges(ModConfig pendingConfig, int whoAmI, ref string message)
         {

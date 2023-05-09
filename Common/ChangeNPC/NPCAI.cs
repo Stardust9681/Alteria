@@ -6,9 +6,9 @@ using Terraria.ModLoader;
 using Terraria.ID;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using static CombatPlus.Core.Util.Utils;
+using static OtherworldMod.Core.Util.Utils;
 
-namespace CombatPlus.Common.ChangeNPC
+namespace OtherworldMod.Common.ChangeNPC
 {
 #nullable enable
     //Splitting GlobalX into partial X_Info files, moving to Common.ChangeX

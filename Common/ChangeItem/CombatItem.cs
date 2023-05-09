@@ -6,11 +6,11 @@ using Terraria.ModLoader;
 using Terraria.ID;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using CombatPlus.Common;
-using CombatPlus.Content;
-using CombatPlus.Common.ChangePlayer;
+using OtherworldMod.Common;
+using OtherworldMod.Content;
+using OtherworldMod.Common.ChangePlayer;
 
-namespace CombatPlus.Common.ChangeItem
+namespace OtherworldMod.Common.ChangeItem
 {
     public partial class CombatItem : GlobalItem
     {

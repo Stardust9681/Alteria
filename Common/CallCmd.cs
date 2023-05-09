@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace CombatPlus.Common
+namespace OtherworldMod.Common
 {
     public abstract class CallCmd : ModType
     {
