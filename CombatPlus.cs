@@ -11,6 +11,8 @@ using System.ComponentModel;
 using System.Reflection;
 using CombatPlus.Common;
 using Terraria.Enums;
+using CombatPlus.Common.ChangeNPC;
+using static CombatPlus.Common.ChangeNPC.Utilities.OtherworldNPCSets;
 
 namespace CombatPlus
 {
@@ -28,8 +30,8 @@ namespace CombatPlus
         #region Client-Side Config
         public ConfigData<bool> UseStyleAlts;
         #endregion
-        public static CombatPlus Instance { get; private set; }
 
+        public static CombatPlus Instance { get; private set; }
         public override void Load()
         {
             Instance = this;

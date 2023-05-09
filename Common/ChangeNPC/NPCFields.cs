@@ -7,6 +7,7 @@ using Terraria.ID;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using static CombatPlus.Core.Util.Utils;
+using static CombatPlus.Common.ChangeNPC.Utilities.OtherworldNPCSets;
 
 namespace CombatPlus.Common.ChangeNPC
 {
@@ -23,8 +24,6 @@ namespace CombatPlus.Common.ChangeNPC
         //Can be changed through AI
         public bool allowContactDmg = true;
 
-        //AI Related
-        public static AI[] Behaviours;
         //public bool npcTarget = true;
         public string? phase = "";
 

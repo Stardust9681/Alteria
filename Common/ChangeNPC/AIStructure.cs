@@ -11,14 +11,21 @@ using static CombatPlus.Core.Util.Utils;
 namespace CombatPlus.Common.ChangeNPC
 {
 #nullable enable
-    public class AI
+    public class AIStyle
     {
         Dictionary<string, AIPhase> phases;
         public readonly int ID;
-        public AI(int id)
+        public bool HasEntry
+        {
+            get;
+            private set;
+        } = false;
+        public AIStyle(int id)
         {
             phases = new Dictionary<string, AIPhase>();
-            Add((NPC npc, int timer) => { return phases.Keys.First(x => !string.IsNullOrEmpty(x)); }, "");
+            AIPhase p = new AIPhase();
+            p.Add((NPC npc, int timer) => { return phases.Keys.First(x => !string.IsNullOrEmpty(x)); });
+            phases.Add("", p);
             ID = id;
         }
         public void Add(AIPhase phase, string? key = null)
@@ -30,9 +37,17 @@ namespace CombatPlus.Common.ChangeNPC
         }
         public void Add(Func<NPC, int, string?> a, string? key = null)
         {
+            HasEntry = true;
             AIPhase p = new AIPhase();
             p.Add(a);
-            Add(p, key);
+            if (!phases.ContainsKey(key))
+            {
+                Add(p, key);
+            }
+            else
+            {
+                phases[key] = p;
+            }
         }
         public void ModifyPhase(string key, Func<NPC, int, string?> func)
         {
@@ -58,6 +73,11 @@ namespace CombatPlus.Common.ChangeNPC
             }
             timer++;
         }
+
+        internal void Unload()
+        {
+            phases.Clear();
+        }
     }
     public class AIPhase
     {
@@ -73,15 +93,16 @@ namespace CombatPlus.Common.ChangeNPC
         }
         public string? Update(NPC npc, int timer)
         {
+            string? key = null;
             foreach (Func<NPC, int, string?> func in aiActions)
             {
-                string? key = func.Invoke(npc, timer);
-                if (key != null)
+                string? test = func.Invoke(npc, timer);
+                if (test?.Equals(key) == false)
                 {
-                    return key;
+                    key = test;
                 }
             }
-            return null;
+            return key;
         }
     }
 #nullable disable
