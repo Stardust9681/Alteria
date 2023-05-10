@@ -58,27 +58,28 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
             int targetDir = npc.position.X > target.position.X ? -1 : 1;
             float appxDist = AppxDistanceToTarget(npc, npcTarget);
-            npc.rotation = npc.DirectionTo(target.position).ToRotation() - MathHelper.PiOver2;
-            Vector2 offset = Vector2.UnitX.RotatedBy(timer * MathHelper.Pi * .004135f);
-            Vector2 targetPos = target.Center + (offset * npc.damage * (npc.confused ? -5f : 5f));
-            Main.NewText((timer * MathHelper.Pi * .00334f) + " : " + (timer));
-            npc.velocity.X += (npc.position.X > targetPos.X) ? -.07f : .07f;
-            npc.velocity.Y += (npc.position.Y > targetPos.Y) ? -.07f : .07f;
+            Vector2 offset = npc.DirectionTo(target.position);
+            if (appxDist < npc.damage * 5f)
+                npc.velocity -= offset;
+            npc.rotation = offset.ToRotation() - MathHelper.PiOver2;
+            float rotation = (((timer * timer) * .001f) % MathHelper.PiOver2) + (3 * MathHelper.PiOver2);
+            //Main.NewText("1 : " + rotation * 180 / MathHelper.Pi);
+            offset = Vector2.UnitX.RotatedBy(rotation);
+            Vector2 targetPos = target.Center + (offset * npc.damage * (npc.confused ? -8f : 8f));
+            //Dust.NewDustDirect(targetPos, 1, 1, DustID.GemDiamond).velocity = Vector2.Zero;
+            npc.velocity.X += (npc.position.X > targetPos.X) ? -.06f : .06f;
+            npc.velocity.Y += (npc.position.Y > targetPos.Y) ? -.06f : .06f;
             if (MathF.Abs(npc.position.X - targetPos.X) < 64)
-                npc.velocity.X *= .98f;
+                npc.velocity.X *= .97f;
             if (MathF.Abs(npc.position.Y - targetPos.Y) < 64)
-                npc.velocity.Y *= .98f;
-            if (npc.collideX || npc.collideY)
-            {
-                if (targetDir > 0)
-                    return nameof(FlierMove1);
-                else
-                    return nameof(FlierMove2);
-            }
+                npc.velocity.Y *= .97f;
 
-            if (timer > 180 && appxDist < npc.damage * 5.4f)
+            if (targetDir < 0 && timer > 120)
+                return nameof(FlierMove2);
+
+            if (timer > 120 && appxDist < npc.damage * 9f && MathF.Abs(npc.position.X - target.position.X) < 96)
             {
-                npc.velocity *= .5f;
+                npc.velocity *= 0f;
                 return nameof(FlierAttack1);
             }
             return null;
@@ -92,25 +93,28 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
             int targetDir = npc.position.X > target.position.X ? -1 : 1;
             float appxDist = AppxDistanceToTarget(npc, npcTarget);
-            npc.rotation = npc.DirectionTo(target.position).ToRotation() - MathHelper.PiOver2;
-            Vector2 offset = Vector2.UnitX.RotatedBy(-timer * MathHelper.Pi * .004135f);
-            Vector2 targetPos = target.Center + (offset * npc.damage * (npc.confused ? -5f : 5f));
-            npc.velocity.X += (npc.position.X > targetPos.X) ? -.07f : .07f;
-            npc.velocity.Y += (npc.position.Y > targetPos.Y) ? -.07f : .07f;
+            Vector2 offset = npc.DirectionTo(target.position);
+            if (appxDist < npc.damage * 5f)
+                npc.velocity -= offset;
+            npc.rotation = offset.ToRotation() - MathHelper.PiOver2;
+            float rotation = (-(((timer*timer) * .001f) % MathHelper.PiOver2)) + (3 * MathHelper.PiOver2);
+            //Main.NewText("2 : " + rotation * 180 / MathHelper.Pi);
+            offset = Vector2.UnitX.RotatedBy(rotation);
+            Vector2 targetPos = target.Center + (offset * npc.damage * (npc.confused ? -8f : 8f));
+            //Dust.NewDustDirect(targetPos, 1, 1, DustID.GemDiamond).velocity = Vector2.Zero;
+            npc.velocity.X += (npc.position.X > targetPos.X) ? -.06f : .06f;
+            npc.velocity.Y += (npc.position.Y > targetPos.Y) ? -.06f : .06f;
             if (MathF.Abs(npc.position.X - targetPos.X) < 64)
-                npc.velocity.X *= .98f;
+                npc.velocity.X *= .97f;
             if (MathF.Abs(npc.position.Y - targetPos.Y) < 64)
-                npc.velocity.Y *= .98f;
-            if (npc.collideX || npc.collideY)
+                npc.velocity.Y *= .97f;
+
+            if (targetDir > 0 && timer > 120)
+                return nameof(FlierMove1);
+
+            if (timer > 120 && appxDist < npc.damage * 9f && MathF.Abs(npc.position.X - target.position.X) < 96)
             {
-                if (targetDir > 0)
-                    return nameof(FlierMove1);
-                else
-                    return nameof(FlierMove2);
-            }
-            if (timer > 180 && appxDist < npc.damage * 5.4f)
-            {
-                npc.velocity *= .5f;
+                npc.velocity *= 0f;
                 return nameof(FlierAttack1);
             }
             return null;
