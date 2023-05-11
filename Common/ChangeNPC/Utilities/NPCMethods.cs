@@ -47,6 +47,8 @@ namespace OtherworldMod.Common.ChangeNPC.Utilities
             Behaviours[type].Unload();
         }
 
+        //Need to set this to return either position, rect, or floatrect
+        //To account for invis and aggro
         /// <summary>
         /// 
         /// </summary>
@@ -116,6 +118,12 @@ namespace OtherworldMod.Common.ChangeNPC.Utilities
         {
             Entity target = isNPC ? Main.npc[npc.target] : Main.player[npc.target];
             return Math.Abs(npc.Center.X - target.Center.X) + Math.Abs(npc.Center.Y - target.Center.Y);
+        }
+
+        public static bool CanNPCShoot(NPC npc)
+        {
+            OtherworldNPC gNPC = npc.GetGlobalNPC<OtherworldNPC>();
+            return (gNPC.shootProj != null && gNPC.shootProj.Length > 0 && gNPC.shootProj[0] != 0);
         }
     }
 }
