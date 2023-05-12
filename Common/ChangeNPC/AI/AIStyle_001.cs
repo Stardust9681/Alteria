@@ -12,6 +12,7 @@ using static OtherworldMod.Common.ChangeNPC.Utilities.OtherworldNPCSets;
 
 namespace OtherworldMod.Common.ChangeNPC.AI
 {
+    //Slimes
     public class AIStyle_001
     {
         public static void Load()
@@ -121,7 +122,8 @@ namespace OtherworldMod.Common.ChangeNPC.AI
                     //Jump if timer has passed 80 ticks (1.33 sec)
                     if (timer >= 80 && timer < 85)
                     {
-                        npc.velocity = new Vector2(targetDir * 3.8f, -6.4f);
+                        float xVel = (-(1 / ((.75f * npc.defense) - .3f)) + 3f) * .667f + 1;
+                        npc.velocity = new Vector2(targetDir * xVel, -6.4f);
                         npc.position.Y -= 4f;
                     }
                     //Slime tried to jump, move to next jump phase
@@ -197,7 +199,8 @@ namespace OtherworldMod.Common.ChangeNPC.AI
                     }
                     if (timer >= 130 && timer < 135)
                     {
-                        npc.velocity = new Vector2(targetDir * 4.2f, -7.7f);
+                        float xVel = (-(1 / ((.75f * npc.defense) - .3f)) + 3f) * 1f + 1;
+                        npc.velocity = new Vector2(targetDir * xVel, -7.7f);
                         npc.position.Y -= 4f;
                     }
                     else if (timer >= 135)
@@ -265,7 +268,8 @@ namespace OtherworldMod.Common.ChangeNPC.AI
                     }
                     if (timer >= 180 && timer < 185)
                     {
-                        npc.velocity = new Vector2(targetDir * 4.6f, -9.2f);
+                        float xVel = (-(1 / ((.75f * npc.defense) - .3f)) + 3f) * 1.5f + 1;
+                        npc.velocity = new Vector2(targetDir * xVel, -9.2f);
                         npc.position.Y -= 4f;
                     }
                     else if (timer >= 185)
