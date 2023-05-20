@@ -45,9 +45,11 @@ Item Changes:
 - Worm Scarf adjusted from 17% DR -> 10% DR
 - Brain of Confusion adjusted from 16.67% dodge to 12% dodge
 - Black Belt adjusted from 10% dodge -> 15% dodge
+- Mana Flower and upgrades to be useful
 
 Buff Changes:
 - Effects are consistent when applied to NPCs and when applied to Player (see: Venom 30 dps against NPCs vs 15 dps against Players)
+    - Buffs can be applied to NPCs and Players also (eg, Shine only works on player)
 - Buffs with similar hardmode variants (On Fire, Frostburn, etc)
 - Venom changed to have -10 def effect, and adjusted to 10 dps
 - Ichor adjusted to -20 def effect
@@ -64,6 +66,7 @@ Mechanical Changes:
 - Early Temple (allow teleporter, RoD/RoH, actuator, etc, allow wire modification)
 - Dodge Functionality (dodges either WORK or they DON'T WORK, none of this halfsies bullshit -- making dodges work, but reducing times/chances)
 - Loadout Cooldown (seriously, swapping between them SHOULD NOT be completely free, NO, they aren't the same as just autopause because you don't sacrifice inventory slots)
+- Luck has a terrible system with arbitrary means of obtaining it and negligible effects
 
 Config [Default]:
 - Allow Enemy Grief (server-side, enemies with applicable AI can break or change tiles) [On]
@@ -80,3 +83,6 @@ API:
 - Require Config (specifies that a mod requires a specific config setting at a certain value, and will warn the user if they try to it, conflicts should be discussed between mod teams)
 - Change Config (allows other mods to change this mod's config based on conditions, abides by config requirements)
 - Read/Write Entity Data (other mods may add their content to this mod's entity database or information)
+- Add set(s) for...
+    Tile min pick power
+    

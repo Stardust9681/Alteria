@@ -8,13 +8,14 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using static OtherworldMod.Core.Util.Utils;
 
-namespace OtherworldMod.Common.ChangeNPC.Utilities
+namespace OtherworldMod.Common.ChangePlayer
 {
-    public static class OtherworldNPCSets
+    public static class PlayerMethods
     {
-        //AI Related
-        public static AIStyle[] Behaviours;
-
-        public static int[] KillCount;
+        public static float RollLuck(Player player)
+        {
+            float playerLuck = player.luck;
+            return Main.rand.NextFloat() * (1-playerLuck);
+        }
     }
 }

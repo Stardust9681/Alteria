@@ -8,16 +8,22 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using static OtherworldMod.Core.Util.Utils;
 using Terraria.DataStructures;
+using Terraria.Utilities;
 using static OtherworldMod.Common.ChangeNPC.Utilities.OtherworldNPCSets;
 using OtherworldMod.Common.ChangeNPC.AI;
 
 namespace OtherworldMod.Common.ChangeNPC
 {
+    //For Town NPCs:
+        //Vine or rope integration into AI?
     public partial class OtherworldNPC : GlobalNPC
     {
         public override bool InstancePerEntity => true;
-        
 
+        public override void ModifyNPCLoot(NPC npc, NPCLoot npcLoot)
+        {
+            base.ModifyNPCLoot(npc, npcLoot);
+        }
         public override void Load()
         {
             Behaviours = new AIStyle[NPCLoader.NPCCount];
