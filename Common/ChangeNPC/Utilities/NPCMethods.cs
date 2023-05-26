@@ -49,10 +49,11 @@ namespace OtherworldMod.Common.ChangeNPC.Utilities
 
         //Need to set this to return either position, rect, or floatrect
         //To account for invis and aggro
+
         /// <summary>
         /// </summary>
         /// <param name="npc"></param>
-        /// <returns></returns>True if NPC target, False if Player target
+        /// <returns>True if NPC target, False if Player target</returns>
         public static bool FindTarget(NPC npc, bool tileImportant = false)
         {
             bool isNPC = false;

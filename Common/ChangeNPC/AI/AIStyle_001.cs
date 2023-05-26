@@ -12,7 +12,9 @@ using static OtherworldMod.Common.ChangeNPC.Utilities.OtherworldNPCSets;
 
 namespace OtherworldMod.Common.ChangeNPC.AI
 {
-    //Slimes
+    /// <summary>
+    /// <see cref="NPCAIStyleID.Slime"/>
+    /// </summary>
     public class AIStyle_001
     {
         public static void Load()

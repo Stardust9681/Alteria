@@ -12,6 +12,9 @@ using static OtherworldMod.Common.ChangeNPC.Utilities.OtherworldNPCSets;
 
 namespace OtherworldMod.Common.ChangeNPC.AI
 {
+    /// <summary>
+    /// <see cref="NPCAIStyleID.DemonEye"/>
+    /// </summary>
     internal class AIStyle_002
     {
         public static void Load()

@@ -13,6 +13,9 @@ using static OtherworldMod.Common.ChangeNPC.Utilities.OtherworldNPCSets;
 
 namespace OtherworldMod.Common.ChangeNPC.AI
 {
+    /// <summary>
+    /// <see cref="NPCAIStyleID.EyeOfCthulhu"/>
+    /// </summary>
     public class AIStyle_004
     {
         public static void Load()

@@ -46,6 +46,7 @@ Item Changes:
 - Brain of Confusion adjusted from 16.67% dodge to 12% dodge
 - Black Belt adjusted from 10% dodge -> 15% dodge
 - Mana Flower and upgrades to be useful
+- Ore variants suck, adjust?
 
 Buff Changes:
 - Effects are consistent when applied to NPCs and when applied to Player (see: Venom 30 dps against NPCs vs 15 dps against Players)

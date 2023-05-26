@@ -128,18 +128,16 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
             npc.velocity *= .9f;
             //If timer is past a value, shoot projectile(s)
-            if (timer > 70)
+            if (timer%70 == 0)
             {
                 Projectile proj = Projectile.NewProjectileDirect(npc.GetSource_FromAI(), npc.Center, npc.DirectionTo(target.Center) * 8.4f, Main.rand.Next(gNPC.shootProj), npc.damage / 3, npc.knockBackResist * 2f, Main.myPlayer);
                 proj.friendly = npc.friendly;
                 proj.hostile = !npc.friendly;
 
                 float dist = AppxDistanceToTarget(npc, npcTarget);
-                //Determine if player is close enough to move to Shoot2
                 if (dist < 600)
                 {
-                    //Just rand, repeats this state some number of times, then moves to move state
-                    if (Main.rand.NextBool())
+                    if (timer < 210)
                         return nameof(BatAttack2);
                     else
                         return nameof(BatMove1);

@@ -129,5 +129,12 @@ namespace OtherworldMod.Common.ChangeNPC
             SetIgnoreWater(npc, NPCID.DevourerBody, true);
             SetIgnoreWater(npc, NPCID.DevourerTail, true);
         }
+
+
+
+        public static class Sets
+        {
+            public static byte[] RotationAI;
+        }
     }
 }

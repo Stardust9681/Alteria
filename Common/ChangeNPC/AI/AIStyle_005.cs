@@ -12,6 +12,9 @@ using static OtherworldMod.Common.ChangeNPC.Utilities.OtherworldNPCSets;
 
 namespace OtherworldMod.Common.ChangeNPC.AI
 {
+    /// <summary>
+    /// <see cref="NPCAIStyleID.Flying"/>
+    /// </summary>
     public class AIStyle_005
     {
         public static void Load()

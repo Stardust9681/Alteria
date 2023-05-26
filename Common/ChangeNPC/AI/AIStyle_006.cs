@@ -15,7 +15,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
     public class AIStyle_006
     {
         /// <summary>
-        /// <see cref="NPCAIStyleID"/>
+        /// <see cref="NPCAIStyleID.Worm"/>
         /// </summary>
         /// <param name="npc"></param>
         /// <param name="timer"></param>
