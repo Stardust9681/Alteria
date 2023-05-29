@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using static OtherworldMod.Core.Util.Utils;
 using static OtherworldMod.Common.ChangeNPC.Utilities.OtherworldNPCSets;
+using OtherworldMod.Common.ChangeNPC.Structure;
 
 namespace OtherworldMod.Common.ChangeNPC
 {
@@ -20,6 +21,7 @@ namespace OtherworldMod.Common.ChangeNPC
         public bool ignoreAIChanges;
         public bool ignoreWater;
         public bool ignoreTiles;
+        public RotateMode rotate;
 
         //Can be changed through AI
         public bool allowContactDmg = true;

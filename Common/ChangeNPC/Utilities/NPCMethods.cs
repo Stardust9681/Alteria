@@ -199,5 +199,7 @@ namespace OtherworldMod.Common.ChangeNPC.Utilities
             targetPos = npc.position + offset;
             return foundTarget;
         }
+
+        public static OtherworldNPC GetOwNPC(this NPC npc) => npc.GetGlobalNPC<OtherworldNPC>();
     }
 }
