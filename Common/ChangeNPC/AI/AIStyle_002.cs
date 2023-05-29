@@ -15,35 +15,15 @@ namespace OtherworldMod.Common.ChangeNPC.AI
     /// <summary>
     /// <see cref="NPCAIStyleID.DemonEye"/>
     /// </summary>
-    internal class AIStyle_002
+    internal class AIStyle_002 : AIStyleType
     {
-        public static void Load()
-        {
-            foreach (int i in new int[] { NPCID.DemonEye2, NPCID.PurpleEye2, NPCID.GreenEye2, NPCID.DialatedEye2, NPCID.SleepyEye2,
+        protected override int[] ApplicableNPCs => new int[] { NPCID.DemonEye2, NPCID.PurpleEye2, NPCID.GreenEye2, NPCID.DialatedEye2, NPCID.SleepyEye2,
                 NPCID.CataractEye2, NPCID.DemonEye, NPCID.TheHungryII, NPCID.WanderingEye, NPCID.PigronCorruption, NPCID.PigronHallow,
                 NPCID.PigronCrimson, NPCID.CataractEye, NPCID.SleepyEye, NPCID.DialatedEye, NPCID.GreenEye, NPCID.PurpleEye,
-                NPCID.DemonEyeOwl, NPCID.DemonEyeSpaceship })
-            {
-                if (i > 0 && i < Behaviours.Length)
-                {
-                    Behaviours[i].Add(EyeAttack1, nameof(EyeAttack1));
-                    Behaviours[i].Add(EyeAttack2, nameof(EyeAttack2));
-                    Behaviours[i].Add(EyeAttack3, nameof(EyeAttack3));
-                    Behaviours[i].Add(EyeWet, nameof(EyeWet));
-                    Behaviours[i].Add(EyeDaytime, nameof(EyeDaytime));
-                }
-            }
-        }
-        public void Unload()
+                NPCID.DemonEyeOwl, NPCID.DemonEyeSpaceship };
+        public override void Load()
         {
-            foreach (int i in new int[] { NPCID.DemonEye2, NPCID.PurpleEye2, NPCID.GreenEye2, NPCID.DialatedEye2, NPCID.SleepyEye2,
-                NPCID.CataractEye2, NPCID.DemonEye, NPCID.TheHungryII, NPCID.WanderingEye, NPCID.PigronCorruption, NPCID.PigronHallow,
-                NPCID.PigronCrimson, NPCID.CataractEye, NPCID.SleepyEye, NPCID.DialatedEye, NPCID.GreenEye, NPCID.PurpleEye,
-                NPCID.DemonEyeOwl, NPCID.DemonEyeSpaceship })
-            {
-                if (i > 0 && i < Behaviours.Length)
-                    UnloadAI(i);
-            }
+            AddAI(EyeAttack1, EyeAttack2, EyeAttack3, EyeWet, EyeDaytime);
         }
         static string? EyeDaytime(NPC npc, int timer)
         {

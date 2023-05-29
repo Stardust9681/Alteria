@@ -15,34 +15,10 @@ namespace OtherworldMod.Common.ChangeNPC.AI
     /// <summary>
     /// <see cref="NPCAIStyleID.Passive"/>
     /// </summary>
-    public class AIStyle_007
+    [Autoload(false)]
+    public abstract class AIStyle_007 : AIStyleType
     {
-        public static void Load()
-        {
-            foreach (int i in new int[] { NPCID.Merchant, NPCID.Nurse, NPCID.ArmsDealer, NPCID.Dryad, NPCID.Guide, NPCID.OldMan,
-                NPCID.Demolitionist, NPCID.Bunny, NPCID.Clothier, NPCID.GoblinTinkerer, NPCID.Wizard, NPCID.Mechanic, NPCID.SantaClaus,
-                NPCID.Penguin, NPCID.PenguinBlack, NPCID.Truffle, NPCID.Steampunker, NPCID.DyeTrader, NPCID.PartyGirl, NPCID.Cyborg,
-                NPCID.Painter, NPCID.WitchDoctor, NPCID.Pirate, NPCID.GoldfishWalker, NPCID.Squirrel, NPCID.Mouse, NPCID.BunnySlimed,
-                NPCID.BunnyXmas, NPCID.Stylist, NPCID.Frog, NPCID.Duck, NPCID.DuckWhite, NPCID.ScorpionBlack, NPCID.Scorpion,
-                NPCID.TravellingMerchant, NPCID.Angler, NPCID.TaxCollector, NPCID.GoldBunny, NPCID.GoldFrog, NPCID.GoldMouse,
-                NPCID.SkeletonMerchant, NPCID.SquirrelRed, NPCID.SquirrelGold, NPCID.PartyBunny, NPCID.DD2Bartender, NPCID.Golfer,
-                NPCID.GoldGoldfishWalker, NPCID.Seagull, NPCID.Grebe, NPCID.Rat, NPCID.ExplosiveBunny, NPCID.Turtle, NPCID.TurtleJungle, 
-               NPCID.SeaTurtle, NPCID.BestiaryGirl, NPCID.TownCat, NPCID.TownDog, NPCID.GemSquirrelAmethyst, NPCID.GemSquirrelTopaz,
-                NPCID.GemSquirrelSapphire, NPCID.GemSquirrelEmerald, NPCID.GemSquirrelRuby, NPCID.GemSquirrelDiamond,
-                NPCID.GemSquirrelAmber, NPCID.GemBunnyAmethyst, NPCID.GemBunnyTopaz, NPCID.GemBunnySapphire, NPCID.GemBunnyEmerald,
-                NPCID.GemBunnyRuby, NPCID.GemBunnyDiamond, NPCID.GemBunnyAmber, NPCID.TownBunny, NPCID.Princess })
-            {
-                Behaviours[i].Add(Walk, nameof(Walk));
-                Behaviours[i].Add(Jump, nameof(Jump));
-                Behaviours[i].Add(NoMove, nameof(NoMove));
-                Behaviours[i].Add(FindHome, nameof(FindHome));
-                Behaviours[i].Add(Walk, nameof(Swim));
-                Behaviours[i].Add(Walk, nameof(Fly));
-            }
-        }
-        public static void Unload()
-        {
-            foreach (int i in new int[] { NPCID.Merchant, NPCID.Nurse, NPCID.ArmsDealer, NPCID.Dryad, NPCID.Guide, NPCID.OldMan,
+        protected override int[] ApplicableNPCs => new int[] { NPCID.Merchant, NPCID.Nurse, NPCID.ArmsDealer, NPCID.Dryad, NPCID.Guide, NPCID.OldMan,
                 NPCID.Demolitionist, NPCID.Bunny, NPCID.Clothier, NPCID.GoblinTinkerer, NPCID.Wizard, NPCID.Mechanic, NPCID.SantaClaus,
                 NPCID.Penguin, NPCID.PenguinBlack, NPCID.Truffle, NPCID.Steampunker, NPCID.DyeTrader, NPCID.PartyGirl, NPCID.Cyborg,
                 NPCID.Painter, NPCID.WitchDoctor, NPCID.Pirate, NPCID.GoldfishWalker, NPCID.Squirrel, NPCID.Mouse, NPCID.BunnySlimed,
@@ -53,10 +29,10 @@ namespace OtherworldMod.Common.ChangeNPC.AI
                NPCID.SeaTurtle, NPCID.BestiaryGirl, NPCID.TownCat, NPCID.TownDog, NPCID.GemSquirrelAmethyst, NPCID.GemSquirrelTopaz,
                 NPCID.GemSquirrelSapphire, NPCID.GemSquirrelEmerald, NPCID.GemSquirrelRuby, NPCID.GemSquirrelDiamond,
                 NPCID.GemSquirrelAmber, NPCID.GemBunnyAmethyst, NPCID.GemBunnyTopaz, NPCID.GemBunnySapphire, NPCID.GemBunnyEmerald,
-                NPCID.GemBunnyRuby, NPCID.GemBunnyDiamond, NPCID.GemBunnyAmber, NPCID.TownBunny, NPCID.Princess })
-            {
-                Behaviours[i].Unload();
-            }
+                NPCID.GemBunnyRuby, NPCID.GemBunnyDiamond, NPCID.GemBunnyAmber, NPCID.TownBunny, NPCID.Princess };
+        public override void Load()
+        {
+            AddAI(Walk, Jump, NoMove, FindHome, Swim, Fly);
         }
         static string? PerformAttack(NPC npc, int timer)
         {

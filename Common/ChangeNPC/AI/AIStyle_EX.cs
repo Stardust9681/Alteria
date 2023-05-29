@@ -16,7 +16,8 @@ namespace OtherworldMod.Common.ChangeNPC.AI
     /// Sample AI Style methods under this API.
     /// Demonstrating different attack stages or steps, in addition to multi-phase cycles.
     /// </summary>
-    public class AIStyle_EX
+    [Autoload(false)]
+    public abstract class AIStyle_EX : AIStyleType
     {
         //TODO:
             //Phase1Move

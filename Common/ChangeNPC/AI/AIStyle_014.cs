@@ -12,31 +12,14 @@ using static OtherworldMod.Common.ChangeNPC.Utilities.OtherworldNPCSets;
 
 namespace OtherworldMod.Common.ChangeNPC.AI
 {
-    public class AIStyle_014
+    public class AIStyle_014 : AIStyleType
     {
-        public static void Load()
-        {
-            foreach (int i in new int[] { NPCID.Harpy, NPCID.CaveBat, NPCID.JungleBat, NPCID.Hellbat, NPCID.Demon, NPCID.VoodooDemon,
+        protected override int[] ApplicableNPCs => new int[] { NPCID.Harpy, NPCID.CaveBat, NPCID.JungleBat, NPCID.Hellbat, NPCID.Demon, NPCID.VoodooDemon,
                 NPCID.GiantBat, NPCID.Slimer, NPCID.IlluminantBat, NPCID.IceBat, NPCID.Lavabat, NPCID.GiantFlyingFox, NPCID.RedDevil,
-                NPCID.VampireBat, NPCID.FlyingSnake, NPCID.SporeBat, NPCID.QueenSlimeMinionPurple })
-            {
-                if (i > 0 && i < Behaviours.Length)
-                {
-                    Behaviours[i].Add(BatMove1, nameof(BatMove1));
-                    Behaviours[i].Add(BatAttack1, nameof(BatAttack1));
-                    Behaviours[i].Add(BatAttack2, nameof(BatAttack2));
-                }
-            }
-        }
-        public void Unload()
+                NPCID.VampireBat, NPCID.FlyingSnake, NPCID.SporeBat, NPCID.QueenSlimeMinionPurple };
+        public override void Load()
         {
-            foreach (int i in new int[] { NPCID.Harpy, NPCID.CaveBat, NPCID.JungleBat, NPCID.Hellbat, NPCID.Demon, NPCID.VoodooDemon,
-                NPCID.GiantBat, NPCID.Slimer, NPCID.IlluminantBat, NPCID.IceBat, NPCID.Lavabat, NPCID.GiantFlyingFox, NPCID.RedDevil,
-                NPCID.VampireBat, NPCID.FlyingSnake, NPCID.SporeBat, NPCID.QueenSlimeMinionPurple })
-            {
-                if (i > 0 && i < Behaviours.Length)
-                    UnloadAI(i);
-            }
+            AddAI(BatMove1, BatAttack1, BatAttack2);
         }
         static string? BatMove1(NPC npc, int timer)
         {

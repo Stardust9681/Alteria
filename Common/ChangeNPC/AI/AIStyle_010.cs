@@ -15,24 +15,12 @@ namespace OtherworldMod.Common.ChangeNPC.AI
     /// <summary>
     /// <see cref="NPCAIStyleID.CursedSkull"/>
     /// </summary>
-    public class AIStyle_010
+    public class AIStyle_010 : AIStyleType
     {
-        public static void Load()
+        protected override int[] ApplicableNPCs => new int[] { NPCID.CursedSkull, NPCID.GiantCursedSkull };
+        public override void Load()
         {
-            foreach (int i in new int[] { NPCID.CursedSkull, NPCID.GiantCursedSkull })
-            {
-                Behaviours[i].Add(RotateCW, nameof(RotateCW));
-                Behaviours[i].Add(RotateCCW, nameof(RotateCCW));
-                Behaviours[i].Add(Attack1, nameof(Attack1));
-                Behaviours[i].Add(Attack2, nameof(Attack2));
-            }
-        }
-        public static void Unload()
-        {
-            foreach (int i in new int[] { NPCID.CursedSkull, NPCID.GiantCursedSkull })
-            {
-                UnloadAI(i);
-            }
+            AddAI(RotateCW, RotateCCW, Attack1, Attack2);
         }
         const float t = 360;
         const float r = 360f/90f;

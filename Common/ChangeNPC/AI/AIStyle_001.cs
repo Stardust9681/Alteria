@@ -15,42 +15,18 @@ namespace OtherworldMod.Common.ChangeNPC.AI
     /// <summary>
     /// <see cref="NPCAIStyleID.Slime"/>
     /// </summary>
-    public class AIStyle_001
+    public class AIStyle_001 : AIStyleType
     {
-        public static void Load()
-        {
-            foreach (int i in new int[] { NPCID.BigCrimslime, NPCID.LittleCrimslime, NPCID.JungleSlime, NPCID.YellowSlime,
+        protected override int[] ApplicableNPCs => new int[] {new int[] { NPCID.BigCrimslime, NPCID.LittleCrimslime, NPCID.JungleSlime, NPCID.YellowSlime,
                 NPCID.RedSlime, NPCID.PurpleSlime, NPCID.BlackSlime, NPCID.BabySlime, NPCID.Pinky, NPCID.GreenSlime, NPCID.Slimer2,
                 NPCID.Slimeling, NPCID.BlueSlime, NPCID.MotherSlime, NPCID.LavaSlime, NPCID.DungeonSlime, NPCID.CorruptSlime,
                 NPCID.IlluminantSlime, NPCID.ToxicSludge, NPCID.IceSlime, NPCID.Crimslime, NPCID.SpikedIceSlime, NPCID.SpikedJungleSlime,
                 NPCID.UmbrellaSlime, NPCID.RainbowSlime, NPCID.SlimeMasked, NPCID.HoppinJack, NPCID.SlimeRibbonWhite,
                 NPCID.SlimeRibbonYellow, NPCID.SlimeRibbonGreen, NPCID.SlimeRibbonRed, NPCID.Grasshopper, NPCID.GoldGrasshopper,
-                NPCID.SlimeSpiked, NPCID.SandSlime, NPCID.QueenSlimeMinionBlue, NPCID.QueenSlimeMinionPink, NPCID.GoldenSlime })
-            {
-                if (i > 0 && i < Behaviours.Length)
-                {
-                    Behaviours[i].Add(SlimeJump1, nameof(SlimeJump1));
-                    Behaviours[i].Add(SlimeJump2, nameof(SlimeJump2));
-                    Behaviours[i].Add(SlimeJump3, nameof(SlimeJump3));
-                    Behaviours[i].Add(SlimeShoot1, nameof(SlimeShoot1));
-                    Behaviours[i].Add(SlimeShoot2, nameof(SlimeShoot2));
-                    Behaviours[i].Add(SlimeWet, nameof(SlimeWet));
-                }
-            }
-        }
-        public static void Unload()
+                NPCID.SlimeSpiked, NPCID.SandSlime, NPCID.QueenSlimeMinionBlue, NPCID.QueenSlimeMinionPink, NPCID.GoldenSlime };
+        public override void Load()
         {
-            foreach (int i in new int[] { NPCID.BigCrimslime, NPCID.LittleCrimslime, NPCID.JungleSlime, NPCID.YellowSlime,
-                NPCID.RedSlime, NPCID.PurpleSlime, NPCID.BlackSlime, NPCID.BabySlime, NPCID.Pinky, NPCID.GreenSlime, NPCID.Slimer2,
-                NPCID.Slimeling, NPCID.BlueSlime, NPCID.MotherSlime, NPCID.LavaSlime, NPCID.DungeonSlime, NPCID.CorruptSlime,
-                NPCID.IlluminantSlime, NPCID.ToxicSludge, NPCID.IceSlime, NPCID.Crimslime, NPCID.SpikedIceSlime, NPCID.SpikedJungleSlime,
-                NPCID.UmbrellaSlime, NPCID.RainbowSlime, NPCID.SlimeMasked, NPCID.HoppinJack, NPCID.SlimeRibbonWhite,
-                NPCID.SlimeRibbonYellow, NPCID.SlimeRibbonGreen, NPCID.SlimeRibbonRed, NPCID.Grasshopper, NPCID.GoldGrasshopper,
-                NPCID.SlimeSpiked, NPCID.SandSlime, NPCID.QueenSlimeMinionBlue, NPCID.QueenSlimeMinionPink, NPCID.GoldenSlime })
-            {
-                if (i > 0 && i < Behaviours.Length)
-                    UnloadAI(i);
-            }
+            AddAI(SlimeJump1, SlimeJump2, SlimeJump3, SlimeShoot1, SlimeShoot2, SlimeWet);
         }
         static string? SlimeWet(NPC npc, int timer)
         {

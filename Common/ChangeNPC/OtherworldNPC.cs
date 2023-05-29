@@ -26,15 +26,6 @@ namespace OtherworldMod.Common.ChangeNPC
         }
         public override void Load()
         {
-            Behaviours = new AIStyle[NPCLoader.NPCCount];
-            for (int i = 0; i < Behaviours.Length; i++)
-            {
-                Behaviours[i] = new AIStyle(i);
-            }
-
-            //ILoadable was throwing nullref, hooray.
-            //So now you get to see this garbage until I add loading system for the ai classes.
-            AIStyle_001.Load();
             AIStyle_002.Load();
             AIStyle_004.Load();
             AIStyle_005.Load();

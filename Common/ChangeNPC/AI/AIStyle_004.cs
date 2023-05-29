@@ -16,35 +16,12 @@ namespace OtherworldMod.Common.ChangeNPC.AI
     /// <summary>
     /// <see cref="NPCAIStyleID.EyeOfCthulhu"/>
     /// </summary>
-    public class AIStyle_004
+    public class AIStyle_004 : AIStyleType
     {
-        public static void Load()
+        protected override int[] ApplicableNPCs => new int[] { NPCID.EyeofCthulhu };
+        public override void Load()
         {
-            foreach (int i in new int[] { NPCID.EyeofCthulhu })
-            {
-                if (i > 0 && i < Behaviours.Length)
-                {
-                    Behaviours[i].Add(EOCMove1, nameof(EOCMove1));
-                    Behaviours[i].Add(EOCMove2, nameof(EOCMove2));
-                    Behaviours[i].Add(EOCMove3, nameof(EOCMove3));
-                    Behaviours[i].Add(EOCAttack1, nameof(EOCAttack1));
-                    Behaviours[i].Add(EOCAttack2, nameof(EOCAttack2));
-                    Behaviours[i].Add(EOCAttack3, nameof(EOCAttack3));
-                    Behaviours[i].Add(EOCAttack4, nameof(EOCAttack4));
-                    Behaviours[i].Add(EOCAttack5, nameof(EOCAttack5));
-                    Behaviours[i].Add(EOCPhase2, nameof(EOCPhase2));
-                    Behaviours[i].Add(EOCSpawn1, nameof(EOCSpawn1));
-                    Behaviours[i].Add(EOCSpawn2, nameof(EOCSpawn2));
-                }
-            }
-        }
-        public void Unload()
-        {
-            foreach (int i in new int[] { NPCID.EyeofCthulhu })
-            {
-                if (i > 0 && i < Behaviours.Length)
-                    UnloadAI(i);
-            }
+            AddAI(EOCMove1, EOCMove2, EOCMove3, EOCAttack1, EOCAttack2, EOCAttack3, EOCAttack4, EOCAttack5, EOCPhase2, EOCSpawn1, EOCSpawn2);
         }
         //Move above player
         static string? EOCMove1(NPC npc, int timer)

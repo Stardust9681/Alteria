@@ -12,17 +12,9 @@ using static OtherworldMod.Common.ChangeNPC.Utilities.OtherworldNPCSets;
 
 namespace OtherworldMod.Common.ChangeNPC.AI
 {
-    public class AIStyle_006
+    //Abstract -> No load
+    public abstract class AIStyle_006 : AIStyleType
     {
-        /// <summary>
-        /// <see cref="NPCAIStyleID.Worm"/>
-        /// </summary>
-        /// <param name="npc"></param>
-        /// <param name="timer"></param>
-        /// <returns></returns>
-        public string? Func1(NPC npc, int timer)
-        {
-            return null;
-        }
+
     }
 }

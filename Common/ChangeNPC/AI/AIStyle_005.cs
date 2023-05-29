@@ -15,42 +15,18 @@ namespace OtherworldMod.Common.ChangeNPC.AI
     /// <summary>
     /// <see cref="NPCAIStyleID.Flying"/>
     /// </summary>
-    public class AIStyle_005
+    public class AIStyle_005 : AIStyleType
     {
-        public static void Load()
-        {
-            foreach (int i in new int[] { NPCID.BigHornetStingy, NPCID.LittleHornetStingy, NPCID.BigHornetSpikey,
+        protected override int[] ApplicableNPCs => new int[] { NPCID.BigHornetStingy, NPCID.LittleHornetStingy, NPCID.BigHornetSpikey,
                 NPCID.LittleHornetSpikey, NPCID.BigHornetLeafy, NPCID.LittleHornetLeafy, NPCID.BigHornetHoney, NPCID.LittleHornetHoney,
                 NPCID.BigHornetFatty, NPCID.LittleHornetFatty, NPCID.BigCrimera, NPCID.LittleCrimera, NPCID.GiantMossHornet,
                 NPCID.BigMossHornet, NPCID.LittleMossHornet, NPCID.TinyMossHornet, NPCID.BigStinger, NPCID.LittleStinger, NPCID.BigEater,
                 NPCID.LittleEater, NPCID.ServantofCthulhu, NPCID.EaterofSouls, NPCID.MeteorHead, NPCID.Hornet, NPCID.Corruptor,
                 NPCID.Probe, NPCID.Crimera, NPCID.MossHornet, NPCID.Moth, NPCID.Bee, NPCID.BeeSmall, NPCID.HornetFatty,
-                NPCID.HornetHoney, NPCID.HornetLeafy, NPCID.HornetSpikey, NPCID.HornetStingy, NPCID.Parrot, NPCID.BloodSquid })
-            {
-                if (i > 0 && i < Behaviours.Length)
-                {
-                    Behaviours[i].Add(FlierMove1, nameof(FlierMove1));
-                    Behaviours[i].Add(FlierMove2, nameof(FlierMove2));
-                    Behaviours[i].Add(FlierAttack1, nameof(FlierAttack1));
-                    Behaviours[i].Add(FlierAttack2, nameof(FlierAttack2));
-                }
-            }
-        }
-        public static void Unload()
+                NPCID.HornetHoney, NPCID.HornetLeafy, NPCID.HornetSpikey, NPCID.HornetStingy, NPCID.Parrot, NPCID.BloodSquid };
+        public override void Load()
         {
-            foreach (int i in new int[] { NPCID.BigHornetStingy, NPCID.LittleHornetStingy, NPCID.BigHornetSpikey,
-                NPCID.LittleHornetSpikey, NPCID.BigHornetLeafy, NPCID.LittleHornetLeafy, NPCID.BigHornetHoney, NPCID.LittleHornetHoney,
-                NPCID.BigHornetFatty, NPCID.LittleHornetFatty, NPCID.BigCrimera, NPCID.LittleCrimera, NPCID.GiantMossHornet,
-                NPCID.BigMossHornet, NPCID.LittleMossHornet, NPCID.TinyMossHornet, NPCID.BigStinger, NPCID.LittleStinger, NPCID.BigEater,
-                NPCID.LittleEater, NPCID.ServantofCthulhu, NPCID.EaterofSouls, NPCID.MeteorHead, NPCID.Hornet, NPCID.Corruptor,
-                NPCID.Probe, NPCID.Crimera, NPCID.MossHornet, NPCID.Moth, NPCID.Bee, NPCID.BeeSmall, NPCID.HornetFatty,
-                NPCID.HornetHoney, NPCID.HornetLeafy, NPCID.HornetSpikey, NPCID.HornetStingy, NPCID.Parrot, NPCID.BloodSquid })
-            {
-                if (i > 0 && i < Behaviours.Length)
-                {
-                    Behaviours[i].Unload();
-                }
-            }
+            AddAI(FlierMove1, FlierMove2, FlierAttack1, FlierAttack2);
         }
 
         //cw circle around player
