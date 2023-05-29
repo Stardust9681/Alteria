@@ -31,9 +31,8 @@ namespace OtherworldMod.Common.ChangeNPC.AI
 
             npc.GetGlobalNPC<OtherworldNPC>().allowContactDmg = false;
 
-            bool npcTarget = FindTarget(npc);
-            Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
-            float dist = AppxDistanceToTarget(npc, npcTarget);
+            bool foundTarget = FindTarget(npc, out Vector2 targetPos);
+            float dist = AppxDistanceTo(npc, targetPos);
 
             if (dist > 800)
                 npc.velocity *= .86f;
@@ -42,7 +41,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             float tSq = t * t;
             float rotation = r * (timer - (xCubed / (3 * tSq)));
             rotation += (npc.whoAmI * 45);
-            Vector2 targetPos = target.Center + Vector2.UnitX.RotatedBy(MathHelper.ToRadians(rotation)) * npc.lifeMax * 2.5f;
+            targetPos += Vector2.UnitX.RotatedBy(MathHelper.ToRadians(rotation)) * npc.lifeMax * 2.5f;
 
             //npc.velocity.X = targetPos.X < npc.position.X ? -3f : 3f;
             //npc.velocity.Y = targetPos.Y < npc.position.Y ? -3f : 3f;
@@ -52,8 +51,8 @@ namespace OtherworldMod.Common.ChangeNPC.AI
                 npc.velocity *= .34f;
             //npc.position = targetPos;
 
-            npc.rotation = (target.Center - npc.Center).ToRotation();
-            npc.spriteDirection = target.position.X > npc.position.X ? -1 : 1;
+            npc.rotation = (targetPos - npc.Center).ToRotation();
+            npc.spriteDirection = targetPos.X > npc.position.X ? -1 : 1;
             if (npc.spriteDirection == 1)
                 npc.rotation += MathHelper.Pi;
 
@@ -66,9 +65,8 @@ namespace OtherworldMod.Common.ChangeNPC.AI
 
             npc.GetGlobalNPC<OtherworldNPC>().allowContactDmg = false;
 
-            bool npcTarget = FindTarget(npc);
-            Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
-            float dist = AppxDistanceToTarget(npc, npcTarget);
+            bool foundTarget = FindTarget(npc, out Vector2 targetPos);
+            float dist = AppxDistanceTo(npc, targetPos);
 
             if (dist > 800)
                 npc.velocity *= .86f;
@@ -77,7 +75,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             float tSq = t * t;
             float rotation = r * (timer - (xCubed / (3 * tSq)));
             rotation += (npc.whoAmI * 45);
-            Vector2 targetPos = target.Center - Vector2.UnitX.RotatedBy(-MathHelper.ToRadians(rotation)) * npc.lifeMax * 2.5f;
+            targetPos -= Vector2.UnitX.RotatedBy(-MathHelper.ToRadians(rotation)) * npc.lifeMax * 2.5f;
 
             //npc.velocity.X = targetPos.X < npc.position.X ? -3f : 3f;
             //npc.velocity.Y = targetPos.Y < npc.position.Y ? -3f : 3f;
@@ -87,8 +85,8 @@ namespace OtherworldMod.Common.ChangeNPC.AI
                 npc.velocity *= .34f;
             //npc.position = targetPos;
 
-            npc.rotation = (target.Center - npc.Center).ToRotation();
-            npc.spriteDirection = target.position.X > npc.position.X ? -1 : 1;
+            npc.rotation = (targetPos - npc.Center).ToRotation();
+            npc.spriteDirection = targetPos.X > npc.position.X ? -1 : 1;
             if (npc.spriteDirection == 1)
                 npc.rotation += MathHelper.Pi;
 
@@ -96,11 +94,9 @@ namespace OtherworldMod.Common.ChangeNPC.AI
         }
         public static string? Attack1(NPC npc, int timer)
         {
-            bool npcTarget = FindTarget(npc);
-            Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
-            float dist = AppxDistanceToTarget(npc, npcTarget);
+            bool foundTarget = FindTarget(npc, out Vector2 targetPos);
+            float dist = AppxDistanceTo(npc, targetPos);
 
-            Vector2 targetPos = target.Center;
             if (timer == 45)
                 npc.velocity = npc.DirectionTo(targetPos) * 8f;
             npc.GetGlobalNPC<OtherworldNPC>().allowContactDmg = npc.velocity.LengthSquared() > 4f;
@@ -111,20 +107,19 @@ namespace OtherworldMod.Common.ChangeNPC.AI
         }
         public static string? Attack2(NPC npc, int timer)
         {
-            bool npcTarget = FindTarget(npc);
-            Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
-            float dist = AppxDistanceToTarget(npc, npcTarget);
+            bool foundTarget = FindTarget(npc, out Vector2 targetPos);
+            float dist = AppxDistanceTo(npc, targetPos);
             npc.velocity *= .98f;
             if (timer > 180 || !CanNPCShoot(npc))
             {
-                if (target.direction > 0)
+                if (targetPos.X > npc.position.X)
                     return nameof(RotateCW);
                 else
                     return nameof(RotateCCW);
             }
             if ((timer+1) % 60 == 0)
             {
-                Projectile p = Projectile.NewProjectileDirect(npc.GetSource_FromAI(), npc.Center, npc.DirectionTo(target.Center) * 5f, Main.rand.Next(npc.GetGlobalNPC<OtherworldNPC>().shootProj), npc.damage / 5, 0, Main.myPlayer);
+                Projectile p = Projectile.NewProjectileDirect(npc.GetSource_FromAI(), npc.Center, npc.DirectionTo(targetPos) * 5f, Main.rand.Next(npc.GetGlobalNPC<OtherworldNPC>().shootProj), npc.damage / 5, 0, Main.myPlayer);
                 p.friendly = npc.friendly;
                 p.hostile = !npc.friendly;
             }

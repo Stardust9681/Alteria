@@ -17,7 +17,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
     /// </summary>
     public class AIStyle_001 : AIStyleType
     {
-        protected override int[] ApplicableNPCs => new int[] {new int[] { NPCID.BigCrimslime, NPCID.LittleCrimslime, NPCID.JungleSlime, NPCID.YellowSlime,
+        protected override int[] ApplicableNPCs => new int[] { NPCID.BigCrimslime, NPCID.LittleCrimslime, NPCID.JungleSlime, NPCID.YellowSlime,
                 NPCID.RedSlime, NPCID.PurpleSlime, NPCID.BlackSlime, NPCID.BabySlime, NPCID.Pinky, NPCID.GreenSlime, NPCID.Slimer2,
                 NPCID.Slimeling, NPCID.BlueSlime, NPCID.MotherSlime, NPCID.LavaSlime, NPCID.DungeonSlime, NPCID.CorruptSlime,
                 NPCID.IlluminantSlime, NPCID.ToxicSludge, NPCID.IceSlime, NPCID.Crimslime, NPCID.SpikedIceSlime, NPCID.SpikedJungleSlime,
@@ -38,10 +38,9 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             //Turn on hitbox, slimes causing contact damage in water is fine by me, and discourages exploits with water buckets
             npc.GetGlobalNPC<OtherworldNPC>().allowContactDmg = true;
             //Find a target, true if NPC found
-            bool npcTarget = FindTarget(npc);
-            Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
+            bool foundTarget = FindTarget(npc, out Vector2 targetPos);
             //Direction to target (account for confusion)
-            int targetDir = target.position.X < npc.position.X ? -1 : 1 * (npc.confused ? -1 : 1);
+            int targetDir = targetPos.X < npc.position.X ? -1 : 1 * (npc.confused ? -1 : 1);
             //Accelerate towards target until vel >= 6
             if (MathF.Abs(npc.velocity.X) < 6)
             {
@@ -65,10 +64,9 @@ namespace OtherworldMod.Common.ChangeNPC.AI
                 return nameof(SlimeWet);
             }
             //Find a target, true if NPC found
-            bool npcTarget = FindTarget(npc);
-            Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
+            bool foundTarget = FindTarget(npc, out Vector2 targetPos);
             //Direction to target (account for confusion)
-            int targetDir = target.position.X < npc.position.X ? -1 : 1 * (npc.confused ? -1 : 1);
+            int targetDir = targetPos.X < npc.position.X ? -1 : 1 * (npc.confused ? -1 : 1);
             if (npc.collideY)
             {
                 //If npc collided with tiles, moving downwards
@@ -84,7 +82,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
                     if (canShoot)
                     {
                         //Determine if NPC should move to shoot phase, and if so, which one.
-                        float dist = AppxDistanceToTarget(npc, npcTarget);
+                        float dist = AppxDistanceTo(npc, targetPos);
                         if (timer < 120)
                         {
                             if (dist < 600)
@@ -149,9 +147,8 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             {
                 return nameof(SlimeWet);
             }
-            bool npcTarget = FindTarget(npc);
-            Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
-            int targetDir = target.position.X < npc.position.X ? -1 : 1 * (npc.confused ? -1 : 1);
+            bool foundTarget = FindTarget(npc, out Vector2 targetPos);
+            int targetDir = targetPos.X < npc.position.X ? -1 : 1 * (npc.confused ? -1 : 1);
             if (npc.collideY)
             {
                 if (npc.velocity.Y > -.04f)
@@ -162,7 +159,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
                     bool canShoot = gNPC.shootProj != null && gNPC.shootProj.Length > 0 && gNPC.shootProj[0] != 0;
                     if (canShoot)
                     {
-                        float dist = AppxDistanceToTarget(npc, npcTarget);
+                        float dist = AppxDistanceTo(npc, targetPos);
                         if (timer < 150)
                         {
                             if (dist < 600)
@@ -218,9 +215,8 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             {
                 return nameof(SlimeWet);
             }
-            bool npcTarget = FindTarget(npc);
-            Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
-            int targetDir = target.position.X < npc.position.X ? -1 : 1 * (npc.confused ? -1 : 1);
+            bool foundTarget = FindTarget(npc, out Vector2 targetPos);
+            int targetDir = targetPos.X < npc.position.X ? -1 : 1 * (npc.confused ? -1 : 1);
             if (npc.collideY)
             {
                 if (npc.velocity.Y > -.04f)
@@ -231,7 +227,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
                     bool canShoot = gNPC.shootProj != null && gNPC.shootProj.Length > 0 && gNPC.shootProj[0] != 0;
                     if (canShoot)
                     {
-                        float dist = AppxDistanceToTarget(npc, npcTarget);
+                        float dist = AppxDistanceTo(npc, targetPos);
                         if (timer < 180)
                         {
                             if (dist < 600)
@@ -291,13 +287,12 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             //Disable contact damage
             npc.GetGlobalNPC<OtherworldNPC>().allowContactDmg = false;
             //Find a target
-            bool npcTarget = FindTarget(npc);
-            Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
-            float dist = AppxDistanceToTarget(npc, npcTarget);
+            bool foundTarget = FindTarget(npc, out Vector2 targetPos);
+            float dist = AppxDistanceTo(npc, targetPos);
             //If timer is past a value, shoot projectile(s)
             if (timer > 85)
             {
-                Projectile proj = Projectile.NewProjectileDirect(npc.GetSource_FromAI(), npc.Center, npc.DirectionTo(target.Center) * 6f, Main.rand.Next(npc.GetGlobalNPC<OtherworldNPC>().shootProj!), npc.damage / 2, npc.knockBackResist * 2f, Main.myPlayer);
+                Projectile proj = Projectile.NewProjectileDirect(npc.GetSource_FromAI(), npc.Center, npc.DirectionTo(targetPos) * 6f, Main.rand.Next(npc.GetGlobalNPC<OtherworldNPC>().shootProj!), npc.damage / 2, npc.knockBackResist * 2f, Main.myPlayer);
                 proj.friendly = npc.friendly;
                 proj.hostile = !npc.friendly;
 
@@ -326,9 +321,8 @@ namespace OtherworldMod.Common.ChangeNPC.AI
                 return nameof(SlimeWet);
             }
             npc.GetGlobalNPC<OtherworldNPC>().allowContactDmg = false;
-            bool npcTarget = FindTarget(npc);
-            Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
-            float dist = AppxDistanceToTarget(npc, npcTarget);
+            bool foundTarget = FindTarget(npc, out Vector2 targetPos);
+            float dist = AppxDistanceTo(npc, targetPos);
             if (timer > 170)
             {
                 for (int i = 0; i < 4; i++)

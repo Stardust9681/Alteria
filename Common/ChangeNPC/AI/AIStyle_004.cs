@@ -32,17 +32,15 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             }
             Vector2 npcCenter = npc.Center;
             OtherworldNPC gNPC = npc.GetGlobalNPC<OtherworldNPC>();
-            bool npcTarget = FindTarget(npc);
-            Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
-            Vector2 targetCenter = target.Center;
-            int targetDir = targetCenter.X < npcCenter.X ? -1 : 1 * (npc.confused ? -1 : 1);
+            bool foundTarget = FindTarget(npc, out Vector2 targetPos);
+            int targetDir = targetPos.X < npcCenter.X ? -1 : 1 * (npc.confused ? -1 : 1);
             gNPC.allowContactDmg = false;
-            npc.rotation = (targetCenter - npcCenter).ToRotation() - MathHelper.PiOver2;
-            Vector2 targetPos = targetCenter + new Vector2(0, -192);
+            npc.rotation = (targetPos - npcCenter).ToRotation() - MathHelper.PiOver2;
+            targetPos = targetPos + new Vector2(0, -192);
             npc.velocity.X += targetDir * .07f;
             bool xReady = false;
             bool yReady = false;
-            if (MathF.Abs(targetCenter.X - npcCenter.X) < 160)
+            if (MathF.Abs(targetPos.X - npcCenter.X) < 160)
             {
                 npc.velocity.X *= .943f;
                 xReady = true;
@@ -76,13 +74,12 @@ namespace OtherworldMod.Common.ChangeNPC.AI
                 return nameof(EOCPhase2);
             }
             OtherworldNPC gNPC = npc.GetGlobalNPC<OtherworldNPC>();
-            bool npcTarget = FindTarget(npc);
-            Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
-            int targetDir = target.Center.X < npc.Center.X ? -1 : 1 * (npc.confused ? -1 : 1);
+            bool foundtarget = FindTarget(npc, out Vector2 targetPos);
+            int targetDir = targetPos.X < npc.Center.X ? -1 : 1 * (npc.confused ? -1 : 1);
             gNPC.allowContactDmg = timer > 30;
             if (timer < 6)
             {
-                Vector2 targetPos = target.Center + new Vector2(0, Main.rand.NextFloat(-4f, 4f));
+                targetPos = targetPos + new Vector2(0, Main.rand.NextFloat(-4f, 4f));
                 npc.rotation = Utils.AngleLerp(npc.rotation, (targetPos - npc.Center).ToRotation() - MathHelper.PiOver2, .75f);
             }
             if (timer == 30)
@@ -94,7 +91,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
                 if (timer > 30 && npc.velocity.LengthSquared() < 16)
                 {
                     npc.velocity *= .5f;
-                    float dist = AppxDistanceToTarget(npc, npcTarget);
+                    float dist = AppxDistanceTo(npc, targetPos);
                     if (dist < 250)
                         return nameof(EOCSpawn1);
                     if (dist > 250 && dist < 400)
@@ -124,13 +121,12 @@ namespace OtherworldMod.Common.ChangeNPC.AI
                 return nameof(EOCPhase2);
             }
             OtherworldNPC gNPC = npc.GetGlobalNPC<OtherworldNPC>();
-            bool npcTarget = FindTarget(npc);
-            Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
-            int targetDir = target.Center.X < npc.Center.X ? -1 : 1 * (npc.confused ? -1 : 1);
+            bool foundTarget = FindTarget(npc, out Vector2 targetPos);
+            int targetDir = targetPos.X < npc.Center.X ? -1 : 1 * (npc.confused ? -1 : 1);
             gNPC.allowContactDmg = timer > 45;
             if (timer < 8)
             {
-                Vector2 targetPos = target.Center + new Vector2(0, Main.rand.NextFloat(-8f, 8f));
+                targetPos = targetPos + new Vector2(0, Main.rand.NextFloat(-8f, 8f));
                 npc.rotation = Utils.AngleLerp(npc.rotation, (targetPos - npc.Center).ToRotation() - MathHelper.PiOver2, .65f);
             }
             if (timer == 45)
@@ -142,7 +138,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
                 if (timer > 45 && npc.velocity.LengthSquared() < 20)
                 {
                     npc.velocity *= .5f;
-                    float dist = AppxDistanceToTarget(npc, npcTarget);
+                    float dist = AppxDistanceTo(npc, targetPos);
                     if (dist < 250)
                         return nameof(EOCSpawn1);
                     if (dist > 250 && dist < 400)
@@ -172,13 +168,12 @@ namespace OtherworldMod.Common.ChangeNPC.AI
                 return nameof(EOCPhase2);
             }
             OtherworldNPC gNPC = npc.GetGlobalNPC<OtherworldNPC>();
-            bool npcTarget = FindTarget(npc);
-            Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
-            int targetDir = target.Center.X < npc.Center.X ? -1 : 1 * (npc.confused ? -1 : 1);
+            bool foundTarget = FindTarget(npc, out Vector2 targetPos);
+            int targetDir = targetPos.X < npc.Center.X ? -1 : 1 * (npc.confused ? -1 : 1);
             gNPC.allowContactDmg = timer > 65;
             if (timer < 12)
             {
-                Vector2 targetPos = target.Center + new Vector2(0, Main.rand.NextFloat(-16f, 16f));
+                targetPos = targetPos + new Vector2(0, Main.rand.NextFloat(-16f, 16f));
                 npc.rotation = Utils.AngleLerp(npc.rotation, (targetPos - npc.Center).ToRotation() - MathHelper.PiOver2, .55f);
             }
             if (timer == 65)
@@ -190,7 +185,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
                 if (timer > 65 && npc.velocity.LengthSquared() < 25)
                 {
                     npc.velocity *= .5f;
-                    float dist = AppxDistanceToTarget(npc, npcTarget);
+                    float dist = AppxDistanceTo(npc, targetPos);
                     if (dist < 250)
                         return nameof(EOCSpawn1);
                     if (dist > 250 && dist < 300)
@@ -212,15 +207,14 @@ namespace OtherworldMod.Common.ChangeNPC.AI
         static string? EOCSpawn1(NPC npc, int timer)
         {
             OtherworldNPC gNPC = npc.GetGlobalNPC<OtherworldNPC>();
-            bool npcTarget = FindTarget(npc);
-            Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
-            int targetDir = target.Center.X < npc.Center.X ? -1 : 1 * (npc.confused ? -1 : 1);
+            bool foundTarget = FindTarget(npc, out Vector2 targetPos);
+            int targetDir = targetPos.X < npc.Center.X ? -1 : 1 * (npc.confused ? -1 : 1);
             gNPC.allowContactDmg = false;
             if (gNPC.spawnNPC == null || gNPC.spawnNPC.Length == 0 || gNPC.spawnNPC[0] == 0)
             {
                 return nameof(EOCMove1);
             }
-            npc.rotation = Utils.AngleLerp(npc.rotation, (target.Center - npc.Center).ToRotation() - MathHelper.PiOver2, .1f);
+            npc.rotation = Utils.AngleLerp(npc.rotation, (targetPos - npc.Center).ToRotation() - MathHelper.PiOver2, .1f);
             npc.velocity *= .9f;
             if (timer % 30 == 0)
             {
@@ -247,9 +241,8 @@ namespace OtherworldMod.Common.ChangeNPC.AI
         static string? EOCPhase2(NPC npc, int timer)
         {
             OtherworldNPC gNPC = npc.GetGlobalNPC<OtherworldNPC>();
-            bool npcTarget = FindTarget(npc);
-            Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
-            int targetDir = target.Center.X < npc.Center.X ? -1 : 1 * (npc.confused ? -1 : 1);
+            bool foundTarget = FindTarget(npc, out Vector2 targetPos);
+            int targetDir = targetPos.X < npc.Center.X ? -1 : 1 * (npc.confused ? -1 : 1);
             gNPC.allowContactDmg = false;
             npc.velocity *= .99f;
             npc.rotation = ((MathHelper.Pi * MathF.Sin(MathHelper.Pi * timer * .125f)) / 6);
@@ -278,17 +271,15 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             }
             Vector2 npcCenter = npc.Center;
             OtherworldNPC gNPC = npc.GetGlobalNPC<OtherworldNPC>();
-            bool npcTarget = FindTarget(npc);
-            Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
-            Vector2 targetCenter = target.Center;
-            int targetDir = targetCenter.X < npcCenter.X ? -1 : 1 * (npc.confused ? -1 : 1);
+            bool foundTarget = FindTarget(npc, out Vector2 targetPos);
+            int targetDir = targetPos.X < npcCenter.X ? -1 : 1 * (npc.confused ? -1 : 1);
             gNPC.allowContactDmg = false;
-            npc.rotation = (targetCenter - npcCenter).ToRotation() - MathHelper.PiOver2;
-            Vector2 targetPos = targetCenter + new Vector2(0, -160);
+            npc.rotation = (targetPos - npcCenter).ToRotation() - MathHelper.PiOver2;
+            targetPos = targetPos + new Vector2(0, -160);
             npc.velocity.X += targetDir * .1f;
             bool xReady = false;
             bool yReady = false;
-            if (MathF.Abs(targetCenter.X - npcCenter.X) < 144)
+            if (MathF.Abs(targetPos.X - npcCenter.X) < 144)
             {
                 npc.velocity.X *= .92f;
                 xReady = true;
@@ -314,9 +305,8 @@ namespace OtherworldMod.Common.ChangeNPC.AI
                 return nameof(EOCMove3);
             }
             OtherworldNPC gNPC = npc.GetGlobalNPC<OtherworldNPC>();
-            bool npcTarget = FindTarget(npc);
-            Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
-            int targetDir = target.Center.X < npc.Center.X ? -1 : 1 * (npc.confused ? -1 : 1);
+            bool foundTarget = FindTarget(npc, out Vector2 targetPos);
+            int targetDir = targetPos.X < npc.Center.X ? -1 : 1 * (npc.confused ? -1 : 1);
             gNPC.allowContactDmg = timer > 90;
             if (timer == 90)
             {
@@ -327,7 +317,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             {
                 if (timer < 90)
                 {
-                    npc.rotation = Utils.AngleLerp(npc.rotation, (target.Center - npc.Center).ToRotation() - MathHelper.PiOver2, .1f);
+                    npc.rotation = Utils.AngleLerp(npc.rotation, (targetPos - npc.Center).ToRotation() - MathHelper.PiOver2, .1f);
                 }
                 else if (npc.velocity.LengthSquared() < 20)
                 {
@@ -353,13 +343,12 @@ namespace OtherworldMod.Common.ChangeNPC.AI
         static string? EOCAttack5(NPC npc, int timer)
         {
             OtherworldNPC gNPC = npc.GetGlobalNPC<OtherworldNPC>();
-            bool npcTarget = FindTarget(npc);
-            Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
-            int targetDir = target.Center.X < npc.Center.X ? -1 : 1 * (npc.confused ? -1 : 1);
+            bool foundTarget = FindTarget(npc, out Vector2 targetPos);
+            int targetDir = targetPos.X < npc.Center.X ? -1 : 1 * (npc.confused ? -1 : 1);
             float healthFactor = ((float)npc.life / (float)npc.lifeMax);
             if (timer < 5)
             {
-                Vector2 targetPos = target.Center + new Vector2(Main.rand.NextFloat(-128f, 128f) * (1 - (2 * healthFactor)), Main.rand.NextFloat(-256f, 256f) * (1 - (2 * healthFactor)));
+                targetPos = targetPos + new Vector2(Main.rand.NextFloat(-128f, 128f) * (1 - (2 * healthFactor)), Main.rand.NextFloat(-256f, 256f) * (1 - (2 * healthFactor)));
                 npc.rotation = Utils.AngleLerp(npc.rotation, (targetPos - npc.Center).ToRotation() - MathHelper.PiOver2, MathHelper.Clamp((1 - (healthFactor)) * .8f, 0, 1));
             }
             int pauseDur = (int)MathHelper.Lerp(5, 30, healthFactor * 2f);
@@ -374,7 +363,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
                 if (timer > pauseDur && npc.velocity.LengthSquared() < velMult * 2f)
                 {
                     npc.velocity *= .5f;
-                    if (AppxDistanceToTarget(npc, npcTarget) < 125)
+                    if (AppxDistanceTo(npc, targetPos) < 125)
                         return nameof(EOCMove2);
                     if (Main.expertMode || Main.masterMode)
                     {
@@ -399,15 +388,14 @@ namespace OtherworldMod.Common.ChangeNPC.AI
         static string? EOCSpawn2(NPC npc, int timer)
         {
             OtherworldNPC gNPC = npc.GetGlobalNPC<OtherworldNPC>();
-            bool npcTarget = FindTarget(npc);
-            Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
-            int targetDir = target.Center.X < npc.Center.X ? -1 : 1 * (npc.confused ? -1 : 1);
+            bool foundTarget = FindTarget(npc, out Vector2 targetPos);
+            int targetDir = targetPos.X < npc.Center.X ? -1 : 1 * (npc.confused ? -1 : 1);
             gNPC.allowContactDmg = false;
             if (gNPC.spawnNPC == null || gNPC.spawnNPC.Length == 0 || gNPC.spawnNPC[0] == 0)
             {
                 return nameof(EOCMove2);
             }
-            npc.rotation = Utils.AngleLerp(npc.rotation, (target.Center - npc.Center).ToRotation() - MathHelper.PiOver2, .1f);
+            npc.rotation = Utils.AngleLerp(npc.rotation, (targetPos - npc.Center).ToRotation() - MathHelper.PiOver2, .1f);
             npc.velocity *= .9f;
             int npcType = Main.rand.Next(gNPC.spawnNPC);
             if (NPC.CountNPCS(npcType) > 2 || timer > 90)

@@ -26,11 +26,6 @@ namespace OtherworldMod.Common.ChangeNPC
         }
         public override void Load()
         {
-            AIStyle_002.Load();
-            AIStyle_004.Load();
-            AIStyle_005.Load();
-            AIStyle_010.Load();
-            AIStyle_014.Load();
         }
         public override void SetDefaults(NPC npc)
         {

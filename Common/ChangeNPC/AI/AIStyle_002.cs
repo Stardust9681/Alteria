@@ -29,10 +29,9 @@ namespace OtherworldMod.Common.ChangeNPC.AI
         {
             npc.GetGlobalNPC<OtherworldNPC>().allowContactDmg = false;
             //Find target
-            bool npcTarget = FindTarget(npc);
-            Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
+            bool foundTarget = FindTarget(npc, out Vector2 targetPos);
             //Find target direction
-            Vector2 targetDir = npc.DirectionTo(target.position);
+            Vector2 targetDir = npc.DirectionTo(targetPos);
             //Change velocity to move away from target (account for confusion)
             npc.velocity -= targetDir * (npc.confused ? -.14f : .14f);
             //Never move on from this AI (I'm not all too concerned about it having weird behaviour when it cycles to nighttime again)
@@ -64,24 +63,23 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             {
                 return nameof(EyeWet);
             }
-            bool npcTarget = FindTarget(npc);
-            Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
-            float dist = AppxDistanceToTarget(npc, npcTarget);
+            bool foundTarget = FindTarget(npc, out Vector2 targetPos);
+            float dist = AppxDistanceTo(npc, targetPos);
             //If target is far enough, move to charge attack
             if (dist > 800)
             {
                 return nameof(EyeAttack2);
             }
-            int targetDir = target.position.X < npc.position.X ? -1 : 1 * (npc.confused ? -1 : 1);
+            int targetDir = targetPos.X < npc.position.X ? -1 : 1 * (npc.confused ? -1 : 1);
             npc.velocity.X += targetDir * .07f;
             int moveDir = npc.velocity.X < 0 ? -1 : 1;
             if (targetDir == moveDir)
             {
-                npc.velocity.Y = MathHelper.Lerp(npc.velocity.Y, ((npc.Center.Y - target.Center.Y) * (npc.confused ? -1 : 1)) * .008f, .05f);
+                npc.velocity.Y = MathHelper.Lerp(npc.velocity.Y, ((npc.Center.Y - targetPos.Y) * (npc.confused ? -1 : 1)) * .008f, .05f);
             }
             else
             {
-                npc.velocity.Y = MathHelper.Lerp(npc.velocity.Y, ((target.Center.Y - npc.Center.Y) * (npc.confused ? -1 : 1)) * .012f, .05f);
+                npc.velocity.Y = MathHelper.Lerp(npc.velocity.Y, ((targetPos.Y - npc.Center.Y) * (npc.confused ? -1 : 1)) * .012f, .05f);
             }
             npc.GetGlobalNPC<OtherworldNPC>().allowContactDmg = targetDir == moveDir && (MathF.Abs(npc.velocity.X) + MathF.Abs(npc.velocity.Y)) > 6.5f;
             if (npc.collideX)
@@ -109,14 +107,13 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             {
                 return nameof(EyeWet);
             }
-            bool npcTarget = FindTarget(npc);
-            Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
+            bool foundTarget = FindTarget(npc, out Vector2 targetPos);
             OtherworldNPC gNPC = npc.GetGlobalNPC<OtherworldNPC>();
             //Disable contact damage on ground
             gNPC.allowContactDmg = false;
             //Check if NPC can shoot projectiles
             bool canShoot = gNPC.shootProj != null && gNPC.shootProj.Length > 0 && gNPC.shootProj[0] != 0;
-            npc.velocity += npc.DirectionTo(target.position) * .5f;
+            npc.velocity += npc.DirectionTo(targetPos) * .5f;
             npc.velocity *= .9f;
             if (!canShoot || timer > 90)
             {
@@ -124,7 +121,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             }
             else if (timer != 0 && timer % 30 == 0)
             {
-                Vector2 vel = npc.DirectionTo(target.position).RotatedBy(MathHelper.ToRadians(((timer / 30) - 2) * 10)) * (npc.confused ? -5.4f : 5.4f);
+                Vector2 vel = npc.DirectionTo(targetPos).RotatedBy(MathHelper.ToRadians(((timer / 30) - 2) * 10)) * (npc.confused ? -5.4f : 5.4f);
                 Projectile proj = Projectile.NewProjectileDirect(npc.GetSource_FromAI(), npc.Center, vel, Main.rand.Next(gNPC.shootProj), npc.damage / 2, 0f, Main.myPlayer);
                 proj.friendly = npc.friendly;
                 proj.hostile = !npc.friendly;
@@ -143,8 +140,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
                 return nameof(EyeWet);
             }
             npc.GetGlobalNPC<OtherworldNPC>().allowContactDmg = false;
-            bool npcTarget = FindTarget(npc);
-            Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
+            bool foundTarget = FindTarget(npc, out Vector2 targetPos);
             if (npc.collideX)
             {
                 npc.velocity.X = -npc.oldVelocity.X;
@@ -167,13 +163,13 @@ namespace OtherworldMod.Common.ChangeNPC.AI
                 npc.GetGlobalNPC<OtherworldNPC>().allowContactDmg = true;
                 if (npc.velocity.LengthSquared() < 49f)
                 {
-                    npc.velocity += npc.DirectionTo(target.position).RotatedByRandom(.262f) * (npc.confused ? -.35f : .35f);
+                    npc.velocity += npc.DirectionTo(targetPos).RotatedByRandom(.262f) * (npc.confused ? -.35f : .35f);
                 }
                 else
                 {
                     npc.velocity *= .986f;
                 }
-                float dist = AppxDistanceToTarget(npc, npcTarget);
+                float dist = AppxDistanceTo(npc, targetPos);
                 if (dist < timer * 3f && timer > 270)
                 {
                     return nameof(EyeAttack1);
@@ -182,7 +178,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             }
             else
             {
-                npc.velocity += npc.DirectionTo(target.position) * (npc.confused ? -1 : 1);
+                npc.velocity += npc.DirectionTo(targetPos) * (npc.confused ? -1 : 1);
                 npc.velocity *= .15f;
                 npc.rotation = npc.velocity.ToRotation();
             }

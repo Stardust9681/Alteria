@@ -34,11 +34,10 @@ namespace OtherworldMod.Common.ChangeNPC.AI
         {
             npc.GetGlobalNPC<OtherworldNPC>().allowContactDmg = false;
             //Find target
-            bool npcTarget = FindTarget(npc);
-            Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
-            int targetDir = npc.position.X > target.position.X ? -1 : 1;
-            float appxDist = AppxDistanceToTarget(npc, npcTarget);
-            Vector2 offset = npc.DirectionTo(target.position);
+            bool foundTarget = FindTarget(npc, out Vector2 targetPos);
+            int targetDir = npc.position.X > targetPos.X ? -1 : 1;
+            float appxDist = AppxDistanceTo(npc, targetPos);
+            Vector2 offset = npc.DirectionTo(targetPos);
             if (appxDist < npc.damage * 6f)
                 npc.velocity -= new Vector2(offset.X, (offset.Y + 1) * .5f) * .3f;
             if (appxDist > npc.damage * 16f)
@@ -47,7 +46,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             float rotation = (((timer * timer) * .001f) % MathHelper.PiOver2) + (3 * MathHelper.PiOver2);
             //Main.NewText("1 : " + rotation * 180 / MathHelper.Pi);
             offset = Vector2.UnitX.RotatedBy(rotation);
-            Vector2 targetPos = target.Center + (offset * npc.damage * (npc.confused ? -8f : 8f));
+            targetPos = targetPos + (offset * npc.damage * (npc.confused ? -8f : 8f));
             //Dust.NewDustDirect(targetPos, 1, 1, DustID.GemDiamond).velocity = Vector2.Zero;
             npc.velocity.X += (npc.position.X > targetPos.X) ? -.06f : .06f;
             npc.velocity.Y += (npc.position.Y > targetPos.Y) ? -.06f : .06f;
@@ -59,7 +58,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             if (targetDir < 0 && timer > 120)
                 return nameof(FlierMove2);
 
-            if (timer > 120 && appxDist < npc.damage * 9f && MathF.Abs(npc.position.X - target.position.X) < 96)
+            if (timer > 120 && appxDist < npc.damage * 9f && MathF.Abs(npc.position.X - targetPos.X) < 96)
             {
                 npc.velocity *= 0f;
                 return nameof(FlierAttack2);
@@ -71,11 +70,10 @@ namespace OtherworldMod.Common.ChangeNPC.AI
         {
             npc.GetGlobalNPC<OtherworldNPC>().allowContactDmg = false;
             //Find target
-            bool npcTarget = FindTarget(npc);
-            Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
-            int targetDir = npc.position.X > target.position.X ? -1 : 1;
-            float appxDist = AppxDistanceToTarget(npc, npcTarget);
-            Vector2 offset = npc.DirectionTo(target.position);
+            bool foundTarger = FindTarget(npc, out Vector2 targetPos);
+            int targetDir = npc.position.X > targetPos.X ? -1 : 1;
+            float appxDist = AppxDistanceTo(npc, targetPos);
+            Vector2 offset = npc.DirectionTo(targetPos);
             if (appxDist < npc.damage * 6f)
                 npc.velocity -= new Vector2(offset.X, (offset.Y+1)*.5f) * .3f;
             if (appxDist > npc.damage * 16f)
@@ -84,7 +82,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             float rotation = (-(((timer*timer) * .001f) % MathHelper.PiOver2)) + (3 * MathHelper.PiOver2);
             //Main.NewText("2 : " + rotation * 180 / MathHelper.Pi);
             offset = Vector2.UnitX.RotatedBy(rotation);
-            Vector2 targetPos = target.Center + (offset * npc.damage * (npc.confused ? -8f : 8f));
+            targetPos = targetPos + (offset * npc.damage * (npc.confused ? -8f : 8f));
             //Dust.NewDustDirect(targetPos, 1, 1, DustID.GemDiamond).velocity = Vector2.Zero;
             npc.velocity.X += (npc.position.X > targetPos.X) ? -.06f : .06f;
             npc.velocity.Y += (npc.position.Y > targetPos.Y) ? -.06f : .06f;
@@ -96,7 +94,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             if (targetDir > 0 && timer > 120)
                 return nameof(FlierMove1);
 
-            if (timer > 120 && appxDist < npc.damage * 9f && MathF.Abs(npc.position.X - target.position.X) < 96)
+            if (timer > 120 && appxDist < npc.damage * 9f && MathF.Abs(npc.position.X - targetPos.X) < 96)
             {
                 return nameof(FlierAttack2);
             }
@@ -106,20 +104,19 @@ namespace OtherworldMod.Common.ChangeNPC.AI
         static string? FlierAttack1(NPC npc, int timer)
         {
             //Find target
-            bool npcTarget = FindTarget(npc);
-            Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
+            bool foundTarget = FindTarget(npc, out Vector2 targetPos);
             float lenSQ = npc.velocity.LengthSquared();
-            int targetDir = npc.position.X > target.position.X ? -1 : 1;
+            int targetDir = npc.position.X > targetPos.X ? -1 : 1;
             npc.GetGlobalNPC<OtherworldNPC>().allowContactDmg = lenSQ > 9f;
             if (timer < 20)
             {
-                Vector2 offset = npc.DirectionTo(target.Center);
+                Vector2 offset = npc.DirectionTo(targetPos);
                 npc.rotation = offset.ToRotation() - MathHelper.PiOver2;
                 npc.velocity = offset * MathF.Sin(timer * MathHelper.Pi * .167f) * 2.4f;
                 return null;
             }
             npc.velocity += Vector2.UnitX.RotatedBy(npc.rotation + MathHelper.PiOver2) * .28f;
-            float appxDist = AppxDistanceToTarget(npc, npcTarget);
+            float appxDist = AppxDistanceTo(npc, targetPos);
             if (npc.collideX || npc.collideY || timer > 180 || appxDist > 550)
             {
                 if (targetDir > 0)
@@ -137,8 +134,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
         static string? FlierAttack2(NPC npc, int timer)
         {
             //Find target
-            bool npcTarget = FindTarget(npc);
-            Entity target = npcTarget ? Main.npc[npc.target] : Main.player[npc.target];
+            bool foundTarget = FindTarget(npc, out Vector2 targetPos);
             if (timer < 30)
             {
                 npc.velocity *= .9f;
@@ -151,7 +147,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
                 }
                 if (timer % 60 == 0)
                 {
-                    Projectile p = Projectile.NewProjectileDirect(npc.GetSource_FromAI(), npc.Center, npc.DirectionTo(target.Center) * 5f, Main.rand.Next(npc.GetGlobalNPC<OtherworldNPC>().shootProj), npc.damage / 5, 0, Main.myPlayer);
+                    Projectile p = Projectile.NewProjectileDirect(npc.GetSource_FromAI(), npc.Center, npc.DirectionTo(targetPos) * 5f, Main.rand.Next(npc.GetGlobalNPC<OtherworldNPC>().shootProj), npc.damage / 5, 0, Main.myPlayer);
                     p.friendly = npc.friendly;
                     p.hostile = !npc.friendly;
                     if (timer > 120)
