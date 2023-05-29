@@ -1,29 +1,29 @@
 Configs: {
-    CombatClientConfig: {
-        DisplayName: Combat+ Mod Config (Client)
-    
-        altUsestyles: {
-            Label: Toggle Alternative Usestyles
-            Tooltip: ""
-        }
-    }
+	CombatClientConfig: {
+		DisplayName: Combat+ Mod Config (Client)
 
-    CombatServerConfig: {
-        DisplayName: Combat+ Mod Config (Server)
+		altUsestyles: {
+			Label: Toggle Alternative Usestyles
+			Tooltip: ""
+		}
+	}
 
-        enemyGrief: {
-            Label: Toggle Enemy Grief
-            Tooltip: ""
-        }
+	CombatServerConfig: {
+		DisplayName: Combat+ Mod Config (Server)
 
-        dst: {
-            Label: Toggle DST Crossover
-            Tooltip: ""
-        }
+		enemyGrief: {
+			Label: Toggle Enemy Grief
+			Tooltip: ""
+		}
 
-        itemBalance: {
-            Label: Toggle Item Balances
-            Tooltip: ""
-        }
-    }
+		dst: {
+			Label: Toggle DST Crossover
+			Tooltip: ""
+		}
+
+		itemBalance: {
+			Label: Toggle Item Balances
+			Tooltip: ""
+		}
+	}
 }

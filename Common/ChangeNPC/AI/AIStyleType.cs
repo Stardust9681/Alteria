@@ -22,6 +22,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
         {
             foreach (int i in ApplicableNPCs)
             {
+                if (i < 0) continue;
                 foreach(Func<NPC, int, string?> act in acts)
                     Behaviours[i].Add(act, act.Method.Name);
             }
@@ -35,6 +36,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
         {
             foreach (int i in ApplicableNPCs)
             {
+                if (i < 0) continue;
                 Behaviours[i].Unload();
             }
         }
