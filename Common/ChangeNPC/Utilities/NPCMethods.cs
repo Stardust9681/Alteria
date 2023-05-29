@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using static OtherworldMod.Core.Util.Utils;
 using static OtherworldMod.Common.ChangeNPC.Utilities.OtherworldNPCSets;
 using static OtherworldMod.Common.ChangeNPC.AI.AIStyle_001;
+using OtherworldMod.Common.ChangeNPC.Structure;
 
 namespace OtherworldMod.Common.ChangeNPC.Utilities
 {
@@ -54,6 +55,8 @@ namespace OtherworldMod.Common.ChangeNPC.Utilities
         /// </summary>
         /// <param name="npc"></param>
         /// <returns>True if NPC target, False if Player target</returns>
+        /// <remarks>Obsolete: Use <see cref="FindTarget(NPC, out Vector2, bool, TargetMode)"/> instead.</remarks>
+        [Obsolete]
         public static bool FindTarget(NPC npc, bool tileImportant = false)
         {
             bool isNPC = false;
@@ -107,23 +110,94 @@ namespace OtherworldMod.Common.ChangeNPC.Utilities
         /// </summary>
         /// <param name="npc"></param>
         /// <param name="isNPC"></param>
-        /// <returns></returns>
         public static float DistanceToTarget(NPC npc, bool isNPC = false)
         {
             Entity target = isNPC ? Main.npc[npc.target] : Main.player[npc.target];
             return Vector2.Distance(npc.position, target.position);
         }
 
+        /// <remarks>Obsolete: Use <see cref="AppxDistanceTo(NPC, Vector2)"/> instead.</remarks>
+        [Obsolete]
         public static float AppxDistanceToTarget(NPC npc, bool isNPC = false)
         {
             Entity target = isNPC ? Main.npc[npc.target] : Main.player[npc.target];
             return Math.Abs(npc.Center.X - target.Center.X) + Math.Abs(npc.Center.Y - target.Center.Y);
         }
 
+        public static float AppxDistanceTo(NPC npc, Vector2 pos)
+        {
+            return Math.Abs(npc.Center.X - pos.X) + Math.Abs(npc.Center.Y - pos.Y);
+        }
+
         public static bool CanNPCShoot(NPC npc)
         {
             OtherworldNPC gNPC = npc.GetGlobalNPC<OtherworldNPC>();
             return (gNPC.shootProj != null && gNPC.shootProj.Length > 0 && gNPC.shootProj[0] != 0);
+        }
+
+        //Returns false if no target is found.
+        public static bool FindTarget(NPC npc, out Vector2 targetPos, bool tileImportant = false, TargetMode mode = TargetMode.Default)
+        {
+            targetPos = npc.position;
+            if (mode == TargetMode.NoTarget)
+                return false;
+            float appxDist = float.MaxValue;
+            bool foundTarget = false;
+            if (mode.Equals(TargetMode.Default | TargetMode.PlayerOnly | TargetMode.Any | TargetMode.AnyIgnoreFriends) && mode!=TargetMode.NPCOnly)
+            {
+                for (int i = 0; i < Main.maxPlayers; i++)
+                {
+                    Player p = Main.player[i];
+                    if (!p.active || p.dead)
+                        continue;
+                    float testDist = AppxDistanceTo(npc, p.Center);
+                    if (testDist < appxDist)
+                    {
+                        foundTarget = true;
+                        if (!tileImportant)
+                        {
+                            appxDist = testDist;
+                            targetPos = p.Center;
+                        }
+                        else if(Collision.CanHitLine(npc.position, npc.width, npc.height, p.position, p.width, p.height))
+                        {
+                            appxDist = testDist;
+                            targetPos = p.Center;
+                        }
+                    }
+                }
+            }
+            if (mode.Equals(TargetMode.Default | TargetMode.NPCOnly | TargetMode.Any | TargetMode.AnyIgnoreFriends) && mode!=TargetMode.PlayerOnly)
+            {
+                for (int i = 0; i < Main.maxNPCs; i++)
+                {
+                    NPC n = Main.npc[i];
+                    if (!n.active)
+                        continue;
+                    if (npc.friendly == n.friendly && !mode.Equals(TargetMode.NPCOnly | TargetMode.AnyIgnoreFriends))
+                        continue;
+                    float testDist = AppxDistanceTo(npc, n.Center);
+                    if (testDist < appxDist)
+                    {
+                        foundTarget = true;
+                        if (!tileImportant)
+                        {
+                            appxDist = testDist;
+                            targetPos = n.Center;
+                        }
+                        else if (Collision.CanHitLine(npc.position, npc.width, npc.height, n.position, n.width, n.height))
+                        {
+                            appxDist = testDist;
+                            targetPos = n.Center;
+                        }
+                    }
+                }
+            }
+            Vector2 offset = targetPos - npc.position;
+            if (npc.confused)
+                offset *= -1;
+            targetPos = npc.position + offset;
+            return foundTarget;
         }
     }
 }
