@@ -59,6 +59,20 @@ namespace OtherworldMod.Common.ChangeNPC
                 return base.CanHitPlayer(npc, target, ref cooldownSlot);
             return false;
         }
+        public override bool CanBeHitByNPC(NPC npc, NPC attacker)
+        {
+            if (attacker.GetGlobalNPC<OtherworldNPC>().allowContactDmg)
+                if (npc.friendly != attacker.friendly) return true;
+                else return base.CanBeHitByNPC(npc, attacker);
+            return false;
+        }
+        public override bool CanHitNPC(NPC npc, NPC target)
+        {
+            if (allowContactDmg)
+                if (npc.friendly != target.friendly) return true;
+                else return base.CanHitNPC(npc, target);
+            return false;
+        }
         public override bool PreAI(NPC npc)
         {
             int timer = (int)npc.ai[0];

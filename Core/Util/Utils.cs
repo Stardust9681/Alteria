@@ -18,6 +18,14 @@ namespace OtherworldMod.Core.Util
         {
             return Projectile.NewProjectileDirect(src.GetSource_FromThis(), pos, vel, type, damage, kb, owner);
         }
+        public static int SpawnProj(this Entity src, Vector2 pos, Vector2 vel, int type, int damage, float kb = 0, int owner = 0)
+        {
+            return Projectile.NewProjectile(src.GetSource_FromThis(), pos, vel, type, damage, kb, owner);
+        }
+        public static Projectile SpawnProjDirect(this Entity src, Vector2 pos, Vector2 vel, int type, int damage, float kb = 0, int owner = 0)
+        {
+            return Projectile.NewProjectileDirect(src.GetSource_FromThis(), pos, vel, type, damage, kb, owner);
+        }
         public static T FirstOrDefault<T>(this T[] arr)
         {
             try
