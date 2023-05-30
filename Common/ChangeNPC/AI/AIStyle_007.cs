@@ -122,7 +122,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
                 return nameof(Jump);
             if (Main.rand.NextBool(360))
                 return nameof(NoMove);
-            npc.velocity.X = direction * 2f;
+            npc.velocity.X = direction;
             return null;
         }
         static string? NoMove(NPC npc, int timer)
