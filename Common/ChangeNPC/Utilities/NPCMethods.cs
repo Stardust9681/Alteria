@@ -143,7 +143,7 @@ namespace OtherworldMod.Common.ChangeNPC.Utilities
                 return false;
             float appxDist = float.MaxValue;
             bool foundTarget = false;
-            if (mode.Equals(TargetMode.Default | TargetMode.PlayerOnly | TargetMode.Any | TargetMode.AnyIgnoreFriends) && mode!=TargetMode.NPCOnly)
+            if ((mode & (TargetMode.Default | TargetMode.PlayerOnly | TargetMode.Any | TargetMode.AnyIgnoreFriends)) != TargetMode.NoTarget && (mode!=TargetMode.NPCOnly))
             {
                 for (int i = 0; i < Main.maxPlayers; i++)
                 {
@@ -167,7 +167,7 @@ namespace OtherworldMod.Common.ChangeNPC.Utilities
                     }
                 }
             }
-            if (mode.Equals(TargetMode.Default | TargetMode.NPCOnly | TargetMode.Any | TargetMode.AnyIgnoreFriends) && mode!=TargetMode.PlayerOnly)
+            if ((mode & (TargetMode.Default | TargetMode.NPCOnly | TargetMode.Any | TargetMode.AnyIgnoreFriends)) != TargetMode.NoTarget && (mode!=TargetMode.PlayerOnly))
             {
                 for (int i = 0; i < Main.maxNPCs; i++)
                 {

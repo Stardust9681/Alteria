@@ -32,8 +32,9 @@ namespace OtherworldMod.Common.ChangeNPC.AI
                 NPCID.GemBunnyRuby, NPCID.GemBunnyDiamond, NPCID.GemBunnyAmber, NPCID.TownBunny, NPCID.Princess };
         public override void Load()
         {
-            AddAI(Walk, Jump, NoMove, FindHome, Swim, Fly);
+            AddAI(Walk, Jump, NoMove, FindHome, Swim, Fly, PerformAttack);
         }
+        //Did you know this one is a pain to do? Emulating item use on NPCs is a pain in the ass, especially since *drawing* needs to be considered x.x
         static string? PerformAttack(NPC npc, int timer)
         {
             int type = NPCID.Sets.AttackType[npc.type];
@@ -44,6 +45,12 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             if (timer > time)
                 return nameof(NoMove);
 
+            npc.velocity.X = 0;
+
+            bool foundTarget = FindTarget(npc, out Vector2 targetPos);
+            if (!foundTarget)
+                return nameof(NoMove);
+
             int damage = npc.damage;
             float kb = npc.knockBackResist;
             NPCLoader.TownNPCAttackStrength(npc, ref damage, ref kb);
@@ -51,33 +58,48 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             int delay = time;
             float projSpeed = 0;
             float grav = 0;
-            float offsetY = 0;
+            float offset = 0;
             switch (type)
             {
-                case 0:
+                case 0: //Thrown
                     NPCLoader.TownNPCAttackProj(npc, ref projType, ref delay);
                     if (timer == delay)
                     {
-                        NPCLoader.TownNPCAttackProjSpeed(npc, ref projSpeed, ref grav, ref offsetY);
-                        
+                        NPCLoader.TownNPCAttackProjSpeed(npc, ref projSpeed, ref grav, ref offset);
+                        Projectile p = npc.SpawnProjDirect(npc.Center + new Vector2(Main.rand.NextFloat(offset), Main.rand.NextFloat(offset)), npc.DirectionTo(targetPos) * projSpeed, projType, damage, kb);
+                        p.friendly = npc.friendly; p.hostile = !npc.friendly;
+                        return nameof(Walk);
                     }
                     break;
-                case 1:
+                case 1: //Shoot
                     NPCLoader.TownNPCAttackProj(npc, ref projType, ref delay);
                     if (timer == delay)
                     {
-                        NPCLoader.TownNPCAttackProjSpeed(npc, ref projSpeed, ref grav, ref offsetY);
-
+                        NPCLoader.TownNPCAttackProjSpeed(npc, ref projSpeed, ref grav, ref offset);
+                        Projectile p = npc.SpawnProjDirect(npc.Center + new Vector2(Main.rand.NextFloat(offset), Main.rand.NextFloat(offset)), npc.DirectionTo(targetPos) * projSpeed, projType, damage, kb);
+                        p.friendly = npc.friendly; p.hostile = !npc.friendly;
+                        return nameof(Walk);
                     }
-                    else if(timer < delay)
+                    break;
+                case 2: //Magic
+                    NPCLoader.TownNPCAttackProj(npc, ref projType, ref delay);
+                    if (timer == delay)
+                    {
+                        NPCLoader.TownNPCAttackProjSpeed(npc, ref projSpeed, ref grav, ref offset);
+                        Projectile p = npc.SpawnProjDirect(npc.Center + new Vector2(Main.rand.NextFloat(offset), Main.rand.NextFloat(offset)), npc.DirectionTo(targetPos) * projSpeed, projType, damage, kb);
+                        p.friendly = npc.friendly; p.hostile = !npc.friendly;
+                        return nameof(Walk);
+                    }
+                    else if (timer < delay)
                     {
                         float intensity = 1f;
                         NPCLoader.TownNPCAttackMagic(npc, ref intensity);
                     }
                     break;
-                case 2:
-                    break;
-                case 3:
+                case 3: //Swing
+                    int iWidth = 0;
+                    int iHeight = 0;
+                    NPCLoader.TownNPCAttackSwing(npc, ref iWidth, ref iHeight);
                     break;
                 default:
                     break;

@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace OtherworldMod.Common.ChangeItem
 {
-    public partial class CombatItem : GlobalItem
+    public partial class OtherworldItem : GlobalItem
     {
         public static class CustomUseStyle
         {

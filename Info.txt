@@ -24,6 +24,8 @@ Other Ideas:
 - NPC data (flying, swiming, etc) + Mod.Call to add to data
 - Element system[?], weaknesses, resistances/strengths {Blood:Crimson, Curse:Corruption/Dungeon, Holy:Hallow, Ice:Tundra, Fire:Hell, Earth:Jungle/Caverns, Wind:Sky/Space}
 - Revert stupid seed changes (DST seed having filter on 24/7, some items not being able to be purchased, etc)
+- Rewrite Liquids entirely(?)
+    NOTE: TO BE DETERMINED, APPARENTLY IN HIGH REQUEST BY MOD DEVS
 
 NPC Changes:
 - NPC AI Rewrite (to include confusion behaviour, hostile/friendly targetting, dynamic movement, add enemy grief to some AI)
@@ -68,6 +70,7 @@ Mechanical Changes:
 - Dodge Functionality (dodges either WORK or they DON'T WORK, none of this halfsies bullshit -- making dodges work, but reducing times/chances)
 - Loadout Cooldown (seriously, swapping between them SHOULD NOT be completely free, NO, they aren't the same as just autopause because you don't sacrifice inventory slots)
 - Luck has a terrible system with arbitrary means of obtaining it and negligible effects
+- Modifiers on summon/minion staves to be more useful (+/- mana cost, +/- speed)
 
 Config [Default]:
 - Allow Enemy Grief (server-side, enemies with applicable AI can break or change tiles) [On]

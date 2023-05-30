@@ -12,7 +12,7 @@ using OtherworldMod.Common.ChangePlayer;
 
 namespace OtherworldMod.Common.ChangeItem
 {
-    public partial class CombatItem : GlobalItem
+    public partial class OtherworldItem : GlobalItem
     {
         public override bool InstancePerEntity => true;
         public enum StackType : byte
@@ -28,13 +28,13 @@ namespace OtherworldMod.Common.ChangeItem
             if (item.type < ItemID.Count)
             {
                 if (item.maxStack == 1)
-                    item.GetGlobalItem<CombatItem>().stack = StackType.NOSTACK; //Weapons, Tools, nonstackables
+                    item.GetGlobalItem<OtherworldItem>().stack = StackType.NOSTACK; //Weapons, Tools, nonstackables
                 else if (item.createTile != -1 || !item.consumable && item.material)
-                    item.GetGlobalItem<CombatItem>().stack = StackType.COMMON_STACK; //Tiles, Ammo, Most Materials
+                    item.GetGlobalItem<OtherworldItem>().stack = StackType.COMMON_STACK; //Tiles, Ammo, Most Materials
                 else if (item.shoot != 0)
-                    item.GetGlobalItem<CombatItem>().stack = StackType.EXPLOSIVE; //Bombs, Grenades, Dynamite, Scarabs, Liquid Bombs, etc.
+                    item.GetGlobalItem<OtherworldItem>().stack = StackType.EXPLOSIVE; //Bombs, Grenades, Dynamite, Scarabs, Liquid Bombs, etc.
                 else
-                    item.GetGlobalItem<CombatItem>().stack = StackType.CONSUMABLE; //Potions
+                    item.GetGlobalItem<OtherworldItem>().stack = StackType.CONSUMABLE; //Potions
             }
         }
         public override bool AltFunctionUse(Item item, Player player)

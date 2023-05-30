@@ -3,8 +3,14 @@
     /// <summary>
     /// 
     /// </summary>
+    [System.Flags]
     public enum TargetMode
     {
+        /// <summary>
+        /// Do not run targetting
+        /// </summary>
+        NoTarget = 0b0000_0000,
+
         /// <summary>
         /// Default targetting. Will target players or friendly NPCs if hostile, will target hostile NPCs if friendly
         /// </summary>
@@ -25,10 +31,5 @@
         /// Target any entity
         /// </summary>
         AnyIgnoreFriends = 0b0001_0000,
-
-        /// <summary>
-        /// Do not run targetting (not sure why you would use this, but here you go)
-        /// </summary>
-        NoTarget = 0b1000_0000
     }
 }
