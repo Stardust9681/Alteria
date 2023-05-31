@@ -9,23 +9,48 @@ using Microsoft.Xna.Framework.Graphics;
 
 using OtherworldMod.Common.ChangeItem.Structure;
 
+//Wonder if this should go into Common.ChangeItem or Common.ChangePlayer, instead of Content
+//Let me know I guess
 namespace OtherworldMod.Content
 {
     public class UseStylePlayer : ModPlayer
     {
-        //public object objData = default(object);
+        //Custom structure here 'cuz it makes me feel better uwu
+        //But uh, for reals, slightly easier use of objData, and slightly better safety for conversion(s)
         public UseStyleData<object> objData = default(object);
-        //public int intData = 0;
         public UseStyleData<int> intData = 0;
-        //public float floatData = 0;
         public UseStyleData<float> floatData = 0;
-        //public bool boolData = false;
         public UseStyleData<bool> boolData = false;
 
-        public static UseStylePlayer ModPlayer(Player player) => player.GetModPlayer<UseStylePlayer>();
-        //UseStylePlayer.ModPlayer(player)
-        //player.GetModPlayer<UseStylePlayer>();
-        //A whole like, 5 characters shorter :sob:
+        /// <summary>
+        /// The percent representing how far the player's item animation is
+        /// </summary>
+        public float UseAnimation => 1f - ((float)Player.itemAnimation / (float)Player.itemAnimationMax);
 
+        /// <summary>
+        /// Sets the player's arms' position
+        /// </summary>
+        /// <param name="rotation">Arm rotation in Radians</param>
+        /// <param name="stretch">Stretch value for arm</param>
+        /// <param name="frontArm">True to change front arm, False to change back arm</param>
+        /// <param name="setDirection">Whether or not to change the direction the player is facing based on rotation value</param>
+        public void SetArm(float rotation, Player.CompositeArmStretchAmount stretch, bool frontArm = true, bool setDirection = false)
+        {
+            if (setDirection)
+            {
+                if (rotation > MathHelper.PiOver2 && rotation < 3 * MathHelper.PiOver2)
+                    Player.direction = -1;
+                else
+                    Player.direction = 1;
+            }
+            if (frontArm)
+            {
+                Player.SetCompositeArmFront(true, stretch, rotation);
+            }
+            else
+            {
+                Player.SetCompositeArmBack(true, stretch, rotation);
+            }
+        }
     }
 }

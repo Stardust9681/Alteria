@@ -85,14 +85,14 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             //Allow contact damage
             npc.GetGlobalNPC<OtherworldNPC>().allowContactDmg = true;
             //Adjust velocity over time, to slow down and to be more "swoop-like"
-            npc.velocity = Vector2.Lerp(npc.velocity, npc.DirectionTo(targetPos) * 4f, .018f);
+            npc.velocity = Vector2.Lerp(npc.velocity, npc.DirectionTo(targetPos) * 5f, .021f);
             //If close enough to target, slow down
             if (AppxDistanceTo(npc, targetPos) > 600)
             {
                 npc.velocity *= .987f;
             }
             //If moving away from the target or too far below the target move to next attack step.
-            if (((npc.velocity.X < 0 ? -1 : 1) != targetDir) || npc.position.Y > targetPos.Y)
+            if (((npc.velocity.X < 0 ? -1 : 1) != targetDir) || npc.position.Y > targetPos.Y + 32f)
                 return nameof(BatAttack2);
             return null;
         }
@@ -118,7 +118,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
                 if (dist < 600)
                 {
                     if (timer < 210)
-                        return nameof(BatAttack2);
+                        return null;
                     else
                         return nameof(BatMove1);
                 }
