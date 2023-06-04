@@ -18,6 +18,12 @@ namespace OtherworldMod.Common.ChangePlayer
         public short manaTimer;
         public int mana;
 
+        public override void OnEnterWorld()
+        {
+            Logging.PublicLogger.Debug("Entering world with NetMode " + Main.netMode + "...");
+            Logging.PublicLogger.Debug(ChangeNPC.Utilities.OtherworldNPCSets.Behaviours[NPCID.BlueSlime].HasEntry);
+            Logging.PublicLogger.Debug(ChangeNPC.Utilities.OtherworldNPCSets.Behaviours[NPCID.BlueSlime].PhaseFromIndex(1)??"Null");
+        }
         public void SetHeal(int healValue)
         {
 

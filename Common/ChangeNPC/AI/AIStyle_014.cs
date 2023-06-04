@@ -12,6 +12,7 @@ using static OtherworldMod.Common.ChangeNPC.Utilities.OtherworldNPCSets;
 
 namespace OtherworldMod.Common.ChangeNPC.AI
 {
+#nullable enable
     public class AIStyle_014 : AIStyleType
     {
         protected override int[] ApplicableNPCs => new int[] { NPCID.Harpy, NPCID.CaveBat, NPCID.JungleBat, NPCID.Hellbat, NPCID.Demon, NPCID.VoodooDemon,

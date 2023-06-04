@@ -11,6 +11,9 @@ using Terraria.DataStructures;
 using Terraria.Utilities;
 using static OtherworldMod.Common.ChangeNPC.Utilities.OtherworldNPCSets;
 using OtherworldMod.Common.ChangeNPC.AI;
+using Terraria.ModLoader.IO;
+using System.IO;
+using System.Reflection;
 
 namespace OtherworldMod.Common.ChangeNPC
 {
@@ -20,13 +23,6 @@ namespace OtherworldMod.Common.ChangeNPC
     {
         public override bool InstancePerEntity => true;
 
-        public override void ModifyNPCLoot(NPC npc, NPCLoot npcLoot)
-        {
-            base.ModifyNPCLoot(npc, npcLoot);
-        }
-        public override void Load()
-        {
-        }
         public override void SetDefaults(NPC npc)
         {
             if (npc.aiStyle == 2)
@@ -64,11 +60,48 @@ namespace OtherworldMod.Common.ChangeNPC
             int timer = (int)npc.ai[0];
             if (Behaviours[npc.netID].HasEntry)
             {
+                string? curPhase = phase;
                 Behaviours[npc.netID].Update(npc, ref phase, ref timer);
                 npc.ai[0] = timer;
+                if (phase?.Equals(curPhase)==false)
+                {
+                    npc.netUpdate = true;
+                }
                 return false;
             }
             return base.PreAI(npc);
+        }
+        public override void SendExtraAI(NPC npc, BitWriter bitWriter, BinaryWriter binaryWriter)
+        {
+            //Uncomment this line to debug Netsync
+            //Logging.PublicLogger.Debug($"SendExtraAI(2) -> {Behaviours[npc.netID].HasEntry} : Phase = {phase} : Netmode = {Main.netMode}");
+
+            //Note: the timer is already synced, NPC position and velocity are already synced, behaviour is deterministic
+            //This *SHOULD* never cause problems.
+            if (Behaviours[npc.netID].HasEntry)
+            {
+                int index = Behaviours[npc.type].GetPhaseIndex(phase);
+                binaryWriter.Write(index);
+                //Uncomment this line to debug Netsync
+                //Logging.PublicLogger.Debug($"SendExtraAI(2) -> {Behaviours[npc.netID].HasEntry} : Phase = {phase} : Index = {index} : Netmode = {Main.netMode}");
+            }
+        }
+        public override void ReceiveExtraAI(NPC npc, BitReader bitReader, BinaryReader binaryReader)
+        {
+            //Uncomment these lines to debug Netsync
+            //Logging.PublicLogger.Debug($"ReceiveExtraAI(1) -> {Behaviours[npc.netID].HasEntry} : Phase = {phase} : Netmode = {Main.netMode}");
+            //Logging.PublicLogger.Debug("\tReceiveExtraAI(1a) -> " + s);
+
+            //Note: the timer is already synced, NPC position and velocity are already synced, behaviour is deterministic
+            //This *SHOULD* never cause problems.
+            //But, as netcode is, this is somehow being an issue. ???
+            if (Behaviours[npc.netID].HasEntry)
+            {
+                int index = binaryReader.ReadInt32();
+                phase = Behaviours[npc.netID].PhaseFromIndex(index);
+                //Uncomment this line to debug Netsync
+                //Logging.PublicLogger.Debug($"ReceiveExtraAI(2) -> {Behaviours[npc.netID].HasEntry} : Phase = {phase} : Index = {index} : Netmode = {Main.netMode}");
+            }
         }
         public override void FindFrame(NPC npc, int frameHeight)
         {

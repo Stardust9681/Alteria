@@ -12,6 +12,7 @@ using static OtherworldMod.Common.ChangeNPC.Utilities.OtherworldNPCSets;
 
 namespace OtherworldMod.Common.ChangeNPC.AI
 {
+#nullable enable
     /// <summary>
     /// <see cref="NPCAIStyleID.Slime"/>
     /// </summary>

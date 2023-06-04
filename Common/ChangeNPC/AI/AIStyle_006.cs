@@ -12,6 +12,7 @@ using static OtherworldMod.Common.ChangeNPC.Utilities.OtherworldNPCSets;
 
 namespace OtherworldMod.Common.ChangeNPC.AI
 {
+#nullable enable
     //Abstract -> No load
     public abstract class AIStyle_006 : AIStyleType
     {

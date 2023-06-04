@@ -13,6 +13,7 @@ using OtherworldMod.Common;
 using Terraria.Enums;
 using OtherworldMod.Common.ChangeNPC;
 using static OtherworldMod.Common.ChangeNPC.Utilities.OtherworldNPCSets;
+using System.IO;
 
 namespace OtherworldMod
 {
@@ -47,8 +48,9 @@ namespace OtherworldMod
         }
         public override void Unload()
         {
+            base.Unload();
             //Instance.Unload();
-            
+
         }
         #region Anti-DST
         private static bool IsDSTItem(int type)

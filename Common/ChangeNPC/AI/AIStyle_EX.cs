@@ -12,6 +12,7 @@ using static OtherworldMod.Common.ChangeNPC.Utilities.OtherworldNPCSets;
 
 namespace OtherworldMod.Common.ChangeNPC.AI
 {
+#nullable enable
     /// <summary>
     /// Sample AI Style methods under this API.
     /// Demonstrating different attack stages or steps, in addition to multi-phase cycles, and control flow

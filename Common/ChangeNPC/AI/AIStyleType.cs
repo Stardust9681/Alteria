@@ -29,6 +29,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
         }
         public void Load(Mod mod)
         {
+            Logging.PublicLogger.Debug("AIStyleType.Load(Mod) : " + Main.netMode);
             Load();
         }
         public abstract void Load();
