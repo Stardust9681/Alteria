@@ -37,5 +37,9 @@ namespace OtherworldMod.Core.Util
                 return default(T);
             }
         }
+        public static float AppxDistance(Vector2 a, Vector2 other)
+        {
+            return Math.Abs(a.X - other.X) + Math.Abs(a.Y - other.Y);
+        }
     }
 }

@@ -46,6 +46,10 @@ namespace OtherworldMod
             Terraria.On_Item.NewItem_IEntitySource_Vector2_Vector2_int_int_bool_int_bool_bool += NewItem5;
             #endregion
         }
+        public override void PostSetupContent()
+        {
+            Common.ChangeNPC.Structure.TargetCollective.Load();
+        }
         public override void Unload()
         {
             base.Unload();

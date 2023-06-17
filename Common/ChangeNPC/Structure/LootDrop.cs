@@ -29,7 +29,7 @@ namespace CombatPlus.Common.ChangeNPC.Structure
         float EffectiveChance(int npcType)
         {
             float chance = 1 - MathF.Pow(1 - rootChance, NPC.killCount[npcType] + 1);
-            return rootChance;
+            return chance;
         }
         (int type, int stack) PickItem(int npcType)
         {

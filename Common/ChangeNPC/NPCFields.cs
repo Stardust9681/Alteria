@@ -22,6 +22,7 @@ namespace OtherworldMod.Common.ChangeNPC
         public bool ignoreWater;
         public bool ignoreTiles;
         public RotateMode rotate;
+        public byte aggro;
 
         //Can be changed through AI
         public bool allowContactDmg = true;

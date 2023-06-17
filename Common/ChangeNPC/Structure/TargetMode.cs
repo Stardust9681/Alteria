@@ -4,7 +4,7 @@
     /// 
     /// </summary>
     [System.Flags]
-    public enum TargetMode
+    public enum TargetMode : byte
     {
         /// <summary>
         /// Do not run targetting
