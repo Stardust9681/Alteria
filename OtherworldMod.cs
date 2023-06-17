@@ -14,6 +14,8 @@ using Terraria.Enums;
 using OtherworldMod.Common.ChangeNPC;
 using static OtherworldMod.Common.ChangeNPC.Utilities.OtherworldNPCSets;
 using System.IO;
+using OtherworldMod.Common.ChangeNPC.Structure;
+using OtherworldMod.Common.ChangeNPC.Utilities;
 
 namespace OtherworldMod
 {
@@ -32,6 +34,10 @@ namespace OtherworldMod
         public ConfigData<bool> UseStyleAlts;
         #endregion
 
+        public static int PlayerIndex { get; private set; }
+        public static int NPCIndex { get; private set; }
+        public static int ProjectileIndex { get; private set; }
+
         public static OtherworldMod Instance { get; private set; }
         public override void Load()
         {
@@ -45,10 +51,13 @@ namespace OtherworldMod
             Terraria.On_Item.NewItem_IEntitySource_Vector2_int_int_int_int_bool_int_bool_bool += NewItem4;
             Terraria.On_Item.NewItem_IEntitySource_Vector2_Vector2_int_int_bool_int_bool_bool += NewItem5;
             #endregion
+            PlayerIndex = TargetCollective.AddCapacity(Main.maxPlayers);
+            NPCIndex = TargetCollective.AddCapacity(Main.maxNPCs);
+            ProjectileIndex = TargetCollective.AddCapacity(Main.maxProjectiles);
         }
         public override void PostSetupContent()
         {
-            Common.ChangeNPC.Structure.TargetCollective.Load();
+            TargetCollective.Load();
         }
         public override void Unload()
         {
@@ -142,20 +151,60 @@ namespace OtherworldMod
 
         public override object Call(params object[] args)
         {
+            /*
             //"ModifyAI", Action<NPC, int, int>
                 //Delegate param pass for modifying AI
             if (args.Length == 3)
                 if (args[0] is string && ((string)args[0]).ToLower().Equals("getconfig"))
                 {
                     if (args[1] is string or null)
-                        if (args[2] is Mod)
-                            return GetConfig((string?)args[1], (Mod)args[2]);
+                        if (args[2] is Mod mod)
+                            return GetConfig((string?)args[1], mod);
                 }
                 else if (args[0] is string && ((string)args[0]).ToLower().Equals("requireconfig"))
                     if (args[1] is string)
                         if (args[2] is Mod)
                             return null; //return RequireConfig((string)args[1], (Mod)args[2]);
+            */
+            if (args.Length == 0)
+                return null;
+            if (args[0] is string cmd)
+            {
+                cmd = cmd.ToLower();
+                switch (cmd)
+                {
+                    case "getconfig":
+                        if (args.Length < 3)
+                            return null;
+                        if (args[1] is string or null)
+                            if (args[2] is Mod mod)
+                                return GetConfig((string?)args[1], mod);
+                        break;
+                    case "targetaddcapacity":
+                        if (args.Length < 2)
+                            return null;
+                        if (args[1] is int cap)
+                            return TargetCollective.AddCapacity(cap);
+                        break;
 
+                        //NOTE : Thinking about changing to style-based AI instead of per-NPC AI (less memory, would show any potential flaws with current system)
+                        //NOTE : Important because that would also be what allows code below to *function*
+                        #region Get AI
+                        /*case "getai":
+                            if(args.Length < 2)
+                                return null;
+                            if (args[1] is int style)
+                            {
+                                //return specific phase
+                                if(args.Length > 2 && args[2] is string or null)
+                                    return OtherworldNPC.Behaviour[style].GetPhase((string)args[2]);
+
+                                //return behaviour
+                                return OtherworldNPC.Behaviour[style];
+                            }*/
+                        #endregion
+                }
+            }
             return null;
         }
         public object GetConfig(string? name, Mod caller)
