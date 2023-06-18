@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using static OtherworldMod.Core.Util.Utils;
 using static OtherworldMod.Common.ChangeNPC.Utilities.NPCMethods;
 using static OtherworldMod.Common.ChangeNPC.Utilities.OtherworldNPCSets;
+using OtherworldMod.Core.Util;
 
 namespace OtherworldMod.Common.ChangeNPC.AI
 {
@@ -29,13 +30,13 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             if (!npc.noGravity)
                 npc.noGravity = true;
             //Find a target, true if NPC found
-            bool foundTarget = FindTarget(npc, out Vector2 targetPos);
+            npc.target = TargetCollective.PullTarget(new NPCTargetSource(npc), out TargetInfo info);
             //Direction to target (account for confusion)
-            int targetDir = targetPos.X < npc.position.X ? -1 : 1 * (npc.confused ? -1 : 1);
+            int targetDir = info.Position.X < npc.position.X ? -1 : 1 * (npc.confused ? -1 : 1);
             //Disable contact damage
             npc.GetGlobalNPC<OtherworldNPC>().allowContactDmg = false;
             //Find and move towards target X position
-            float targetX = targetPos.X - (targetDir * 96f);
+            float targetX = info.Position.X - (targetDir * 96f);
             if (npc.position.X > targetX)
             {
                 npc.velocity.X -= .08f;
@@ -48,7 +49,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             if (MathF.Abs(npc.position.X - targetX) < 64)
                 npc.velocity.X *= .95f;
             //Find and move towards target Y position
-            float targetY = targetPos.Y - 320;
+            float targetY = info.Position.Y - 320;
             if (npc.position.Y > targetY)
             {
                 npc.velocity.Y -= .06f;
@@ -61,7 +62,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             if (MathF.Abs(npc.position.Y - targetY) < 64)
                 npc.velocity.Y *= .98f;
             //Slow down if very close to target
-            if (AppxDistanceTo(npc, targetPos) < 400)
+            if (AppxDistanceTo(npc, info.Position) < 400)
             {
                 npc.velocity *= .987f;
             }
@@ -75,9 +76,9 @@ namespace OtherworldMod.Common.ChangeNPC.AI
         static string? BatAttack1(NPC npc, int timer)
         {
             //Find a target, true if NPC found
-            bool foundTarget = FindTarget(npc, out Vector2 targetPos);
+            npc.target = TargetCollective.PullTarget(new NPCTargetSource(npc), out TargetInfo info);
             //Direction to target (account for confusion)
-            int targetDir = targetPos.X < npc.position.X ? -1 : 1 * (npc.confused ? -1 : 1);
+            int targetDir = info.Position.X < npc.position.X ? -1 : 1 * (npc.confused ? -1 : 1);
             //If npc not moving enough downwards, fix that. Also responsible for initial swoop downwards.
             if (npc.velocity.Y < 1)
             {
@@ -86,14 +87,14 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             //Allow contact damage
             npc.GetGlobalNPC<OtherworldNPC>().allowContactDmg = true;
             //Adjust velocity over time, to slow down and to be more "swoop-like"
-            npc.velocity = Vector2.Lerp(npc.velocity, npc.DirectionTo(targetPos) * 5f, .021f);
+            npc.velocity = Vector2.Lerp(npc.velocity, npc.DirectionTo(info.Position) * 5f, .02f);
             //If close enough to target, slow down
-            if (AppxDistanceTo(npc, targetPos) > 600)
+            if (AppxDistanceTo(npc, info.Position) > 600)
             {
                 npc.velocity *= .987f;
             }
             //If moving away from the target or too far below the target move to next attack step.
-            if (((npc.velocity.X < 0 ? -1 : 1) != targetDir) || npc.position.Y > targetPos.Y + 32f)
+            if (((npc.velocity.X < 0 ? -1 : 1) != targetDir) || npc.position.Y > info.Position.Y + 32f)
                 return nameof(BatAttack2);
             return null;
         }
@@ -106,16 +107,16 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             //Disable contact damage
             gNPC.allowContactDmg = false;
             //Find a target
-            bool foundTarget = FindTarget(npc, out Vector2 targetPos);
+            npc.target = TargetCollective.PullTarget(new NPCTargetSource(npc), out TargetInfo info);
             npc.velocity *= .9f;
             //If timer is past a value, shoot projectile(s)
             if (timer%70 == 0)
             {
-                Projectile proj = npc.SpawnProjDirect(npc.Center, npc.DirectionTo(targetPos) * 8.4f, Main.rand.Next(gNPC.shootProj), npc.damage / 3, npc.knockBackResist * 2f, Main.myPlayer);
+                Projectile proj = npc.SpawnProjDirect(npc.Center, npc.DirectionTo(info.Position) * 8.4f, Main.rand.Next(gNPC.shootProj), npc.damage / 3, npc.knockBackResist * 2f, Main.myPlayer);
                 proj.friendly = npc.friendly;
                 proj.hostile = !npc.friendly;
 
-                float dist = AppxDistanceTo(npc, targetPos);
+                float dist = AppxDistanceTo(npc, info.Position);
                 if (dist < 600)
                 {
                     if (timer < 210)

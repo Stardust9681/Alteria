@@ -14,8 +14,8 @@ using Terraria.Enums;
 using OtherworldMod.Common.ChangeNPC;
 using static OtherworldMod.Common.ChangeNPC.Utilities.OtherworldNPCSets;
 using System.IO;
-using OtherworldMod.Common.ChangeNPC.Structure;
 using OtherworldMod.Common.ChangeNPC.Utilities;
+using OtherworldMod.Core.Util;
 
 namespace OtherworldMod
 {
@@ -34,10 +34,6 @@ namespace OtherworldMod
         public ConfigData<bool> UseStyleAlts;
         #endregion
 
-        public static int PlayerIndex { get; private set; }
-        public static int NPCIndex { get; private set; }
-        public static int ProjectileIndex { get; private set; }
-
         public static OtherworldMod Instance { get; private set; }
         public override void Load()
         {
@@ -51,13 +47,6 @@ namespace OtherworldMod
             Terraria.On_Item.NewItem_IEntitySource_Vector2_int_int_int_int_bool_int_bool_bool += NewItem4;
             Terraria.On_Item.NewItem_IEntitySource_Vector2_Vector2_int_int_bool_int_bool_bool += NewItem5;
             #endregion
-            PlayerIndex = TargetCollective.AddCapacity(Main.maxPlayers);
-            NPCIndex = TargetCollective.AddCapacity(Main.maxNPCs);
-            ProjectileIndex = TargetCollective.AddCapacity(Main.maxProjectiles);
-        }
-        public override void PostSetupContent()
-        {
-            TargetCollective.Load();
         }
         public override void Unload()
         {
@@ -148,7 +137,27 @@ namespace OtherworldMod
             return orig.Invoke(source, X, Y, Type, Start, ai0, ai1, ai2, ai3, Target);
         }
         #endregion
-
+        public override void HandlePacket(BinaryReader reader, int whoAmI)
+        {
+            int type = reader.ReadInt32();
+            switch (type)
+            {
+                case 1:
+                    if (whoAmI != 255)
+                    {
+                        ModPacket packet = GetPacket(12);
+                        packet.Write(1);
+                        packet.Write((byte)whoAmI);
+                        packet.Send(-1, whoAmI);
+                    }
+                    else
+                    {
+                        int playerIndex = reader.ReadByte();
+                        TargetCollective.AddTarget(new PlayerTarget(playerIndex));
+                    }
+                    break;
+            }
+        }
         public override object Call(params object[] args)
         {
             /*
@@ -179,12 +188,6 @@ namespace OtherworldMod
                         if (args[1] is string or null)
                             if (args[2] is Mod mod)
                                 return GetConfig((string?)args[1], mod);
-                        break;
-                    case "targetaddcapacity":
-                        if (args.Length < 2)
-                            return null;
-                        if (args[1] is int cap)
-                            return TargetCollective.AddCapacity(cap);
                         break;
 
                         //NOTE : Thinking about changing to style-based AI instead of per-NPC AI (less memory, would show any potential flaws with current system)

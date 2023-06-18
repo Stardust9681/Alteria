@@ -9,19 +9,22 @@ using Microsoft.Xna.Framework.Graphics;
 using static OtherworldMod.Core.Util.Utils;
 using static OtherworldMod.Common.ChangeNPC.Utilities.OtherworldNPCSets;
 using OtherworldMod.Common.ChangeNPC.Structure;
+using OtherworldMod.Core.Util;
 
 namespace OtherworldMod.Common.ChangeNPC
 {
     //Splitting GlobalX into partial X_Info files, moving to Common.ChangeX
     public partial class OtherworldNPC : GlobalNPC
     {
-        //Don't expect these to change
+        //Don't expect these to change during gameplay
         public int[]? shootProj;
         public int[]? spawnNPC;
         public bool ignoreAIChanges;
         public bool ignoreWater;
         public bool ignoreTiles;
         public RotateMode rotate;
+
+        //Aggro value for targeting
         public byte aggro;
 
         //Can be changed through AI
@@ -131,13 +134,6 @@ namespace OtherworldMod.Common.ChangeNPC
             SetIgnoreWater(npc, NPCID.DevourerHead, true);
             SetIgnoreWater(npc, NPCID.DevourerBody, true);
             SetIgnoreWater(npc, NPCID.DevourerTail, true);
-        }
-
-
-
-        public static class Sets
-        {
-            public static byte[] RotationAI;
         }
     }
 }

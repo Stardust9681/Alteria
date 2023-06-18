@@ -13,7 +13,8 @@ using static OtherworldMod.Common.ChangeNPC.Utilities.OtherworldNPCSets;
 namespace OtherworldMod.Common.ChangeNPC.AI
 {
     /// <summary>
-    /// Helper class for AI styles to add functions
+    /// Helper class for AI styles to add functions.
+    /// Also some other helper functions for use in AI.
     /// </summary>
     public abstract class AIStyleType : ILoadable
     {
@@ -41,5 +42,11 @@ namespace OtherworldMod.Common.ChangeNPC.AI
                 Behaviours[i].Unload();
             }
         }
+
+        #region I Hate GlobalNPC Name Please Help Me How To Fix What Name To Pick
+        //This is a real cry for help I don't know how to name these things.
+        public static T GlobalNPC<T>(NPC npc) where T : GlobalNPC => npc.GetGlobalNPC<T>();
+        public static OtherworldNPC GetNPC_1(NPC npc) => GlobalNPC<OtherworldNPC>(npc);
+        #endregion
     }
 }

@@ -10,6 +10,12 @@ namespace OtherworldMod.Core.Util
 {
     public static class Utils
     {
+        public static float SafeInvert(this float num)
+        {
+            if (num == 0)
+                return float.MaxValue;
+            else return 1f / num;
+        }
         public static int QuickProj(Entity src, Vector2 pos, Vector2 vel, int type, int damage, float kb = 0, int owner = 0)
         {
             return Projectile.NewProjectile(src.GetSource_FromThis(), pos, vel, type, damage, kb, owner);

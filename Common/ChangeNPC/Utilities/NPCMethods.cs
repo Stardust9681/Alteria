@@ -10,6 +10,7 @@ using static OtherworldMod.Core.Util.Utils;
 using static OtherworldMod.Common.ChangeNPC.Utilities.OtherworldNPCSets;
 using static OtherworldMod.Common.ChangeNPC.AI.AIStyle_001;
 using OtherworldMod.Common.ChangeNPC.Structure;
+using OtherworldMod.Core.Util;
 
 namespace OtherworldMod.Common.ChangeNPC.Utilities
 {
@@ -200,6 +201,6 @@ namespace OtherworldMod.Common.ChangeNPC.Utilities
             return foundTarget;
         }
 
-        public static OtherworldNPC GetOwNPC(this NPC npc) => npc.GetGlobalNPC<OtherworldNPC>();
+        public static ITargetSource GetTargetSource(NPC npc) => new NPCTargetSource(npc);
     }
 }

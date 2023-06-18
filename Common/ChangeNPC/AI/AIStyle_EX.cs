@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using static OtherworldMod.Core.Util.Utils;
 using static OtherworldMod.Common.ChangeNPC.Utilities.NPCMethods;
 using static OtherworldMod.Common.ChangeNPC.Utilities.OtherworldNPCSets;
+using OtherworldMod.Core.Util;
 
 namespace OtherworldMod.Common.ChangeNPC.AI
 {
@@ -53,17 +54,14 @@ namespace OtherworldMod.Common.ChangeNPC.AI
         static string? Phase1Attack(NPC npc, int timer)
         {
             //Find a target and position
-            bool foundTarget = FindTarget(npc, out Vector2 targetPos);
-            //If no target found, move on
-            if (!foundTarget)
-                return nameof(Phase1Move);
+            npc.target = TargetCollective.PullTarget(new NPCTargetSource(npc), out TargetInfo info);
 
             //Slow down before and after attack
             if (timer != 5)
                 npc.velocity *= .99f;
             else //if(timer == 5), charge target position, and enable contact damage
             {
-                npc.velocity = npc.DirectionTo(targetPos) * 8f;
+                npc.velocity = npc.DirectionTo(info.Position) * 8f;
                 npc.GetGlobalNPC<OtherworldNPC>().allowContactDmg = true;
             }
 
@@ -91,21 +89,17 @@ namespace OtherworldMod.Common.ChangeNPC.AI
         static string? Phase2Move(NPC npc, int timer)
         {
             //Find target
-            bool foundTarget = FindTarget(npc, out Vector2 targetPos);
+            npc.target = TargetCollective.PullTarget(new NPCTargetSource(npc), out TargetInfo info);
 
             //Move towards target (even if target is self)
-            npc.velocity.X += .14f * (targetPos.X < npc.position.X ? -1 : 1);
-            npc.velocity.Y += .21f * (targetPos.Y < npc.position.Y ? -1 : 1);
-
-            //repeat if no target found
-            if (!foundTarget)
-                return nameof(Phase2Move);
+            npc.velocity.X += .14f * (info.Position.X < npc.position.X ? -1 : 1);
+            npc.velocity.Y += .21f * (info.Position.Y < npc.position.Y ? -1 : 1);
 
             //Move to next phase if timer condition met
             if (timer > 360)
             {
                 //Control flow; which action should be used next
-                if (AppxDistanceTo(npc, targetPos) < 300)
+                if (AppxDistanceTo(npc, info.Position) < 300)
                     return nameof(Phase2Attack1);
                 else
                     return nameof(Phase2Attack2);
@@ -116,16 +110,14 @@ namespace OtherworldMod.Common.ChangeNPC.AI
         static string? Phase2Attack1(NPC npc, int timer)
         {
             ///Stronger variant of <see cref="Phase1Attack(NPC, int)"/>
-            
-            bool foundTarget = FindTarget(npc, out Vector2 targetPos);
-            if (!foundTarget)
-                return nameof(Phase2Move);
+
+            npc.target = TargetCollective.PullTarget(new NPCTargetSource(npc), out TargetInfo info);
 
             if (timer != 10)
                 npc.velocity *= .99f;
             else
             {
-                npc.velocity = npc.DirectionTo(targetPos) * 12f;
+                npc.velocity = npc.DirectionTo(info.Position) * 12f;
                 npc.GetGlobalNPC<OtherworldNPC>().allowContactDmg = true;
             }
 
@@ -141,17 +133,14 @@ namespace OtherworldMod.Common.ChangeNPC.AI
         static string? Phase2Attack2(NPC npc, int timer)
         {
             //Find target
-            bool foundTarget = FindTarget(npc, out Vector2 targetPos);
-            //Move on if no target found
-            if (!foundTarget)
-                return nameof(Phase2Move);
+            npc.target = TargetCollective.PullTarget(new NPCTargetSource(npc), out TargetInfo info);
 
             //Short-cut if conditions not met
             if (timer < 60)
                 return null;
 
             //Spawn projectile, move on
-            Projectile p = npc.SpawnProjDirect(npc.Center, npc.DirectionTo(targetPos), npc.GetGlobalNPC<OtherworldNPC>().shootProj!.First(), npc.damage / 2, 0, Main.myPlayer);
+            Projectile p = npc.SpawnProjDirect(npc.Center, npc.DirectionTo(info.Position), npc.GetGlobalNPC<OtherworldNPC>().shootProj!.First(), npc.damage / 2, 0, Main.myPlayer);
             p.friendly = npc.friendly; p.hostile = !npc.friendly;
             return nameof(Phase2Move);
         }

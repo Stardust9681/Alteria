@@ -20,9 +20,14 @@ namespace OtherworldMod.Common.ChangePlayer
 
         public override void OnEnterWorld()
         {
-            Logging.PublicLogger.Debug("Entering world with NetMode " + Main.netMode + "...");
-            Logging.PublicLogger.Debug(ChangeNPC.Utilities.OtherworldNPCSets.Behaviours[NPCID.BlueSlime].HasEntry);
-            Logging.PublicLogger.Debug(ChangeNPC.Utilities.OtherworldNPCSets.Behaviours[NPCID.BlueSlime].PhaseFromIndex(1)??"Null");
+            if (Main.netMode != NetmodeID.SinglePlayer)
+            {
+                ModPacket packet = OtherworldMod.Instance.GetPacket(8);
+                packet.Write(1);
+                packet.Send();
+            }
+            else
+                Core.Util.TargetCollective.AddTarget(new Core.Util.PlayerTarget(Player));
         }
         public void SetHeal(int healValue)
         {

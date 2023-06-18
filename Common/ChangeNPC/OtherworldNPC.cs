@@ -27,13 +27,20 @@ namespace OtherworldMod.Common.ChangeNPC
         {
             if (npc.aiStyle == 2)
                 npc.noGravity = true;
+            if (npc.aiStyle == NPCAIStyleID.Passive)
+                npc.GetGlobalNPC<OtherworldNPC>().aggro = 55;
             if (npc.type == NPCID.Harpy)
                 npc.noGravity = true;
             if (npc.type == NPCID.EyeofCthulhu)
             {
                 npc.GetGlobalNPC<OtherworldNPC>().spawnNPC = new int[] { NPCID.ServantofCthulhu, NPCID.DemonEye };
             }
+
             SetVanillaDefaults(npc);
+        }
+        public override void OnSpawn(NPC npc, IEntitySource source)
+        {
+            Core.Util.TargetCollective.AddTarget(new Core.Util.NPCTarget(npc));
         }
         public override bool CanHitPlayer(NPC npc, Player target, ref int cooldownSlot)
         {
@@ -94,7 +101,6 @@ namespace OtherworldMod.Common.ChangeNPC
 
             //Note: the timer is already synced, NPC position and velocity are already synced, behaviour is deterministic
             //This *SHOULD* never cause problems.
-            //But, as netcode is, this is somehow being an issue. ???
             if (Behaviours[npc.netID].HasEntry)
             {
                 int index = binaryReader.ReadInt32();
@@ -102,6 +108,7 @@ namespace OtherworldMod.Common.ChangeNPC
                 //Uncomment this line to debug Netsync
                 //Logging.PublicLogger.Debug($"ReceiveExtraAI(2) -> {Behaviours[npc.netID].HasEntry} : Phase = {phase} : Index = {index} : Netmode = {Main.netMode}");
             }
+            
         }
         public override void FindFrame(NPC npc, int frameHeight)
         {
