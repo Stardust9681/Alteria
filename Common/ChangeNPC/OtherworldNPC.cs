@@ -38,7 +38,7 @@ namespace OtherworldMod.Common.ChangeNPC
             {
                 if (npc.aiStyle == 2)
                     npc.noGravity = true;
-                if (npc.aiStyle == NPCAIStyleID.Passive)
+                if (NPCID.Sets.ActsLikeTownNPC[npc.netID] && npc.aiStyle == NPCAIStyleID.Passive)
                     npc.GetGlobalNPC<OtherworldNPC>().aggro = 55;
                 if (npc.type == NPCID.Harpy)
                     npc.noGravity = true;

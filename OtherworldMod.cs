@@ -273,6 +273,14 @@ namespace OtherworldMod
         }
     }
 
+    public class OtherworldSystem : ModSystem
+    {
+        public override void PostUpdateEverything()
+        {
+            TargetCollective.Update();
+        }
+    }
+
     [Label("Combat+ Mod Config (Server)")]
     public class OtherworldServerConfig : ModConfig
     {

@@ -6,9 +6,9 @@
     public enum RotateMode : byte
     {
         /// <summary>
-        /// Do not apply rotation to this entity
+        /// Rotate this entity over time, regardless of other circumstances
         /// </summary>
-        NoRotation = 0b0000_0001,
+        OverTime = 0b0000_0001,
         /// <summary>
         /// Apply rotation with a positive relationship to X velocity
         /// </summary>
@@ -34,8 +34,8 @@
         /// </summary>
         ToVelocity = 0b0100_0000,
         /// <summary>
-        /// Rotate this entity over time, regardless of other circumstances
+        /// Do not apply rotation to this entity
         /// </summary>
-        OverTime = 0b1000_0000
+        NoRotation = 0b1000_0000
     }
 }
