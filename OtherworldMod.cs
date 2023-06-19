@@ -26,6 +26,8 @@ namespace OtherworldMod
         //Get as Tuple (Requirement{Mod,value,Reason},value)
         //Worth making entire struct?
         #region Server-Side Config
+        public ConfigData<bool> NPCAIChanges;
+        public ConfigData<bool> NPCDynamicHitboxes;
         public ConfigData<bool> NPCGrief;
         public ConfigData<bool> DSTXOver;
         public ConfigData<bool> ItemBalance;
@@ -272,9 +274,19 @@ namespace OtherworldMod
     }
 
     [Label("Combat+ Mod Config (Server)")]
-    public class CombatServerConfig : ModConfig
+    public class OtherworldServerConfig : ModConfig
     {
         public override ConfigScope Mode => ConfigScope.ServerSide;
+
+        [DefaultValue(true)]
+        [Label("Toggle NPC AI Changes")]
+        [Description("If disabled: NPCs will retain constant hitboxes, and will not grief terrain")]
+        public bool aiChanges;
+
+        [DefaultValue(true)]
+        [Label("Toggle Dynamic NPC Hitboxes")]
+        [Description("If disabled: hostile NPCs will always deal damage when colliding with the player")]
+        public bool dynamicHitboxes;
 
         //True : Allows applicable NPCs to affect environment
         [DefaultValue(false)]
@@ -293,11 +305,22 @@ namespace OtherworldMod
 
         public override void OnChanged()
         {
-            if (OtherworldMod.Instance != null)
+            OtherworldMod instance = OtherworldMod.Instance;
+            if (instance != null)
             {
-                OtherworldMod.Instance.NPCGrief.value = enemyGrief;
-                OtherworldMod.Instance.DSTXOver.value = dst;
-                OtherworldMod.Instance.ItemBalance.value = itemBalance;
+                instance.NPCAIChanges.value = aiChanges;
+                if (aiChanges)
+                {
+                    instance.NPCDynamicHitboxes.value = dynamicHitboxes;
+                    instance.NPCGrief.value = enemyGrief;
+                }
+                else
+                {
+                    instance.NPCDynamicHitboxes.value = false;
+                    instance.NPCGrief.value = false;
+                }
+                instance.DSTXOver.value = dst;
+                instance.ItemBalance.value = itemBalance;
             }
         }
         public override bool AcceptClientChanges(ModConfig pendingConfig, int whoAmI, ref string message)
@@ -310,11 +333,11 @@ namespace OtherworldMod
             }
             return true;
         }
-        private static CombatServerConfig AsThis(ModConfig config) => (CombatServerConfig)config;
+        private static OtherworldServerConfig AsThis(ModConfig config) => (OtherworldServerConfig)config;
     }
 
     [Label("Combat+ Mod Config (Client)")]
-    public class CombatClientConfig : ModConfig
+    public class OtherworldClientConfig : ModConfig
     {
         public override ConfigScope Mode => ConfigScope.ClientSide;
         [DefaultValue(true)]
@@ -333,6 +356,6 @@ namespace OtherworldMod
         {
             return true;
         }
-        private static CombatClientConfig AsThis(ModConfig config) => (CombatClientConfig)config;
+        private static OtherworldClientConfig AsThis(ModConfig config) => (OtherworldClientConfig)config;
     }
 }

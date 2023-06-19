@@ -10,7 +10,7 @@ using static OtherworldMod.Core.Util.Utils;
 
 namespace OtherworldMod.Common.ChangePlayer
 {
-    public class CombatPlayer : ModPlayer
+    public class OtherworldPlayer : ModPlayer
     {
         public short healTimer;
         public int heal;

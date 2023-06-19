@@ -18,25 +18,37 @@ using System.Reflection;
 namespace OtherworldMod.Common.ChangeNPC
 {
     //For Town NPCs:
-        //Vine or rope integration into AI?
+    //Vine or rope integration into AI?
     public partial class OtherworldNPC : GlobalNPC
     {
+        //Whether or not to run new AI (if this is false, dynamic hitbox and NPC grief settings have no effect
+        public bool AIChanges => OtherworldMod.Instance.NPCAIChanges;
+
+        //Determine whether or not to use Otherworld's dynamic hitbox setting(s) rather than a constant hitbox
+        public bool DynamicHitbox => OtherworldMod.Instance.NPCDynamicHitboxes;
+
+        //Whether or not NPCs can grief terrain (not all NPCs have this behaviour)
+        public bool NPCGrief => OtherworldMod.Instance.NPCGrief;
+
         public override bool InstancePerEntity => true;
 
         public override void SetDefaults(NPC npc)
         {
-            if (npc.aiStyle == 2)
-                npc.noGravity = true;
-            if (npc.aiStyle == NPCAIStyleID.Passive)
-                npc.GetGlobalNPC<OtherworldNPC>().aggro = 55;
-            if (npc.type == NPCID.Harpy)
-                npc.noGravity = true;
-            if (npc.type == NPCID.EyeofCthulhu)
+            if (AIChanges)
             {
-                npc.GetGlobalNPC<OtherworldNPC>().spawnNPC = new int[] { NPCID.ServantofCthulhu, NPCID.DemonEye };
-            }
+                if (npc.aiStyle == 2)
+                    npc.noGravity = true;
+                if (npc.aiStyle == NPCAIStyleID.Passive)
+                    npc.GetGlobalNPC<OtherworldNPC>().aggro = 55;
+                if (npc.type == NPCID.Harpy)
+                    npc.noGravity = true;
+                if (npc.type == NPCID.EyeofCthulhu)
+                {
+                    npc.GetGlobalNPC<OtherworldNPC>().spawnNPC = new int[] { NPCID.ServantofCthulhu, NPCID.DemonEye };
+                }
 
-            SetVanillaDefaults(npc);
+                SetVanillaDefaults(npc);
+            }
         }
         public override void OnSpawn(NPC npc, IEntitySource source)
         {
@@ -44,90 +56,113 @@ namespace OtherworldMod.Common.ChangeNPC
         }
         public override bool CanHitPlayer(NPC npc, Player target, ref int cooldownSlot)
         {
-            if(allowContactDmg)
-                return base.CanHitPlayer(npc, target, ref cooldownSlot);
-            return false;
+            if (DynamicHitbox)
+            {
+                if (allowContactDmg)
+                    return base.CanHitPlayer(npc, target, ref cooldownSlot);
+                return false;
+            }
+            return base.CanHitPlayer(npc, target, ref cooldownSlot);
         }
         public override bool CanBeHitByNPC(NPC npc, NPC attacker)
         {
-            if (attacker.GetGlobalNPC<OtherworldNPC>().allowContactDmg)
-                if (npc.friendly != attacker.friendly) return true;
-                else return base.CanBeHitByNPC(npc, attacker);
-            return false;
+            if (DynamicHitbox)
+            {
+                if (attacker.GetGlobalNPC<OtherworldNPC>().allowContactDmg)
+                    if (npc.friendly != attacker.friendly) return true;
+                    else return base.CanBeHitByNPC(npc, attacker);
+                return false;
+            }
+            return base.CanBeHitByNPC(npc, attacker);
         }
         public override bool CanHitNPC(NPC npc, NPC target)
         {
-            if (allowContactDmg)
-                if (npc.friendly != target.friendly) return true;
-                else return base.CanHitNPC(npc, target);
-            return false;
+            if (DynamicHitbox)
+            {
+                if (allowContactDmg)
+                    if (npc.friendly != target.friendly) return true;
+                    else return base.CanHitNPC(npc, target);
+                return false;
+            }
+            return base.CanHitNPC(npc, target);
         }
         public override bool PreAI(NPC npc)
         {
-            int timer = (int)npc.ai[0];
-            if (Behaviours[npc.netID].HasEntry)
+            if (AIChanges)
             {
-                string? curPhase = phase;
-                Behaviours[npc.netID].Update(npc, ref phase, ref timer);
-                npc.ai[0] = timer;
-                if (phase?.Equals(curPhase)==false)
+                int timer = (int)npc.ai[0];
+                if (Behaviours[npc.netID].HasEntry)
                 {
-                    npc.netUpdate = true;
+                    string? curPhase = phase;
+                    Behaviours[npc.netID].Update(npc, ref phase, ref timer);
+                    npc.ai[0] = timer;
+                    if (phase?.Equals(curPhase) == false)
+                    {
+                        npc.netUpdate = true;
+                    }
+                    return false;
                 }
-                return false;
             }
             return base.PreAI(npc);
         }
         public override void SendExtraAI(NPC npc, BitWriter bitWriter, BinaryWriter binaryWriter)
         {
-            //Uncomment this line to debug Netsync
-            //Logging.PublicLogger.Debug($"SendExtraAI(2) -> {Behaviours[npc.netID].HasEntry} : Phase = {phase} : Netmode = {Main.netMode}");
-
-            //Note: the timer is already synced, NPC position and velocity are already synced, behaviour is deterministic
-            //This *SHOULD* never cause problems.
-            if (Behaviours[npc.netID].HasEntry)
+            if (AIChanges)
             {
-                int index = Behaviours[npc.type].GetPhaseIndex(phase);
-                binaryWriter.Write(index);
                 //Uncomment this line to debug Netsync
-                //Logging.PublicLogger.Debug($"SendExtraAI(2) -> {Behaviours[npc.netID].HasEntry} : Phase = {phase} : Index = {index} : Netmode = {Main.netMode}");
+                //Logging.PublicLogger.Debug($"SendExtraAI(2) -> {Behaviours[npc.netID].HasEntry} : Phase = {phase} : Netmode = {Main.netMode}");
+
+                //Note: the timer is already synced, NPC position and velocity are already synced, behaviour is deterministic
+                //This *SHOULD* never cause problems.
+                if (Behaviours[npc.netID].HasEntry)
+                {
+                    int index = Behaviours[npc.type].GetPhaseIndex(phase);
+                    binaryWriter.Write(index);
+                    //Uncomment this line to debug Netsync
+                    //Logging.PublicLogger.Debug($"SendExtraAI(2) -> {Behaviours[npc.netID].HasEntry} : Phase = {phase} : Index = {index} : Netmode = {Main.netMode}");
+                }
             }
         }
         public override void ReceiveExtraAI(NPC npc, BitReader bitReader, BinaryReader binaryReader)
         {
-            //Uncomment these lines to debug Netsync
-            //Logging.PublicLogger.Debug($"ReceiveExtraAI(1) -> {Behaviours[npc.netID].HasEntry} : Phase = {phase} : Netmode = {Main.netMode}");
-            //Logging.PublicLogger.Debug("\tReceiveExtraAI(1a) -> " + s);
-
-            //Note: the timer is already synced, NPC position and velocity are already synced, behaviour is deterministic
-            //This *SHOULD* never cause problems.
-            if (Behaviours[npc.netID].HasEntry)
+            if (AIChanges)
             {
-                int index = binaryReader.ReadInt32();
-                phase = Behaviours[npc.netID].PhaseFromIndex(index);
-                //Uncomment this line to debug Netsync
-                //Logging.PublicLogger.Debug($"ReceiveExtraAI(2) -> {Behaviours[npc.netID].HasEntry} : Phase = {phase} : Index = {index} : Netmode = {Main.netMode}");
+                //Uncomment these lines to debug Netsync
+                //Logging.PublicLogger.Debug($"ReceiveExtraAI(1) -> {Behaviours[npc.netID].HasEntry} : Phase = {phase} : Netmode = {Main.netMode}");
+                //Logging.PublicLogger.Debug("\tReceiveExtraAI(1a) -> " + s);
+
+                //Note: the timer is already synced, NPC position and velocity are already synced, behaviour is deterministic
+                //This *SHOULD* never cause problems.
+                if (Behaviours[npc.netID].HasEntry)
+                {
+                    int index = binaryReader.ReadInt32();
+                    phase = Behaviours[npc.netID].PhaseFromIndex(index);
+                    //Uncomment this line to debug Netsync
+                    //Logging.PublicLogger.Debug($"ReceiveExtraAI(2) -> {Behaviours[npc.netID].HasEntry} : Phase = {phase} : Index = {index} : Netmode = {Main.netMode}");
+                }
             }
-            
         }
         public override void FindFrame(NPC npc, int frameHeight)
         {
-            //Will look for way to add this into AI instead of through findframe
-            if (npc.aiStyle == NPCAIStyleID.EyeOfCthulhu)
+            if (AIChanges)
             {
-                npc.frameCounter++;
-                frameHeight = 166;
-                if (npc.life > npc.lifeMax * .5f)
+                //Will look for way to add this into AI instead of through findframe
+                if (npc.aiStyle == NPCAIStyleID.EyeOfCthulhu)
                 {
-                    npc.frame = new Rectangle(0, (((int)npc.frameCounter%24)/24)*frameHeight, 110, frameHeight);
+                    npc.frameCounter++;
+                    frameHeight = 166;
+                    if (npc.life > npc.lifeMax * .5f)
+                    {
+                        npc.frame = new Rectangle(0, (((int)npc.frameCounter % 24) / 24) * frameHeight, 110, frameHeight);
+                    }
+                    else
+                    {
+                        npc.frame = new Rectangle(0, (3 + (((int)npc.frameCounter % 24) / 24)) * frameHeight, 110, frameHeight);
+                    }
+                    if (npc.frameCounter == 24)
+                        npc.frameCounter = 0;
+                    return;
                 }
-                else
-                {
-                    npc.frame = new Rectangle(0, (3+(((int)npc.frameCounter % 24) / 24)) * frameHeight, 110, frameHeight);
-                }
-                if (npc.frameCounter == 24)
-                    npc.frameCounter = 0;
-                return;
             }
             base.FindFrame(npc, frameHeight);
         }

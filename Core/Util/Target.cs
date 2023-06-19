@@ -347,6 +347,17 @@ namespace OtherworldMod.Core.Util
             targets.Add(target);
             return targets.Count;
         }
+        public static int AddTarget<T>(T entity) where T : Entity
+        {
+            Type t = typeof(T);
+            if (t.Equals(typeof(NPC)))
+                return AddTarget(new NPCTarget(entity as NPC));
+            else if (t.Equals(typeof(Player)))
+                return AddTarget(new PlayerTarget(entity as Player));
+            else if (t.Equals(typeof(Projectile)))
+                return AddTarget(new ProjectileTarget(entity as Projectile));
+            return AddTarget(new EntityTarget(entity.GetSource_FromThis()));
+        }
         public static void Update()
         {
             for (int i = 0; i < targets.Count; i++)

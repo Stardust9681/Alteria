@@ -37,7 +37,7 @@ namespace OtherworldMod.Common.ChangeItem
         {
             if (item.potion)
             {
-                CombatPlayer modPlayer = player.GetModPlayer<CombatPlayer>();
+                OtherworldPlayer modPlayer = player.GetModPlayer<OtherworldPlayer>();
                 modPlayer.heal = item.healLife;
                 modPlayer.healTimer = 1;
             }
