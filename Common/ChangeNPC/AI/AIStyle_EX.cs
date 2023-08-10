@@ -21,6 +21,24 @@ namespace OtherworldMod.Common.ChangeNPC.AI
     [Autoload(false)]
     public class AIStyle_EX : AIStyleType
     {
+        //This method can be used to return a special target type.
+            //See [TODO:Brain of Cthulhu] for more details
+        protected override ITargetable SetDefaultTarget(int npcIndex)
+        {
+            return new Core.Util.NPCTarget<AIStyle_EX>(npcIndex);
+        }
+        //This methods can be used to return a special Radar type.
+            //See [TODO:Creepers] for more details
+        protected override IRadar SetDefaultRadar(int npcIndex)
+        {
+            return new Core.Util.NPCRadar(npcIndex);
+        }
+        //Update the existing target's information with relevant information from here.
+        public override void UpdateInfo(ref TargetInfo info, int npcIndex, IRadar radar)
+        {
+            info.Position = Main.npc[npcIndex].position;
+        }
+
         protected override int[] ApplicableNPCs => new int[] { NPCID.BlueSlime };
 
         public override void Load()
@@ -54,7 +72,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
         static string? Phase1Attack(NPC npc, int timer)
         {
             //Find a target and position
-            npc.target = TargetCollective.PullTarget(new NPCTargetSource(npc), out TargetInfo info);
+            npc.target = PullTarget(npc, out TargetInfo info);
 
             //Slow down before and after attack
             if (timer != 5)
@@ -89,7 +107,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
         static string? Phase2Move(NPC npc, int timer)
         {
             //Find target
-            npc.target = TargetCollective.PullTarget(new NPCTargetSource(npc), out TargetInfo info);
+            npc.target = PullTarget(npc, out TargetInfo info);
 
             //Move towards target (even if target is self)
             npc.velocity.X += .14f * (info.Position.X < npc.position.X ? -1 : 1);
@@ -111,7 +129,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
         {
             ///Stronger variant of <see cref="Phase1Attack(NPC, int)"/>
 
-            npc.target = TargetCollective.PullTarget(new NPCTargetSource(npc), out TargetInfo info);
+            npc.target = PullTarget(npc, out TargetInfo info);
 
             if (timer != 10)
                 npc.velocity *= .99f;
@@ -133,7 +151,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
         static string? Phase2Attack2(NPC npc, int timer)
         {
             //Find target
-            npc.target = TargetCollective.PullTarget(new NPCTargetSource(npc), out TargetInfo info);
+            npc.target = PullTarget(npc, out TargetInfo info);
 
             //Short-cut if conditions not met
             if (timer < 60)

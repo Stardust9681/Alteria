@@ -16,6 +16,14 @@ namespace OtherworldMod.Common.ChangeNPC.AI
 #nullable enable
     public class AIStyle_014 : AIStyleType
     {
+        protected override ITargetable SetDefaultTarget(int npcIndex)
+        {
+            return new Core.Util.NPCTarget<AIStyle_014>(npcIndex);
+        }
+        public override void UpdateInfo(ref TargetInfo info, int npcIndex, IRadar radar)
+        {
+            info.Position = Main.npc[npcIndex].position;
+        }
         protected override int[] ApplicableNPCs => new int[] { NPCID.Harpy, NPCID.CaveBat, NPCID.JungleBat, NPCID.Hellbat, NPCID.Demon, NPCID.VoodooDemon,
                 NPCID.GiantBat, NPCID.Slimer, NPCID.IlluminantBat, NPCID.IceBat, NPCID.Lavabat, NPCID.GiantFlyingFox, NPCID.RedDevil,
                 NPCID.VampireBat, NPCID.FlyingSnake, NPCID.SporeBat, NPCID.QueenSlimeMinionPurple };
@@ -30,7 +38,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             if (!npc.noGravity)
                 npc.noGravity = true;
             //Find a target, true if NPC found
-            npc.target = TargetCollective.PullTarget(new NPCTargetSource(npc), out TargetInfo info);
+            npc.target = PullTarget(npc, out TargetInfo info);
             //Direction to target (account for confusion)
             int targetDir = info.Position.X < npc.position.X ? -1 : 1 * (npc.confused ? -1 : 1);
             //Disable contact damage
@@ -76,7 +84,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
         static string? BatAttack1(NPC npc, int timer)
         {
             //Find a target, true if NPC found
-            npc.target = TargetCollective.PullTarget(new NPCTargetSource(npc), out TargetInfo info);
+            npc.target = PullTarget(npc, out TargetInfo info);
             //Direction to target (account for confusion)
             int targetDir = info.Position.X < npc.position.X ? -1 : 1 * (npc.confused ? -1 : 1);
             //If npc not moving enough downwards, fix that. Also responsible for initial swoop downwards.
@@ -107,7 +115,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             //Disable contact damage
             gNPC.allowContactDmg = false;
             //Find a target
-            npc.target = TargetCollective.PullTarget(new NPCTargetSource(npc), out TargetInfo info);
+            npc.target = PullTarget(npc, out TargetInfo info);
             npc.velocity *= .9f;
             //If timer is past a value, shoot projectile(s)
             if (timer%70 == 0)

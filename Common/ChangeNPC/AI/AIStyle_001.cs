@@ -10,6 +10,8 @@ using static OtherworldMod.Core.Util.Utils;
 using static OtherworldMod.Common.ChangeNPC.Utilities.NPCMethods;
 using static OtherworldMod.Common.ChangeNPC.Utilities.OtherworldNPCSets;
 using OtherworldMod.Core.Util;
+using OtherworldMod.Common.Structure;
+using OtherworldMod.Common.Interface;
 
 namespace OtherworldMod.Common.ChangeNPC.AI
 {
@@ -19,6 +21,14 @@ namespace OtherworldMod.Common.ChangeNPC.AI
     /// </summary>
     public class AIStyle_001 : AIStyleType
     {
+        protected override ITargetable SetDefaultTarget(int npcIndex)
+        {
+            return new Core.Util.NPCTarget<AIStyle_001>(npcIndex);
+        }
+        public override void UpdateInfo(ref TargetInfo info, int npcIndex, IRadar radar)
+        {
+            info.Position = Main.npc[npcIndex].position;
+        }
         protected override int[] ApplicableNPCs => new int[] { NPCID.BigCrimslime, NPCID.LittleCrimslime, NPCID.JungleSlime, NPCID.YellowSlime,
                 NPCID.RedSlime, NPCID.PurpleSlime, NPCID.BlackSlime, NPCID.BabySlime, NPCID.Pinky, NPCID.GreenSlime, NPCID.Slimer2,
                 NPCID.Slimeling, NPCID.BlueSlime, NPCID.MotherSlime, NPCID.LavaSlime, NPCID.DungeonSlime, NPCID.CorruptSlime,
@@ -40,7 +50,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             //Turn on hitbox, slimes causing contact damage in water is fine by me, and discourages exploits with water buckets
             OtherworldNPC gNPC = GetNPC_1(npc);
             gNPC.allowContactDmg = true;
-            npc.target = TargetCollective.PullTarget(new NPCTargetSource(npc), out TargetInfo info);
+            npc.target = PullTarget(npc, out TargetInfo info);
             //Direction to target (account for confusion)
             int targetDir = info.Position.X < npc.position.X ? -1 : 1 * (npc.confused ? -1 : 1);
             //Accelerate towards target until vel >= 6
@@ -66,7 +76,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
                 return nameof(SlimeWet);
             }
             OtherworldNPC gNPC = GetNPC_1(npc);
-            npc.target = TargetCollective.PullTarget(new NPCTargetSource(npc), out TargetInfo info);
+            npc.target = PullTarget(npc, out TargetInfo info);
             //Direction to target (account for confusion)
             int targetDir = info.Position.X < npc.position.X ? -1 : 1 * (npc.confused ? -1 : 1);
             if (npc.collideY)
@@ -149,7 +159,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
                 return nameof(SlimeWet);
             }
             OtherworldNPC gNPC = GetNPC_1(npc);
-            npc.target = TargetCollective.PullTarget(new NPCTargetSource(npc), out TargetInfo info);
+            npc.target = PullTarget(npc, out TargetInfo info);
             int targetDir = info.Position.X < npc.position.X ? -1 : 1 * (npc.confused ? -1 : 1);
             if (npc.collideY)
             {
@@ -217,7 +227,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
                 return nameof(SlimeWet);
             }
             OtherworldNPC gNPC = GetNPC_1(npc);
-            npc.target = TargetCollective.PullTarget(new NPCTargetSource(npc), out TargetInfo info);
+            npc.target = PullTarget(npc, out TargetInfo info);
             int targetDir = info.Position.X < npc.position.X ? -1 : 1 * (npc.confused ? -1 : 1);
             if (npc.collideY)
             {
@@ -287,7 +297,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             }
             OtherworldNPC gNPC = GetNPC_1(npc);
             gNPC.allowContactDmg = false;
-            npc.target = TargetCollective.PullTarget(new NPCTargetSource(npc), out TargetInfo info);
+            npc.target = PullTarget(npc, out TargetInfo info);
             float dist = AppxDistanceTo(npc, info.Position);
             //If timer is past a value, shoot projectile(s)
             if (timer > 85)
@@ -322,7 +332,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             }
             OtherworldNPC gNPC = GetNPC_1(npc);
             gNPC.allowContactDmg = false;
-            npc.target = TargetCollective.PullTarget(new NPCTargetSource(npc), out TargetInfo info);
+            npc.target = PullTarget(npc, out TargetInfo info);
             float dist = AppxDistanceTo(npc, info.Position);
             if (timer > 170)
             {

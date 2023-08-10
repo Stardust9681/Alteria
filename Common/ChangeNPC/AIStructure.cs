@@ -7,6 +7,8 @@ using Terraria.ID;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using static OtherworldMod.Core.Util.Utils;
+using OtherworldMod.Common.Interface;
+using OtherworldMod.Common.Structure;
 
 namespace OtherworldMod.Common.ChangeNPC
 {
@@ -91,6 +93,29 @@ namespace OtherworldMod.Common.ChangeNPC
             }
             timer++;
         }
+
+        //internal delegate void updateTargetInfo(ref TargetInfo info, int npcIndex, IRadar radar);
+        internal delegate IRadar setRadar(int npcIndex);
+        internal delegate ITargetable setTarget(int npcIndex);
+
+        //internal event updateTargetInfo? On_UpdateTargetInfo;
+        //public void UpdateTargetInfo(ref TargetInfo info, int npcIndex, IRadar radar)
+        //{
+        //    if (On_UpdateTargetInfo is not null)
+        //        On_UpdateTargetInfo?.Invoke(ref info, npcIndex, radar);
+        //    else
+        //    {
+        //        NPC npc = Main.npc[npcIndex];
+        //        info.Position = npc.position;
+        //        info.aggro = AI.AIStyleType.GetNPC_1(npc).aggro;
+        //        //info.faction = AI.AIStyleType.GetNPC_1(npc).fac
+        //    }
+        //}
+        internal event setRadar? On_SetRadar;
+        public IRadar SetRadar(int npcIndex) => On_SetRadar?.Invoke(npcIndex) ?? new Core.Util.NPCRadar(npcIndex);
+        internal event setTarget? On_SetTarget;
+        public ITargetable SetTarget(int npcIndex) => On_SetTarget?.Invoke(npcIndex) ?? new Core.Util.NPCTarget(npcIndex);
+
         /// <summary>
         /// Returns index of the given phase.
         /// </summary>

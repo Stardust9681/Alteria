@@ -9,6 +9,8 @@ using Microsoft.Xna.Framework.Graphics;
 using static OtherworldMod.Core.Util.Utils;
 using static OtherworldMod.Common.ChangeNPC.Utilities.NPCMethods;
 using static OtherworldMod.Common.ChangeNPC.Utilities.OtherworldNPCSets;
+using OtherworldMod.Common.Structure;
+using OtherworldMod.Common.Interface;
 
 namespace OtherworldMod.Common.ChangeNPC.AI
 {
@@ -30,8 +32,13 @@ namespace OtherworldMod.Common.ChangeNPC.AI
         }
         public void Load(Mod mod)
         {
-            Logging.PublicLogger.Debug("AIStyleType.Load(Mod) : " + Main.netMode);
             Load();
+            foreach (int i in ApplicableNPCs)
+            {
+                if (i < 0) continue;
+                Behaviours[i].On_SetRadar += SetDefaultRadar;
+                Behaviours[i].On_SetTarget += SetDefaultTarget;
+            }
         }
         public abstract void Load();
         public void Unload()
@@ -39,8 +46,30 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             foreach (int i in ApplicableNPCs)
             {
                 if (i < 0) continue;
+                Behaviours[i].On_SetRadar -= SetDefaultRadar;
+                Behaviours[i].On_SetTarget -= SetDefaultTarget;
                 Behaviours[i].Unload();
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="npcIndex"></param>
+        /// <param name="radar"></param>
+        public abstract void UpdateInfo(ref TargetInfo info, int npcIndex, IRadar radar);
+
+        protected virtual IRadar SetDefaultRadar(int npcIndex) => new Core.Util.NPCRadar(npcIndex);
+        protected virtual ITargetable SetDefaultTarget(int npcIndex) => new Core.Util.NPCTarget(npcIndex);
+
+        protected static ITargetable PullTargetDirect(NPC npc, out TargetInfo info)
+        {
+            return Core.Util.TargetCollective.PullTargetDirect(GetNPC_1(npc).NPCRadar, out info);
+        }
+        protected static int PullTarget(NPC npc, out TargetInfo info)
+        {
+            return Core.Util.TargetCollective.PullTarget(GetNPC_1(npc).NPCRadar, out info);
         }
 
         #region I Hate GlobalNPC Name Please Help Me How To Fix What Name To Pick

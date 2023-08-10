@@ -8,8 +8,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using static OtherworldMod.Core.Util.Utils;
 using static OtherworldMod.Common.ChangeNPC.Utilities.OtherworldNPCSets;
-using OtherworldMod.Common.ChangeNPC.Structure;
 using OtherworldMod.Core.Util;
+using OtherworldMod.Common.Structure;
 
 namespace OtherworldMod.Common.ChangeNPC
 {
@@ -32,6 +32,18 @@ namespace OtherworldMod.Common.ChangeNPC
 
         //public bool npcTarget = true;
         public string? phase = "";
+
+
+        public Common.Interface.IRadar NPCRadar
+        {
+            get;
+            private set;
+        }
+        public Common.Interface.ITargetable NPCTarget
+        {
+            get;
+            private set;
+        }
 
         private void SetProjectiles(NPC npc, int checkType, params int[] projs)
         {

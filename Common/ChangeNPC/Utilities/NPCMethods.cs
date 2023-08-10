@@ -9,8 +9,8 @@ using Microsoft.Xna.Framework.Graphics;
 using static OtherworldMod.Core.Util.Utils;
 using static OtherworldMod.Common.ChangeNPC.Utilities.OtherworldNPCSets;
 using static OtherworldMod.Common.ChangeNPC.AI.AIStyle_001;
-using OtherworldMod.Common.ChangeNPC.Structure;
 using OtherworldMod.Core.Util;
+using OtherworldMod.Common.Structure;
 
 namespace OtherworldMod.Common.ChangeNPC.Utilities
 {
@@ -57,8 +57,7 @@ namespace OtherworldMod.Common.ChangeNPC.Utilities
         /// <param name="npc"></param>
         /// <returns>True if NPC target, False if Player target</returns>
         /// <remarks>Obsolete: Use <see cref="FindTarget(NPC, out Vector2, bool, TargetMode)"/> instead.</remarks>
-        [Obsolete]
-        public static bool FindTarget(NPC npc, bool tileImportant = false)
+        /*public static bool FindTarget(NPC npc, bool tileImportant = false)
         {
             bool isNPC = false;
             float dist = float.MaxValue;
@@ -93,7 +92,7 @@ namespace OtherworldMod.Common.ChangeNPC.Utilities
             }
             npc.target = target;
             return isNPC;
-        }
+        }*/
 
         /// <summary>
         /// 
@@ -137,7 +136,7 @@ namespace OtherworldMod.Common.ChangeNPC.Utilities
         }
 
         //Returns false if no target is found.
-        public static bool FindTarget(NPC npc, out Vector2 targetPos, bool tileImportant = false, TargetMode mode = TargetMode.Default)
+        /*public static bool FindTarget(NPC npc, out Vector2 targetPos, bool tileImportant = false, TargetMode mode = TargetMode.Default)
         {
             targetPos = npc.position;
             if (mode == TargetMode.NoTarget)
@@ -199,8 +198,6 @@ namespace OtherworldMod.Common.ChangeNPC.Utilities
                 offset *= -1;
             targetPos = npc.position + offset;
             return foundTarget;
-        }
-
-        public static ITargetSource GetTargetSource(NPC npc) => new NPCTargetSource(npc);
+        }*/
     }
 }

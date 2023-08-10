@@ -11,98 +11,15 @@ using Mono.Cecil;
 using OtherworldMod.Common.ChangeNPC;
 using Microsoft.CodeAnalysis;
 using static OtherworldMod.Core.Util.Utils;
+using OtherworldMod.Common.Interface;
+using OtherworldMod.Common.Structure;
 
 namespace OtherworldMod.Core.Util
 {
-    public struct TargetInfo
-    {
-        public TargetInfo()
-        {
-            Position = Vector2.Zero;
-            aggro = 0;
-        }
-        public TargetInfo(byte aggro, Vector2 position)
-        {
-            this.aggro = aggro;
-            Position = position;
-        }
-        public Vector2 Position { get; private set; }
-        public byte aggro;
-
-        internal static void NetSend(TargetInfo info, System.IO.BinaryWriter writer)
-        {
-            writer.Write(info.aggro);
-            writer.Write(info.Position.X);
-            writer.Write(info.Position.Y);
-        }
-        internal static TargetInfo NetRec(System.IO.BinaryReader reader)
-        {
-            TargetInfo info = new TargetInfo();
-            info.aggro = reader.ReadByte();
-            info.Position = new Vector2(reader.ReadSingle(), reader.ReadSingle());
-            return info;
-        }
-    }
-
-    public interface ISourceable<T>
-    {
-        public T Source { get; }
-    }
-    /// <summary>
-    /// The source of a <see cref="TargetCollective.PullTarget(ITargetSource)"/> call, used to find a valid target (<see cref="ITargetSource"/>)
-    /// </summary>
-    public interface ITargetSource
-    {
-        /// <summary>
-        /// Whether or not this source will ignore misdirect effects (confusion, invisibility, etc)
-        /// </summary>
-        /// <param name="target"></param>
-        /// <returns></returns>
-        public bool IgnoresMisdirection(ITargetable target);
-        /// <summary>
-        /// Used to weigh a target's value/worth. Larger (positive) values are deemed as more worthy targets.
-        /// </summary>
-        /// <param name="target"></param>
-        /// <returns>A signed float signalling <paramref name="target"/>'s weight for targeting as determined by table below.
-        /// <list type="table">
-        /// <item><term>Positive</term>
-        /// <description>High Priority Target</description></item>
-        /// <item><term>Zero</term>
-        /// <description>Low Priority Target</description></item>
-        /// <item><term>Negative</term>
-        /// <description>Cannot be targeted</description></item>
-        /// </list></returns>
-        public float GetWeight(ITargetable target);
-    }
-    /// <summary>
-    /// A thing that can be found and targetted with <see cref="TargetCollective.PullTarget(ITargetSource)"/>
-    /// </summary>
-    public interface ITargetable
-    {
-        /// <summary>
-        /// Called to find target state.
-        /// </summary>
-        /// <param name="source">The searching source</param>
-        /// <returns>Returns a signed int dictating the target state such that
-        /// <list type="table">
-        /// <item><term>-1</term>
-        /// <description>Marked for removal; the target has expired and should no longer be available.</description></item>
-        /// <item><term>0</term>
-        /// <description>Active, but should not be available for radar location</description></item>
-        /// <item><term>1</term>
-        /// <description>Active and available for radar</description></item></list></returns>
-        public int GetState();
-        /// <summary>
-        /// Get information about the target including position and aggro
-        /// </summary>
-        /// <param name="source"></param>
-        /// <returns></returns>
-        public TargetInfo GetInfo(ITargetSource source);
-    }
-
+    /*
     //Arbitrary entity target types
     //For when someone adds an unknown entity type, and doesn't properly use API to create their own type.
-    public class EntityTargetSource : ITargetSource
+    public class EntityTargetSource : IRadar
     {
         public EntityTargetSource(IEntitySource src) { source = src; }
         IEntitySource source;
@@ -127,15 +44,15 @@ namespace OtherworldMod.Core.Util
                 return 1;
             return -1;
         }
-        public virtual TargetInfo GetInfo(ITargetSource source)
+        public virtual TargetInfo GetInfo(IRadar source)
         {
-            return new TargetInfo(0, Source.Center);
+            return new TargetInfo(0, Source.Center, Faction.UnivNoFac);
         }
     }
 
     //Player target types
     //Use this for effects that happen from the player but aren't directly controlled by the player (ex: retaliation/parry strikes)
-    public class PlayerTargetSource : ITargetSource, ISourceable<Player>
+    public class PlayerTargetSource : IRadar, ISourceable<Player>
     {
         public PlayerTargetSource(Player player) => index = player.whoAmI;
         int index;
@@ -179,16 +96,25 @@ namespace OtherworldMod.Core.Util
                 return 0;
             return 1;
         }
-        public virtual TargetInfo GetInfo(ITargetSource source)
+        public virtual TargetInfo GetInfo(IRadar source)
         {
             byte aggro = (byte)((Source.aggro + 4300) * 255 / 6500);
-            return new TargetInfo(aggro, Source.Center);
+            Faction infoFac = Source.team switch
+            {
+                1 => Faction.TeamRed,
+                2 => Faction.TeamGreen,
+                3 => Faction.TeamBlue,
+                4 => Faction.TeamYellow,
+                5 => Faction.TeamPink,
+                _ => Faction.TeamWhite,
+            };
+            return new TargetInfo(aggro, Source.Center, infoFac);
         }
     }
 
     //Projectile target types
     //Use these for projectile homing (minions, chlorophyte/nanite bullets, etc), or redirect (Stardust Guardian)
-    public class ProjectileTargetSource : ITargetSource, ISourceable<Projectile>
+    public class ProjectileTargetSource : IRadar, ISourceable<Projectile>
     {
         public ProjectileTargetSource(Projectile projectile) => index = projectile.whoAmI;
         int index;
@@ -229,15 +155,16 @@ namespace OtherworldMod.Core.Util
                 return -1;
             return 1;
         }
-        public virtual TargetInfo GetInfo(ITargetSource source)
+        public virtual TargetInfo GetInfo(IRadar source)
         {
-            return new TargetInfo(0, Source.Center);
+            if(Source.hostile)
+                return new TargetInfo(0, Source.Center, );
         }
     }
 
     //NPC target types
     //Primary mod objective uses these.
-    public class NPCTargetSource : ITargetSource, ISourceable<NPC>
+    public class NPCTargetSource : IRadar, ISourceable<NPC>
     {
         public NPCTargetSource(NPC npc) => index = npc.whoAmI;
         int index;
@@ -288,7 +215,7 @@ namespace OtherworldMod.Core.Util
                 return -1;
             return 1;
         }
-        public virtual TargetInfo GetInfo(ITargetSource source)
+        public virtual TargetInfo GetInfo(IRadar source)
         {
             NPC npc = Source;
             byte aggro = npc.GetGlobalNPC<OtherworldNPC>().aggro;
@@ -318,7 +245,7 @@ namespace OtherworldMod.Core.Util
     //Misc target types
     //For adding or using *completely* arbitrary radars/targets...
     //Radar is omniscient, will ignore misdirects, no special exceptions, and ignores tiles, liquid, etc.
-    public class RadarTargetSource : ITargetSource
+    public class RadarTargetSource : IRadar
     {
         public RadarTargetSource(Vector2 pos) => orig = pos;
         Vector2 orig;
@@ -332,105 +259,291 @@ namespace OtherworldMod.Core.Util
     {
         public EmptyTarget(Vector2 pos, byte aggro)
         {
-            info = new TargetInfo(aggro, pos);
+            info = new TargetInfo(aggro, pos, Faction.UnivHostile);
         }
         TargetInfo info;
         public int GetState() => -1;
-        public TargetInfo GetInfo(ITargetSource source) => info;
+        public TargetInfo GetInfo(IRadar source) => info;
+    }*/
+
+    //For modded NPCs that DON'T use this system
+    public class NPCTarget : ITargetable, ISourceable<NPC>
+    {
+        protected int _index;
+        public NPC Source => Main.npc[_index];
+        public NPCTarget(int index = 0)
+        {
+            _index = index;
+        }
+
+        public virtual TargetInfo GetInfo(IRadar radar)
+        {
+            return new TargetInfo(Source.GetGlobalNPC<OtherworldNPC>().aggro, Source.position, Faction.UnivNoFac | Faction.UnivHostile);
+        }
+        public virtual int GetState()
+        {
+            return Source.active ? 1 : -1;
+        }
+    }
+    //For NPCs that DO use this system
+    public class NPCTarget<T> : NPCTarget where T : Common.ChangeNPC.AI.AIStyleType
+    {
+        private Common.ChangeNPC.AI.AIStyleType _style;
+        public NPCTarget(int index = 0) : base(index)
+        {
+            _style = ModContent.GetInstance<T>();
+        }
+
+        private TargetInfo _cache;
+        public override TargetInfo GetInfo(IRadar radar)
+        {
+            if (!_cache.Initiated)
+                return (_cache = base.GetInfo(radar));
+            _style.UpdateInfo(ref _cache, _index, radar);
+            return _cache;
+        }
+        public override int GetState()
+        {
+            return Source.active ? 1 : -1;
+        }
+    }
+
+    //Projectiles that wish to be targeted should inherit this class
+    public class ProjectileTarget : ITargetable, ISourceable<Projectile>
+    {
+        protected int _index;
+        public Projectile Source => Main.projectile[_index];
+        public ProjectileTarget(int index = 0)
+        {
+            _index = 0;
+        }
+
+        public TargetInfo GetInfo(IRadar radar)
+        {
+            return new TargetInfo(100, Source.position, Faction.UnivNoFac);
+        }
+        public int GetState() => 0;
+    }
+
+    //Player target
+    public class PlayerTarget : ITargetable, ISourceable<Player>
+    {
+        protected int _index;
+        public Player Source => Main.player[_index];
+        public PlayerTarget(int index = 0)
+        {
+            _index = index;
+        }
+
+        public TargetInfo GetInfo(IRadar radar)
+        {
+            byte aggro = (byte)MathHelper.Min(((Source.aggro + 4300) * 255 / 6500), 255);
+            return new TargetInfo(aggro, Source.position, Faction.UnivFriendly);
+        }
+        public int GetState() => 0;
+    }
+
+    public class Target : ITargetable
+    {
+        private Vector2 _position;
+        private byte _aggro;
+        public Target(Vector2 pos, byte aggro)
+        {
+            _position = pos;
+            _aggro = aggro;
+        }
+        public TargetInfo GetInfo(IRadar radar) => new TargetInfo(_aggro, _position, Faction.UnivHostile);
+        public int GetState() => 0;
+    }
+
+
+
+    public class NPCRadar : IRadar, ISourceable<NPC>
+    {
+        protected int _index;
+        public NPC Source => Main.npc[_index];
+        public NPCRadar(int index = 0)
+        {
+            _index = index;
+            _info = new RadarInfo(Source.position, false, 3f, true, true);
+        }
+        public float GetWeight(ITargetable target)
+        {
+            return (Vector2.DistanceSquared(Info.Position, target.GetInfo(this).Position) * Info.AggroFactor).SafeInvert();
+        }
+        private RadarInfo _info;
+        public RadarInfo Info
+        {
+            get
+            {
+                _info.Position = Source.position;
+                return _info;
+            }
+        }
+    }
+
+    public class ProjectileRadar : IRadar, ISourceable<Projectile>
+    {
+        protected int _index;
+        public Projectile Source => Main.projectile[_index];
+        public ProjectileRadar(int index = 0)
+        {
+            _index = index;
+            _info = new RadarInfo(Source.position, true, 3, false, true);
+        }
+        public float GetWeight(ITargetable target)
+        {
+            return (Vector2.DistanceSquared(Info.Position, target.GetInfo(this).Position) * Info.AggroFactor).SafeInvert();
+        }
+        private RadarInfo _info;
+        public RadarInfo Info
+        {
+            get
+            {
+                _info.Position = Source.position;
+                return _info;
+            }
+        }
+    }
+
+    public class PlayerRadar : IRadar, ISourceable<Player>
+    {
+        protected int _index;
+        public Player Source => Main.player[_index];
+        public PlayerRadar(int index = 0)
+        {
+            _index = index;
+            _info = new RadarInfo(Source.position, true, 3, false, true);
+        }
+        public float GetWeight(ITargetable target)
+        {
+            return (Vector2.DistanceSquared(Info.Position, target.GetInfo(this).Position) * Info.AggroFactor).SafeInvert();
+        }
+        private RadarInfo _info;
+        public RadarInfo Info
+        {
+            get
+            {
+                _info.Position = Source.position;
+                return _info;
+            }
+        }
+    }
+
+    public class Radar : IRadar
+    {
+        public Radar(Vector2 pos)
+        {
+            _info = new RadarInfo(pos, true, 1, true, true);
+        }
+        public float GetWeight(ITargetable target)
+        {
+            return (Vector2.DistanceSquared(Info.Position, target.GetInfo(this).Position) * Info.AggroFactor).SafeInvert();
+        }
+        private RadarInfo _info;
+        public RadarInfo Info
+        {
+            get
+            {
+                return _info;
+            }
+        }
     }
 
     public static class TargetCollective
     {
-        private static List<ITargetable> targets = new List<ITargetable>(2048);
-        public static int AddTarget(ITargetable target)
+        private static RigidList<ITargetable> targets = new RigidList<ITargetable>(1024);
+        public static void AddTarget(ITargetable target)
         {
             targets.Add(target);
-            return targets.Count;
         }
-        public static int AddTarget<T>(T entity) where T : Entity
-        {
-            Type t = typeof(T);
-            if (t.Equals(typeof(NPC)))
-                return AddTarget(new NPCTarget(entity as NPC));
-            else if (t.Equals(typeof(Player)))
-                return AddTarget(new PlayerTarget(entity as Player));
-            else if (t.Equals(typeof(Projectile)))
-                return AddTarget(new ProjectileTarget(entity as Projectile));
-            return AddTarget(new EntityTarget(entity.GetSource_FromThis()));
-        }
-        public static void Update()
+        public static void RemoveTarget(ITargetable target)
         {
             for (int i = 0; i < targets.Count; i++)
             {
-                ITargetable target = targets[i];
-                int state = target.GetState();
-                if (state == -1)
+                if (!targets.TryGet(i, out ITargetable comp))
+                    continue;
+                if (target.Equals(comp))
                 {
                     targets.RemoveAt(i);
-                    i--;
+                    break;
+                }
+            }
+        }
+
+        public static void Update()
+        {
+            for(int i = 0; i < targets.Count; i++)
+            {
+                if (targets.TryGet(i, out ITargetable target))
+                {
+                    int state = target.GetState();
+                    if (state == -1)
+                    {
+                        targets.RemoveAt(i);
+                    }
                 }
             }
         }
 
         /// <summary>
-        /// Finds the optimal target for a given <see cref="ITargetSource"/> radar.
+        /// Finds the optimal target for a given <see cref="IRadar"/> radar.
         /// </summary>
         /// <param name="source">Searching object</param>
+        /// <param name="info"></param>
+        /// <param name="cutoff">Cutoff point for maximum target weight for early return</param>
         /// <returns>Index of found target</returns>
-        public static int PullTarget(ITargetSource source, out TargetInfo info, float cutoff = 2048)
+        public static int PullTarget(IRadar source, out TargetInfo info, float cutoff = 2048)
         {
-            cutoff.SafeInvert();
-            int retIndex = 0;
-            float prevWeight = -1;
-            for(int i = 0; i < targets.Count; i++)
-            {
-                ITargetable target = targets[i];
-                float targetWeight = source.GetWeight(target);
-                if (targetWeight < 0 || target.GetState() != 1)
-                {
-                    continue;
-                }
-                if (targetWeight > prevWeight)
-                {
-                    prevWeight = targetWeight;
-                    retIndex = i;
-                    if (targetWeight > cutoff)
-                        break;
-                }
-            }
-            info = targets[retIndex].GetInfo(source);
-            return retIndex;
+            return targets.IndexOf(PullTargetDirect(source, out info, cutoff));
         }
+
         /// <summary>
-        /// Get a target from private array
+        /// Get a target from private list
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public static ITargetable GetTargetFromIndex(int index) => targets[index];
-        /// <summary>
-        /// Finds the optimal target for a given <see cref="ITargetSource"/> radar.
-        /// </summary>
-        /// <param name="source">Searching object</param>
-        /// <returns>Found target</returns>
-        public static ITargetable PullTargetDirect(ITargetSource source, out TargetInfo info, float cutoff = 2048)
+        public static bool TryGetTarget(int index, out ITargetable target)
         {
-            cutoff.SafeInvert();
-            ITargetable returnVal = targets[0];
-            float prevWeight = -1;
-            foreach (ITargetable target in targets)
+            return targets.TryGet(index, out target);
+        }
+
+        /// <summary>
+        /// Finds the optimal target for a given <see cref="IRadar"/> radar.
+        /// </summary>
+        /// <param name="radar">Searching object</param>
+        /// <returns>Found target</returns>
+        public static ITargetable PullTargetDirect(IRadar radar, out TargetInfo info, float cutoff = 2048)
+        {
+            //If no target at index 0 (safer than assuming one will exist at 0)
+            if (targets.Count == 0)
             {
-                float targetWeight = source.GetWeight(target);
-                if (targetWeight < 0 || target.GetState() != 1)
-                    continue;
-                if (targetWeight > prevWeight)
+                ITargetable def = default(ITargetable);
+                info = new TargetInfo(0, Vector2.Zero, Faction.UnivNoFac);
+                return def;
+            }
+
+            ITargetable returnVal = default(ITargetable);
+            cutoff.SafeInvert();
+            float prevWeight = -1;
+
+            for(int i = 0; i < targets.Count; i++)
+            {
+                if (targets.TryGet(i, out ITargetable target))
                 {
-                    returnVal = target;
-                    prevWeight = targetWeight;
-                    if (targetWeight > cutoff)
-                        break;
+                    float targetWeight = radar.GetWeight(target);
+                    if (targetWeight < 0)// || target.GetState() != 1)
+                        continue;
+                    if (targetWeight > prevWeight)
+                    {
+                        returnVal = target;
+                        prevWeight = targetWeight;
+                        if (targetWeight > cutoff)
+                            break;
+                    }
                 }
             }
-            info = returnVal.GetInfo(source);
+            info = returnVal.GetInfo(radar);
             return returnVal;
         }
     }

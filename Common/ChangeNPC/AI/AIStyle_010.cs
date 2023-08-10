@@ -19,6 +19,14 @@ namespace OtherworldMod.Common.ChangeNPC.AI
     /// </summary>
     public class AIStyle_010 : AIStyleType
     {
+        protected override ITargetable SetDefaultTarget(int npcIndex)
+        {
+            return new Core.Util.NPCTarget<AIStyle_010>(npcIndex);
+        }
+        public override void UpdateInfo(ref TargetInfo info, int npcIndex, IRadar radar)
+        {
+            info.Position = Main.npc[npcIndex].position;
+        }
         protected override int[] ApplicableNPCs => new int[] { NPCID.CursedSkull, NPCID.GiantCursedSkull };
         public override void Load()
         {
@@ -33,7 +41,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
 
             npc.GetGlobalNPC<OtherworldNPC>().allowContactDmg = false;
 
-            npc.target = TargetCollective.PullTarget(new NPCTargetSource(npc), out TargetInfo info);
+            npc.target = PullTarget(npc, out TargetInfo info);
             float dist = AppxDistanceTo(npc, info.Position);
 
             if (dist > 800)
@@ -67,7 +75,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
 
             npc.GetGlobalNPC<OtherworldNPC>().allowContactDmg = false;
 
-            npc.target = TargetCollective.PullTarget(new NPCTargetSource(npc), out TargetInfo info);
+            npc.target = PullTarget(npc, out TargetInfo info);
             float dist = AppxDistanceTo(npc, info.Position);
 
             if (dist > 800)
@@ -96,7 +104,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
         }
         public static string? Attack1(NPC npc, int timer)
         {
-            npc.target = TargetCollective.PullTarget(new NPCTargetSource(npc), out TargetInfo info);
+            npc.target = PullTarget(npc, out TargetInfo info);
             float dist = AppxDistanceTo(npc, info.Position);
 
             if (timer == 45)
@@ -109,7 +117,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
         }
         public static string? Attack2(NPC npc, int timer)
         {
-            npc.target = TargetCollective.PullTarget(new NPCTargetSource(npc), out TargetInfo info);
+            npc.target = PullTarget(npc, out TargetInfo info);
             float dist = AppxDistanceTo(npc, info.Position);
             npc.velocity *= .98f;
             if (timer > 180 || !CanNPCShoot(npc))

@@ -12,5 +12,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Common\ChangeTile\" />
+    <Folder Include="Common\Structure\TargetRadar\" />
   </ItemGroup>
 </Project>

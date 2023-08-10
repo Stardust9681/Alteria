@@ -19,6 +19,14 @@ namespace OtherworldMod.Common.ChangeNPC.AI
     /// </summary>
     public class AIStyle_005 : AIStyleType
     {
+        protected override ITargetable SetDefaultTarget(int npcIndex)
+        {
+            return new Core.Util.NPCTarget<AIStyle_005>(npcIndex);
+        }
+        public override void UpdateInfo(ref TargetInfo info, int npcIndex, IRadar radar)
+        {
+            info.Position = Main.npc[npcIndex].position;
+        }
         protected override int[] ApplicableNPCs => new int[] { NPCID.BigHornetStingy, NPCID.LittleHornetStingy, NPCID.BigHornetSpikey,
                 NPCID.LittleHornetSpikey, NPCID.BigHornetLeafy, NPCID.LittleHornetLeafy, NPCID.BigHornetHoney, NPCID.LittleHornetHoney,
                 NPCID.BigHornetFatty, NPCID.LittleHornetFatty, NPCID.BigCrimera, NPCID.LittleCrimera, NPCID.GiantMossHornet,
@@ -34,9 +42,10 @@ namespace OtherworldMod.Common.ChangeNPC.AI
         //cw circle around player
         static string? FlierMove1(NPC npc, int timer)
         {
-            npc.GetGlobalNPC<OtherworldNPC>().allowContactDmg = false;
+            OtherworldNPC gNPC = GetNPC_1(npc);
+            gNPC.allowContactDmg = false;
             //Find target
-            npc.target = TargetCollective.PullTarget(new NPCTargetSource(npc), out TargetInfo info);
+            npc.target = PullTarget(npc, out TargetInfo info);
             int targetDir = npc.position.X > info.Position.X ? -1 : 1;
             float appxDist = AppxDistanceTo(npc, info.Position);
             Vector2 offset = npc.DirectionTo(info.Position);
@@ -70,9 +79,10 @@ namespace OtherworldMod.Common.ChangeNPC.AI
         //ccw circle around player
         static string? FlierMove2(NPC npc, int timer)
         {
-            npc.GetGlobalNPC<OtherworldNPC>().allowContactDmg = false;
+            OtherworldNPC gNPC = GetNPC_1(npc);
+            gNPC.allowContactDmg = false;
             //Find target
-            npc.target = TargetCollective.PullTarget(new NPCTargetSource(npc), out TargetInfo info);
+            npc.target = PullTarget(npc, out TargetInfo info);
             int targetDir = npc.position.X > info.Position.X ? -1 : 1;
             float appxDist = AppxDistanceTo(npc, info.Position);
             Vector2 offset = npc.DirectionTo(info.Position);
@@ -105,8 +115,9 @@ namespace OtherworldMod.Common.ChangeNPC.AI
         //move quickly towards player
         static string? FlierAttack1(NPC npc, int timer)
         {
+            OtherworldNPC gNPC = GetNPC_1(npc);
             //Find target
-            npc.target = TargetCollective.PullTarget(new NPCTargetSource(npc), out TargetInfo info);
+            npc.target = PullTarget(npc, out TargetInfo info);
             float lenSQ = npc.velocity.LengthSquared();
             int targetDir = npc.position.X > info.Position.X ? -1 : 1;
             npc.GetGlobalNPC<OtherworldNPC>().allowContactDmg = lenSQ > 9f;
@@ -136,7 +147,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
         static string? FlierAttack2(NPC npc, int timer)
         {
             //Find target
-            npc.target = TargetCollective.PullTarget(new NPCTargetSource(npc), out TargetInfo info);
+            npc.target = PullTarget(npc, out TargetInfo info);
             if (timer < 30)
             {
                 npc.velocity *= .9f;

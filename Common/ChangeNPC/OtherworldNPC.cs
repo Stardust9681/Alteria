@@ -52,7 +52,19 @@ namespace OtherworldMod.Common.ChangeNPC
         }
         public override void OnSpawn(NPC npc, IEntitySource source)
         {
-            Core.Util.TargetCollective.AddTarget(new Core.Util.NPCTarget(npc));
+            if (AIChanges)
+            {
+                if (Behaviours[npc.netID].HasEntry)
+                {
+                    NPCTarget = Behaviours[npc.netID].SetTarget(npc.whoAmI);
+                    NPCRadar = Behaviours[npc.netID].SetRadar(npc.whoAmI);
+                }
+                else
+                {
+                    Core.Util.TargetCollective.AddTarget(new Core.Util.NPCTarget(npc.whoAmI));
+                    NPCRadar = new Core.Util.NPCRadar(npc.whoAmI);
+                }
+            }
         }
         public override bool CanHitPlayer(NPC npc, Player target, ref int cooldownSlot)
         {
@@ -90,9 +102,9 @@ namespace OtherworldMod.Common.ChangeNPC
         {
             if (AIChanges)
             {
-                int timer = (int)npc.ai[0];
-                if (Behaviours[npc.netID].HasEntry)
+                if (npc.netID >= 0 && npc.netID < Behaviours.Length && Behaviours[npc.netID].HasEntry)
                 {
+                    int timer = (int)npc.ai[0];
                     string? curPhase = phase;
                     Behaviours[npc.netID].Update(npc, ref phase, ref timer);
                     npc.ai[0] = timer;

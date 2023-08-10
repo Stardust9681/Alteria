@@ -29,6 +29,7 @@ Other Ideas:
 
 NPC Changes:
 - NPC AI Rewrite (to include confusion behaviour, hostile/friendly targetting, dynamic movement, add enemy grief to some AI)
+- NPC method/hook for movement (void(NPC, Target, ref Velocity), confusion, wind, invis, etc)
 - Constant Hitbox -> Situational Hitbox
 - IgnoresWater, ShootsProjectile, SpawnsNPC, Flies, TargetsNPCs, ...
 - Gradually increase item droprates by some function as a given NPC type is killed, reset when item is dropped
@@ -58,6 +59,8 @@ Buff Changes:
 - Ichor adjusted to -20 def effect
 - Cursed Inferno adjusted to 20 dps
 - Confused applies to more enemies
+- Buff stacking -- can apply fire, poison, etc. multiple times
+- Buff resistances -- partial effect or cap to stack count
 
 UI Changes:
 - Accessibility Toggle for Info Accessories (client-side config, disable colour alteration)
@@ -90,3 +93,6 @@ API:
 - Add set(s) for...
     Tile min pick power
     
+Vanilla Bugs/Problems:
+- Drunk dungeon enemies have 0 drops until Skeletron is killed, and are not added to bestiary (no way to see what these are or what they're supposed to drop)
+- Hel-fire/Amarok yoyos balance

@@ -19,6 +19,14 @@ namespace OtherworldMod.Common.ChangeNPC.AI
     /// </summary>
     internal class AIStyle_002 : AIStyleType
     {
+        protected override ITargetable SetDefaultTarget(int npcIndex)
+        {
+            return new NPCTarget<AIStyle_002>(npcIndex);
+        }
+        public override void UpdateInfo(ref TargetInfo info, int npcIndex, IRadar radar)
+        {
+            info.Position = Main.npc[npcIndex].position;
+        }
         protected override int[] ApplicableNPCs => new int[] { NPCID.DemonEye2, NPCID.PurpleEye2, NPCID.GreenEye2, NPCID.DialatedEye2, NPCID.SleepyEye2,
                 NPCID.CataractEye2, NPCID.DemonEye, NPCID.TheHungryII, NPCID.WanderingEye, NPCID.PigronCorruption, NPCID.PigronHallow,
                 NPCID.PigronCrimson, NPCID.CataractEye, NPCID.SleepyEye, NPCID.DialatedEye, NPCID.GreenEye, NPCID.PurpleEye,
@@ -31,9 +39,9 @@ namespace OtherworldMod.Common.ChangeNPC.AI
         {
             npc.GetGlobalNPC<OtherworldNPC>().allowContactDmg = false;
             //Find target
-            bool foundTarget = FindTarget(npc, out Vector2 targetPos);
+            npc.target = PullTarget(npc, out TargetInfo info);
             //Find target direction
-            Vector2 targetDir = npc.DirectionTo(targetPos);
+            Vector2 targetDir = npc.DirectionTo(info.Position);
             //Change velocity to move away from target (account for confusion)
             npc.velocity -= targetDir * (npc.confused ? -.14f : .14f);
             //Never move on from this AI (I'm not all too concerned about it having weird behaviour when it cycles to nighttime again)
@@ -66,7 +74,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
                 return nameof(EyeWet);
             }
             OtherworldNPC gNPC = GetNPC_1(npc);
-            npc.target = TargetCollective.PullTarget(new NPCTargetSource(npc), out TargetInfo info);
+            npc.target = PullTarget(npc, out TargetInfo info);
             //bool foundTarget = FindTarget(npc, out Vector2 targetPos);
             float dist = AppxDistanceTo(npc, info.Position);
             //If target is far enough, move to charge attack
@@ -113,7 +121,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             }
             //bool foundTarget = FindTarget(npc, out Vector2 targetPos);
             OtherworldNPC gNPC = GetNPC_1(npc);
-            npc.target = TargetCollective.PullTarget(new NPCTargetSource(npc), out TargetInfo info);
+            npc.target = PullTarget(npc, out TargetInfo info);
             //Disable contact damage on ground
             gNPC.allowContactDmg = false;
             //Check if NPC can shoot projectiles
@@ -146,7 +154,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             }
             OtherworldNPC gNPC = GetNPC_1(npc);
             gNPC.allowContactDmg = false;
-            npc.target = TargetCollective.PullTarget(new NPCTargetSource(npc), out TargetInfo info);
+            npc.target = PullTarget(npc, out TargetInfo info);
             if (npc.collideX)
             {
                 npc.velocity.X = -npc.oldVelocity.X;

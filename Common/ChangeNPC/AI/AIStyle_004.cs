@@ -20,6 +20,14 @@ namespace OtherworldMod.Common.ChangeNPC.AI
     /// </summary>
     public class AIStyle_004 : AIStyleType
     {
+        protected override ITargetable SetDefaultTarget(int npcIndex)
+        {
+            return new NPCTarget<AIStyle_004>(npcIndex);
+        }
+        public override void UpdateInfo(ref TargetInfo info, int npcIndex, IRadar radar)
+        {
+            info.Position = Main.npc[npcIndex].position;
+        }
         protected override int[] ApplicableNPCs => new int[] { NPCID.EyeofCthulhu };
         public override void Load()
         {
@@ -34,7 +42,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             }
             Vector2 npcCenter = npc.Center;
             OtherworldNPC gNPC = npc.GetGlobalNPC<OtherworldNPC>();
-            npc.target = TargetCollective.PullTarget(new NPCTargetSource(npc), out TargetInfo info);
+            npc.target = PullTarget(npc, out TargetInfo info);
             int targetDir = info.Position.X < npcCenter.X ? -1 : 1 * (npc.confused ? -1 : 1);
             gNPC.allowContactDmg = false;
             npc.rotation = (info.Position - npcCenter).ToRotation() - MathHelper.PiOver2;
@@ -76,7 +84,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
                 return nameof(EOCPhase2);
             }
             OtherworldNPC gNPC = npc.GetGlobalNPC<OtherworldNPC>();
-            npc.target = TargetCollective.PullTarget(new NPCTargetSource(npc), out TargetInfo info);
+            npc.target = PullTarget(npc, out TargetInfo info);
             int targetDir = info.Position.X < npc.Center.X ? -1 : 1 * (npc.confused ? -1 : 1);
             gNPC.allowContactDmg = timer > 30;
             if (timer < 6)
@@ -123,7 +131,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
                 return nameof(EOCPhase2);
             }
             OtherworldNPC gNPC = npc.GetGlobalNPC<OtherworldNPC>();
-            npc.target = TargetCollective.PullTarget(new NPCTargetSource(npc), out TargetInfo info);
+            npc.target = PullTarget(npc, out TargetInfo info);
             int targetDir = info.Position.X < npc.Center.X ? -1 : 1 * (npc.confused ? -1 : 1);
             gNPC.allowContactDmg = timer > 45;
             if (timer < 8)
@@ -170,7 +178,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
                 return nameof(EOCPhase2);
             }
             OtherworldNPC gNPC = npc.GetGlobalNPC<OtherworldNPC>();
-            npc.target = TargetCollective.PullTarget(new NPCTargetSource(npc), out TargetInfo info);
+            npc.target = PullTarget(npc, out TargetInfo info);
             int targetDir = info.Position.X < npc.Center.X ? -1 : 1 * (npc.confused ? -1 : 1);
             gNPC.allowContactDmg = timer > 65;
             if (timer < 12)
@@ -209,7 +217,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
         static string? EOCSpawn1(NPC npc, int timer)
         {
             OtherworldNPC gNPC = npc.GetGlobalNPC<OtherworldNPC>();
-            npc.target = TargetCollective.PullTarget(new NPCTargetSource(npc), out TargetInfo info);
+            npc.target = PullTarget(npc, out TargetInfo info);
             int targetDir = info.Position.X < npc.Center.X ? -1 : 1 * (npc.confused ? -1 : 1);
             gNPC.allowContactDmg = false;
             if (gNPC.spawnNPC == null || gNPC.spawnNPC.Length == 0 || gNPC.spawnNPC[0] == 0)
@@ -243,7 +251,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
         static string? EOCPhase2(NPC npc, int timer)
         {
             OtherworldNPC gNPC = npc.GetGlobalNPC<OtherworldNPC>();
-            npc.target = TargetCollective.PullTarget(new NPCTargetSource(npc), out TargetInfo info);
+            npc.target = PullTarget(npc, out TargetInfo info);
             int targetDir = info.Position.X < npc.Center.X ? -1 : 1 * (npc.confused ? -1 : 1);
             gNPC.allowContactDmg = false;
             npc.velocity *= .99f;
@@ -273,7 +281,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             }
             Vector2 npcCenter = npc.Center;
             OtherworldNPC gNPC = npc.GetGlobalNPC<OtherworldNPC>();
-            npc.target = TargetCollective.PullTarget(new NPCTargetSource(npc), out TargetInfo info);
+            npc.target = PullTarget(npc, out TargetInfo info);
             int targetDir = info.Position.X < npcCenter.X ? -1 : 1 * (npc.confused ? -1 : 1);
             gNPC.allowContactDmg = false;
             npc.rotation = (info.Position - npcCenter).ToRotation() - MathHelper.PiOver2;
@@ -307,7 +315,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
                 return nameof(EOCMove3);
             }
             OtherworldNPC gNPC = npc.GetGlobalNPC<OtherworldNPC>();
-            npc.target = TargetCollective.PullTarget(new NPCTargetSource(npc), out TargetInfo info);
+            npc.target = PullTarget(npc, out TargetInfo info);
             int targetDir = info.Position.X < npc.Center.X ? -1 : 1 * (npc.confused ? -1 : 1);
             gNPC.allowContactDmg = timer > 90;
             if (timer == 90)
@@ -345,7 +353,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
         static string? EOCAttack5(NPC npc, int timer)
         {
             OtherworldNPC gNPC = npc.GetGlobalNPC<OtherworldNPC>();
-            npc.target = TargetCollective.PullTarget(new NPCTargetSource(npc), out TargetInfo info);
+            npc.target = PullTarget(npc, out TargetInfo info);
             int targetDir = info.Position.X < npc.Center.X ? -1 : 1 * (npc.confused ? -1 : 1);
             float healthFactor = ((float)npc.life / (float)npc.lifeMax);
             if (timer < 5)
@@ -390,7 +398,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
         static string? EOCSpawn2(NPC npc, int timer)
         {
             OtherworldNPC gNPC = npc.GetGlobalNPC<OtherworldNPC>();
-            npc.target = TargetCollective.PullTarget(new NPCTargetSource(npc), out TargetInfo info);
+            npc.target = PullTarget(npc, out TargetInfo info);
             int targetDir = info.Position.X < npc.Center.X ? -1 : 1 * (npc.confused ? -1 : 1);
             gNPC.allowContactDmg = false;
             if (gNPC.spawnNPC == null || gNPC.spawnNPC.Length == 0 || gNPC.spawnNPC[0] == 0)

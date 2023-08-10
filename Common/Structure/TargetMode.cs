@@ -1,4 +1,4 @@
-﻿namespace OtherworldMod.Common.ChangeNPC.Structure
+﻿namespace OtherworldMod.Common.Structure
 {
     /// <summary>
     /// 

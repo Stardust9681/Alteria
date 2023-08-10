@@ -21,7 +21,5 @@ namespace OtherworldMod.Common.ChangeNPC.Utilities
                 arr[i] = new AIStyle(i);
             return arr;
         }
-
-        public static int[] KillCount;
     }
 }

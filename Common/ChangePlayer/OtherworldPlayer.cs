@@ -27,7 +27,7 @@ namespace OtherworldMod.Common.ChangePlayer
                 packet.Send();
             }
             else
-                Core.Util.TargetCollective.AddTarget(new Core.Util.PlayerTarget(Player));
+                Core.Util.TargetCollective.AddTarget(new Core.Util.PlayerTarget(Player.whoAmI));
         }
         public void SetHeal(int healValue)
         {

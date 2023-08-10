@@ -15,11 +15,11 @@ using Terraria.Utilities;
 using OtherworldMod.Common.ChangeNPC.AI;
 using OtherworldMod.Common.ChangePlayer;
 
-namespace CombatPlus.Common.ChangeNPC.Structure
+namespace OtherworldMod.Common.Structure
 {
     public class LootDrop
     {
-        List<(int,int)> itemTypes;
+        List<(int, int)> itemTypes;
         float rootChance;
         IItemDropRuleCondition condition;
 
@@ -39,7 +39,7 @@ namespace CombatPlus.Common.ChangeNPC.Structure
                     return itemTypes[0];
                 return Main.rand.Next(itemTypes);
             }
-            return (0,0);
+            return (0, 0);
         }
         public bool TestLoot(NPC npc)
         {
@@ -47,7 +47,7 @@ namespace CombatPlus.Common.ChangeNPC.Structure
             if (PlayerMethods.RollLuck(interactionPlayer) < EffectiveChance(npc.type))
             {
                 (int, int) pickedItem = PickItem(npc.type);
-                Item.NewItem(npc.GetSource_Loot(), npc.getRect(), pickedItem.Item1, pickedItem.Item2); 
+                Item.NewItem(npc.GetSource_Loot(), npc.getRect(), pickedItem.Item1, pickedItem.Item2);
                 return true;
             }
             return false;

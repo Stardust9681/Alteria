@@ -19,6 +19,14 @@ namespace OtherworldMod.Common.ChangeNPC.AI
     [Autoload(false)]
     public abstract class AIStyle_007 : AIStyleType
     {
+        protected override ITargetable SetDefaultTarget(int npcIndex)
+        {
+            return new Core.Util.NPCTarget<AIStyle_007>(npcIndex);
+        }
+        public override void UpdateInfo(ref TargetInfo info, int npcIndex, IRadar radar)
+        {
+            info.Position = Main.npc[npcIndex].position;
+        }
         protected override int[] ApplicableNPCs => new int[] { NPCID.Merchant, NPCID.Nurse, NPCID.ArmsDealer, NPCID.Dryad, NPCID.Guide, NPCID.OldMan,
                 NPCID.Demolitionist, NPCID.Bunny, NPCID.Clothier, NPCID.GoblinTinkerer, NPCID.Wizard, NPCID.Mechanic, NPCID.SantaClaus,
                 NPCID.Penguin, NPCID.PenguinBlack, NPCID.Truffle, NPCID.Steampunker, NPCID.DyeTrader, NPCID.PartyGirl, NPCID.Cyborg,
@@ -48,9 +56,8 @@ namespace OtherworldMod.Common.ChangeNPC.AI
 
             npc.velocity.X = 0;
 
-            bool foundTarget = FindTarget(npc, out Vector2 targetPos);
-            if (!foundTarget)
-                return nameof(NoMove);
+            npc.target = PullTarget(npc, out TargetInfo info);
+            Vector2 targetPos = info.Position;
 
             int damage = npc.damage;
             float kb = npc.knockBackResist;

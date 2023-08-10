@@ -49,6 +49,8 @@ namespace OtherworldMod
             Terraria.On_Item.NewItem_IEntitySource_Vector2_int_int_int_int_bool_int_bool_bool += NewItem4;
             Terraria.On_Item.NewItem_IEntitySource_Vector2_Vector2_int_int_bool_int_bool_bool += NewItem5;
             #endregion
+
+            ModContent.GetInstance<OtherworldServerConfig>().SetupConfig();
         }
         public override void Unload()
         {
@@ -311,9 +313,12 @@ namespace OtherworldMod
         [Label("Toggle Item Balances")]
         public bool itemBalance;
 
-        public override void OnChanged()
+        public void SetupConfig()
         {
-            OtherworldMod instance = OtherworldMod.Instance;
+            SetupConfig(OtherworldMod.Instance);
+        }
+        public void SetupConfig(OtherworldMod instance)
+        {
             if (instance != null)
             {
                 instance.NPCAIChanges.value = aiChanges;
@@ -331,16 +336,22 @@ namespace OtherworldMod
                 instance.ItemBalance.value = itemBalance;
             }
         }
+
+        public override void OnChanged()
+        {
+            SetupConfig();
+        }
         public override bool AcceptClientChanges(ModConfig pendingConfig, int whoAmI, ref string message)
         {
-            if (whoAmI != Main.myPlayer)
-            {
-                message = "Please contact the server host to change these settings.";
-                System.Console.WriteLine($"{Main.player[whoAmI].name} tried to access server config.");
-                return false;
-            }
-            return true;
+            if (Main.dedServ)
+                return true;
+            if (whoAmI == Main.myPlayer)
+                return true;
+            message = "Please contact the server host to change these settings.";
+            System.Console.WriteLine($"{Main.player[whoAmI].name} tried to access server config.");
+            return false;
         }
+
         private static OtherworldServerConfig AsThis(ModConfig config) => (OtherworldServerConfig)config;
     }
 
