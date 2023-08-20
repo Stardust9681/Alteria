@@ -33,6 +33,9 @@ namespace OtherworldMod.Common.ChangeNPC
         //public bool npcTarget = true;
         public string? phase = "";
 
+        //Should only be changed through buffs
+        public float npcSpeed;
+
 
         public Common.Interface.IRadar NPCRadar
         {

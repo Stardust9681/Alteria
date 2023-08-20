@@ -49,6 +49,26 @@ namespace OtherworldMod.Common.ChangeNPC.Utilities
             Behaviours[type].Unload();
         }
 
+        public static string GetLootTableName(int npcID)
+        {
+            if (npcID < 0)
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+            return $"Terraria.NPC_{npcID}";
+        }
+        public static string GetLootIndexName(string table, int index)
+        {
+            if (table is null or "")
+            {
+                throw new InvalidOperationException();
+            }
+            return table + $".DropNo_{index}";
+        }
+
+        public static string GetLootTableGlobal() => "Terraria.Global";
+        public static string GetLootFromGlobal(int itemType) => $"Terraria.Global_{ContentSamples.ItemsByType[itemType].Name}";
+
         //Need to set this to return either position, rect, or floatrect
         //To account for invis and aggro
 

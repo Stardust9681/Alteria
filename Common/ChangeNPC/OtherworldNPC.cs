@@ -9,11 +9,13 @@ using Microsoft.Xna.Framework.Graphics;
 using static OtherworldMod.Core.Util.Utils;
 using Terraria.DataStructures;
 using Terraria.Utilities;
+using Terraria.GameContent.ItemDropRules;
 using static OtherworldMod.Common.ChangeNPC.Utilities.OtherworldNPCSets;
 using OtherworldMod.Common.ChangeNPC.AI;
 using Terraria.ModLoader.IO;
 using System.IO;
 using System.Reflection;
+using OtherworldMod.Common.ChangeNPC.Utilities;
 
 namespace OtherworldMod.Common.ChangeNPC
 {
@@ -102,17 +104,27 @@ namespace OtherworldMod.Common.ChangeNPC
         {
             if (AIChanges)
             {
-                if (npc.netID >= 0 && npc.netID < Behaviours.Length && Behaviours[npc.netID].HasEntry)
+                try
                 {
-                    int timer = (int)npc.ai[0];
-                    string? curPhase = phase;
-                    Behaviours[npc.netID].Update(npc, ref phase, ref timer);
-                    npc.ai[0] = timer;
-                    if (phase?.Equals(curPhase) == false)
+                    if (npc.netID >= 0 && npc.netID < Behaviours.Length && Behaviours[npc.netID].HasEntry)
                     {
-                        npc.netUpdate = true;
+                        int timer = (int)npc.ai[0];
+                        string? curPhase = phase;
+                        Behaviours[npc.netID].Update(npc, ref phase, ref timer);
+                        npc.ai[0] = timer;
+                        if (phase?.Equals(curPhase) == false)
+                        {
+                            npc.netUpdate = true;
+                        }
+                        return false;
                     }
-                    return false;
+                }
+                catch (NullReferenceException nullRef)
+                {
+                    Logging.PublicLogger.Error(nullRef.Message, nullRef);
+                    Main.NewText(nullRef.Message, Color.DarkRed);
+                    npc.timeLeft = 0;
+                    npc.active = false;
                 }
             }
             return base.PreAI(npc);
@@ -177,6 +189,32 @@ namespace OtherworldMod.Common.ChangeNPC
                 }
             }
             base.FindFrame(npc, frameHeight);
+        }
+        public override void ModifyNPCLoot(NPC npc, NPCLoot npcLoot)
+        {
+            base.ModifyNPCLoot(npc, npcLoot);
+            /*ItemDropDatabase lootDB = (ItemDropDatabase)typeof(NPCLoot).GetField("itemDropDatabase", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(npcLoot);
+            int netID = (int)typeof(NPCLoot).GetField("npcNetId", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(npcLoot);
+            List<IItemDropRule> drops = (List<IItemDropRule>)typeof(ItemDropDatabase).GetField("_globalEntries", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(lootDB);
+            List<DropRateInfo> dropRates = new List<DropRateInfo>();
+            DropRateInfoChainFeed ratesInfo = new DropRateInfoChainFeed(1f);
+            foreach (IItemDropRule x in drops)
+            {
+                x.ReportDroprates(dropRates, ratesInfo);
+                
+            }
+            int count = 0;
+            LootTable table = new LootTable();
+            foreach (DropRateInfo info in dropRates)
+            {
+                //Add loot to manager here
+                LootDrop drop = new LootDrop(info.dropRate, NPCMethods.GetLootIndexName(NPCMethods.GetLootTableName(netID), count));
+                drop.AddToPool(1, info.itemId, info.stackMin, info.stackMax);
+                table.AddDrop(drop);
+                npcLoot.Add(new NewItemDropRule(NPCMethods.GetLootTableName(netID), NPCMethods.GetLootIndexName(NPCMethods.GetLootTableName(netID), count));
+                count++;
+            }
+            LootManager.AddTable(NPCMethods.GetLootTableName(netID), table);*/
         }
     }
 }

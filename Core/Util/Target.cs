@@ -278,7 +278,7 @@ namespace OtherworldMod.Core.Util
 
         public virtual TargetInfo GetInfo(IRadar radar)
         {
-            return new TargetInfo(Source.GetGlobalNPC<OtherworldNPC>().aggro, Source.position, Faction.UnivNoFac | Faction.UnivHostile);
+            return new TargetInfo(Source.GetGlobalNPC<OtherworldNPC>().aggro, Source.Center, Faction.UnivNoFac | Faction.UnivHostile);
         }
         public virtual int GetState()
         {
@@ -367,16 +367,17 @@ namespace OtherworldMod.Core.Util
             _index = index;
             _info = new RadarInfo(Source.position, false, 3f, true, true);
         }
-        public float GetWeight(ITargetable target)
+        public virtual float GetWeight(ITargetable target)
         {
             return (Vector2.DistanceSquared(Info.Position, target.GetInfo(this).Position) * Info.AggroFactor).SafeInvert();
         }
-        private RadarInfo _info;
-        public RadarInfo Info
+        protected RadarInfo _info;
+        public virtual RadarInfo Info
         {
             get
             {
                 _info.Position = Source.position;
+                //_info.Faction = Source.GetGlobalNPC<OtherworldNPC>()
                 return _info;
             }
         }
@@ -543,8 +544,24 @@ namespace OtherworldMod.Core.Util
                     }
                 }
             }
-            info = returnVal.GetInfo(radar);
+            info = returnVal?.GetInfo(radar)??new TargetInfo();
             return returnVal;
+        }
+
+        public static int CountTargetsInRange(Vector2 position, float range = 32f, Predicate<ITargetable>? pred = null)
+        {
+            IRadar omniScanner = new Radar(position);
+            int count = 0;
+            for (int i = 0; i < targets.Count; i++)
+            {
+                if (!targets.TryGet(i, out ITargetable target))
+                    continue;
+                if (target.GetInfo(omniScanner).Position.DistanceSQ(position) > MathF.Pow(range, 2))
+                    continue;
+                if (pred?.Invoke(target) ?? true)
+                    count++;
+            }
+            return count;
         }
     }
 }
