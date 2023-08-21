@@ -6,21 +6,21 @@ using Terraria.ModLoader;
 using Terraria.ID;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using static OtherworldMod.Core.Util.Utils;
-using static OtherworldMod.Common.ChangeNPC.Utilities.NPCMethods;
-using static OtherworldMod.Common.ChangeNPC.Utilities.OtherworldNPCSets;
+using static Alteria.Core.Util.Utils;
+using static Alteria.Common.ChangeNPC.Utilities.NPCMethods;
+using static Alteria.Common.ChangeNPC.Utilities.AlteriaNPCSets;
 using Terraria.DataStructures;
 using Terraria.GameContent.ItemDropRules;
 using static Terraria.GameContent.ItemDropRules.Conditions;
 using Terraria.Utilities;
-using OtherworldMod.Common.ChangeNPC.AI;
-using OtherworldMod.Common.ChangePlayer;
+using Alteria.Common.ChangeNPC.AI;
+using Alteria.Common.ChangePlayer;
 using System.ComponentModel;
 using System.Diagnostics.Metrics;
 using static System.Text.StringBuilder;
 using Terraria.ModLoader.IO;
 
-namespace OtherworldMod.Common.Structure
+namespace Alteria.Common.Structure
 {
     public class LootDrop
     {

@@ -7,12 +7,12 @@ using Terraria.ID;
 using Terraria.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using static OtherworldMod.Core.Util.Utils;
-using static OtherworldMod.Common.ChangeNPC.Utilities.NPCMethods;
-using static OtherworldMod.Common.ChangeNPC.Utilities.OtherworldNPCSets;
-using OtherworldMod.Core.Util;
+using static Alteria.Core.Util.Utils;
+using static Alteria.Common.ChangeNPC.Utilities.NPCMethods;
+using static Alteria.Common.ChangeNPC.Utilities.AlteriaNPCSets;
+using Alteria.Core.Util;
 
-namespace OtherworldMod.Common.ChangeNPC.AI
+namespace Alteria.Common.ChangeNPC.AI
 {
 #nullable enable
     /// <summary>
@@ -41,7 +41,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
                 return nameof(EOCMove3);
             }
             Vector2 npcCenter = npc.Center;
-            OtherworldNPC gNPC = npc.GetGlobalNPC<OtherworldNPC>();
+            AlteriaNPC gNPC = npc.GetGlobalNPC<AlteriaNPC>();
             npc.target = PullTarget(npc, out TargetInfo info);
             int targetDir = info.Position.X < npcCenter.X ? -1 : 1 * (npc.confused ? -1 : 1);
             gNPC.allowContactDmg = false;
@@ -83,7 +83,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             {
                 return nameof(EOCPhase2);
             }
-            OtherworldNPC gNPC = npc.GetGlobalNPC<OtherworldNPC>();
+            AlteriaNPC gNPC = npc.GetGlobalNPC<AlteriaNPC>();
             npc.target = PullTarget(npc, out TargetInfo info);
             int targetDir = info.Position.X < npc.Center.X ? -1 : 1 * (npc.confused ? -1 : 1);
             gNPC.allowContactDmg = timer > 30;
@@ -130,7 +130,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             {
                 return nameof(EOCPhase2);
             }
-            OtherworldNPC gNPC = npc.GetGlobalNPC<OtherworldNPC>();
+            AlteriaNPC gNPC = npc.GetGlobalNPC<AlteriaNPC>();
             npc.target = PullTarget(npc, out TargetInfo info);
             int targetDir = info.Position.X < npc.Center.X ? -1 : 1 * (npc.confused ? -1 : 1);
             gNPC.allowContactDmg = timer > 45;
@@ -177,7 +177,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             {
                 return nameof(EOCPhase2);
             }
-            OtherworldNPC gNPC = npc.GetGlobalNPC<OtherworldNPC>();
+            AlteriaNPC gNPC = npc.GetGlobalNPC<AlteriaNPC>();
             npc.target = PullTarget(npc, out TargetInfo info);
             int targetDir = info.Position.X < npc.Center.X ? -1 : 1 * (npc.confused ? -1 : 1);
             gNPC.allowContactDmg = timer > 65;
@@ -216,7 +216,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
         //Spawn servants
         static string? EOCSpawn1(NPC npc, int timer)
         {
-            OtherworldNPC gNPC = npc.GetGlobalNPC<OtherworldNPC>();
+            AlteriaNPC gNPC = npc.GetGlobalNPC<AlteriaNPC>();
             npc.target = PullTarget(npc, out TargetInfo info);
             int targetDir = info.Position.X < npc.Center.X ? -1 : 1 * (npc.confused ? -1 : 1);
             gNPC.allowContactDmg = false;
@@ -250,7 +250,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
         //Make the transition to phase 2, uses methods below
         static string? EOCPhase2(NPC npc, int timer)
         {
-            OtherworldNPC gNPC = npc.GetGlobalNPC<OtherworldNPC>();
+            AlteriaNPC gNPC = npc.GetGlobalNPC<AlteriaNPC>();
             npc.target = PullTarget(npc, out TargetInfo info);
             int targetDir = info.Position.X < npc.Center.X ? -1 : 1 * (npc.confused ? -1 : 1);
             gNPC.allowContactDmg = false;
@@ -280,7 +280,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
                 return nameof(EOCMove3);
             }
             Vector2 npcCenter = npc.Center;
-            OtherworldNPC gNPC = npc.GetGlobalNPC<OtherworldNPC>();
+            AlteriaNPC gNPC = npc.GetGlobalNPC<AlteriaNPC>();
             npc.target = PullTarget(npc, out TargetInfo info);
             int targetDir = info.Position.X < npcCenter.X ? -1 : 1 * (npc.confused ? -1 : 1);
             gNPC.allowContactDmg = false;
@@ -314,7 +314,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             {
                 return nameof(EOCMove3);
             }
-            OtherworldNPC gNPC = npc.GetGlobalNPC<OtherworldNPC>();
+            AlteriaNPC gNPC = npc.GetGlobalNPC<AlteriaNPC>();
             npc.target = PullTarget(npc, out TargetInfo info);
             int targetDir = info.Position.X < npc.Center.X ? -1 : 1 * (npc.confused ? -1 : 1);
             gNPC.allowContactDmg = timer > 90;
@@ -352,7 +352,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
         //Phase2 hyperdash
         static string? EOCAttack5(NPC npc, int timer)
         {
-            OtherworldNPC gNPC = npc.GetGlobalNPC<OtherworldNPC>();
+            AlteriaNPC gNPC = npc.GetGlobalNPC<AlteriaNPC>();
             npc.target = PullTarget(npc, out TargetInfo info);
             int targetDir = info.Position.X < npc.Center.X ? -1 : 1 * (npc.confused ? -1 : 1);
             float healthFactor = ((float)npc.life / (float)npc.lifeMax);
@@ -397,7 +397,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
         //Phase2 spawn servants
         static string? EOCSpawn2(NPC npc, int timer)
         {
-            OtherworldNPC gNPC = npc.GetGlobalNPC<OtherworldNPC>();
+            AlteriaNPC gNPC = npc.GetGlobalNPC<AlteriaNPC>();
             npc.target = PullTarget(npc, out TargetInfo info);
             int targetDir = info.Position.X < npc.Center.X ? -1 : 1 * (npc.confused ? -1 : 1);
             gNPC.allowContactDmg = false;

@@ -6,9 +6,9 @@ using Terraria.ModLoader;
 using Terraria.ID;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using static OtherworldMod.Core.Util.Utils;
+using static Alteria.Core.Util.Utils;
 
-namespace OtherworldMod.Common.ChangePlayer
+namespace Alteria.Common.ChangePlayer
 {
     public static class PlayerMethods
     {

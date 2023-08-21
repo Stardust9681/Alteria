@@ -6,11 +6,11 @@ using Terraria.ModLoader;
 using Terraria.ID;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using static OtherworldMod.Core.Util.Utils;
-using OtherworldMod.Common.Interface;
-using OtherworldMod.Common.Structure;
+using static Alteria.Core.Util.Utils;
+using Alteria.Common.Interface;
+using Alteria.Common.Structure;
 
-namespace OtherworldMod.Common.ChangeNPC
+namespace Alteria.Common.ChangeNPC
 {
 #nullable enable
     //I wonder if I should have designed this as a generic-type class such that...
@@ -75,11 +75,11 @@ namespace OtherworldMod.Common.ChangeNPC
             }
             catch (ArgumentOutOfRangeException e)
             {
-                Logging.PublicLogger.Error($"[OtherworldMod] Tried to modify NPC phase '{key}' out of bounds.", e);
+                Logging.PublicLogger.Error($"[Alteria] Tried to modify NPC phase '{key}' out of bounds.", e);
             }
             catch (Exception e)
             {
-                Logging.PublicLogger.Error("[OtherworldMod] Unknown problem", e);
+                Logging.PublicLogger.Error("[Alteria] Unknown problem", e);
             }
         }
         public void Update(NPC npc, ref string? phase, ref int timer)
@@ -120,7 +120,7 @@ namespace OtherworldMod.Common.ChangeNPC
         /// Returns index of the given phase.
         /// </summary>
         /// <remarks>
-        /// Used in <see cref="OtherworldNPC"/> for NetSync/Net code
+        /// Used in <see cref="AlteriaNPC"/> for NetSync/Net code
         /// </remarks>
         /// <param name="curPhase"></param>
         /// <returns></returns>

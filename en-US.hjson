@@ -1,0 +1,81 @@
+Mods: {
+	Alteria: {
+		Configs: {
+			OtherworldClientConfig: {
+				DisplayName: Combat+ Mod Config (Client)
+
+				altUsestyles: {
+					Label: Toggle Alternative Usestyles
+					Tooltip: ""
+				}
+			}
+
+			OtherworldServerConfig: {
+				DisplayName: Combat+ Mod Config (Server)
+
+				aiChanges: {
+					Label: Toggle NPC AI Changes
+					Tooltip: ""
+				}
+
+				dynamicHitboxes: {
+					Label: Toggle Dynamic NPC Hitboxes
+					Tooltip: ""
+				}
+
+				enemyGrief: {
+					Label: Toggle Enemy Grief
+					Tooltip: ""
+				}
+
+				dst: {
+					Label: Toggle DST Crossover
+					Tooltip: ""
+				}
+
+				itemBalance: {
+					Label: Toggle Item Balances
+					Tooltip: ""
+				}
+			}
+
+			AlteriaConfig_Client: {
+				DisplayName: Alteria Config (Client)
+
+				altUsestyles: {
+					Label: Toggle Alternative Usestyles
+					Tooltip: ""
+				}
+			}
+
+			AlteriaConfig_Server: {
+				DisplayName: Alteria Config (Server)
+
+				aiChanges: {
+					Label: Toggle NPC AI Changes
+					Tooltip: ""
+				}
+
+				dynamicHitboxes: {
+					Label: Toggle Dynamic NPC Hitboxes
+					Tooltip: ""
+				}
+
+				enemyGrief: {
+					Label: Toggle Enemy Grief
+					Tooltip: ""
+				}
+
+				dst: {
+					Label: Toggle DST Crossover
+					Tooltip: ""
+				}
+
+				itemBalance: {
+					Label: Toggle Item Balances
+					Tooltip: ""
+				}
+			}
+		}
+	}
+}

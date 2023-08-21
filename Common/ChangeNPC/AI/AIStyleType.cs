@@ -6,13 +6,13 @@ using Terraria.ModLoader;
 using Terraria.ID;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using static OtherworldMod.Core.Util.Utils;
-using static OtherworldMod.Common.ChangeNPC.Utilities.NPCMethods;
-using static OtherworldMod.Common.ChangeNPC.Utilities.OtherworldNPCSets;
-using OtherworldMod.Common.Structure;
-using OtherworldMod.Common.Interface;
+using static Alteria.Core.Util.Utils;
+using static Alteria.Common.ChangeNPC.Utilities.NPCMethods;
+using static Alteria.Common.ChangeNPC.Utilities.AlteriaNPCSets;
+using Alteria.Common.Structure;
+using Alteria.Common.Interface;
 
-namespace OtherworldMod.Common.ChangeNPC.AI
+namespace Alteria.Common.ChangeNPC.AI
 {
     /// <summary>
     /// Helper class for AI styles to add functions.
@@ -75,7 +75,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
         #region I Hate GlobalNPC Name Please Help Me How To Fix What Name To Pick
         //This is a real cry for help I don't know how to name these things.
         public static T GlobalNPC<T>(NPC npc) where T : GlobalNPC => npc.GetGlobalNPC<T>();
-        public static OtherworldNPC GetNPC_1(NPC npc) => GlobalNPC<OtherworldNPC>(npc);
+        public static AlteriaNPC GetNPC_1(NPC npc) => GlobalNPC<AlteriaNPC>(npc);
         #endregion
     }
 }

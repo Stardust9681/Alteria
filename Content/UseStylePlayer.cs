@@ -7,11 +7,11 @@ using Terraria.ID;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-using OtherworldMod.Common.ChangeItem.Structure;
+using Alteria.Common.ChangeItem.Structure;
 
 //Wonder if this should go into Common.ChangeItem or Common.ChangePlayer, instead of Content
 //Let me know I guess
-namespace OtherworldMod.Content
+namespace Alteria.Content
 {
     public class UseStylePlayer : ModPlayer
     {

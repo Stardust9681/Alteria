@@ -1,4 +1,4 @@
-﻿global using OtherworldMod.Common.Interface;
-global using OtherworldMod.Common.Structure;
+﻿global using Alteria.Common.Interface;
+global using Alteria.Common.Structure;
 
-namespace OtherworldMod.Common;
+namespace Alteria.Common;

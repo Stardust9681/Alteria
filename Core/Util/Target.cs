@@ -8,13 +8,13 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Mono.Cecil;
-using OtherworldMod.Common.ChangeNPC;
+using Alteria.Common.ChangeNPC;
 using Microsoft.CodeAnalysis;
-using static OtherworldMod.Core.Util.Utils;
-using OtherworldMod.Common.Interface;
-using OtherworldMod.Common.Structure;
+using static Alteria.Core.Util.Utils;
+using Alteria.Common.Interface;
+using Alteria.Common.Structure;
 
-namespace OtherworldMod.Core.Util
+namespace Alteria.Core.Util
 {
     /*
     //Arbitrary entity target types
@@ -278,7 +278,7 @@ namespace OtherworldMod.Core.Util
 
         public virtual TargetInfo GetInfo(IRadar radar)
         {
-            return new TargetInfo(Source.GetGlobalNPC<OtherworldNPC>().aggro, Source.Center, Faction.UnivNoFac | Faction.UnivHostile);
+            return new TargetInfo(Source.GetGlobalNPC<AlteriaNPC>().aggro, Source.Center, Faction.UnivNoFac | Faction.UnivHostile);
         }
         public virtual int GetState()
         {

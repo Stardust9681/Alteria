@@ -7,11 +7,11 @@ using Terraria.ID;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-using OtherworldMod.Common.ChangePlayer;
-using OtherworldMod.Common.ChangeItem;
-using OtherworldMod.Content;
+using Alteria.Common.ChangePlayer;
+using Alteria.Common.ChangeItem;
+using Alteria.Content;
 
-namespace OtherworldMod.Common.ChangeItem
+namespace Alteria.Common.ChangeItem
 {
     public partial class OtherworldItem : GlobalItem
     {

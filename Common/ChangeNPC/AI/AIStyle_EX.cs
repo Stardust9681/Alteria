@@ -6,12 +6,12 @@ using Terraria.ModLoader;
 using Terraria.ID;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using static OtherworldMod.Core.Util.Utils;
-using static OtherworldMod.Common.ChangeNPC.Utilities.NPCMethods;
-using static OtherworldMod.Common.ChangeNPC.Utilities.OtherworldNPCSets;
-using OtherworldMod.Core.Util;
+using static Alteria.Core.Util.Utils;
+using static Alteria.Common.ChangeNPC.Utilities.NPCMethods;
+using static Alteria.Common.ChangeNPC.Utilities.AlteriaNPCSets;
+using Alteria.Core.Util;
 
-namespace OtherworldMod.Common.ChangeNPC.AI
+namespace Alteria.Common.ChangeNPC.AI
 {
 #nullable enable
     /// <summary>
@@ -80,13 +80,13 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             else //if(timer == 5), charge target position, and enable contact damage
             {
                 npc.velocity = npc.DirectionTo(info.Position) * 8f;
-                npc.GetGlobalNPC<OtherworldNPC>().allowContactDmg = true;
+                npc.GetGlobalNPC<AlteriaNPC>().allowContactDmg = true;
             }
 
             //Disable contact damage and move on, after some duration
             if (timer > 120)
             {
-                npc.GetGlobalNPC<OtherworldNPC>().allowContactDmg = false;
+                npc.GetGlobalNPC<AlteriaNPC>().allowContactDmg = false;
                 return nameof(Phase1Move);
             }
 
@@ -136,12 +136,12 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             else
             {
                 npc.velocity = npc.DirectionTo(info.Position) * 12f;
-                npc.GetGlobalNPC<OtherworldNPC>().allowContactDmg = true;
+                npc.GetGlobalNPC<AlteriaNPC>().allowContactDmg = true;
             }
 
             if (timer > 120)
             {
-                npc.GetGlobalNPC<OtherworldNPC>().allowContactDmg = false;
+                npc.GetGlobalNPC<AlteriaNPC>().allowContactDmg = false;
                 return nameof(Phase1Move);
             }
 
@@ -158,7 +158,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
                 return null;
 
             //Spawn projectile, move on
-            Projectile p = npc.SpawnProjDirect(npc.Center, npc.DirectionTo(info.Position), npc.GetGlobalNPC<OtherworldNPC>().shootProj!.First(), npc.damage / 2, 0, Main.myPlayer);
+            Projectile p = npc.SpawnProjDirect(npc.Center, npc.DirectionTo(info.Position), npc.GetGlobalNPC<AlteriaNPC>().shootProj!.First(), npc.damage / 2, 0, Main.myPlayer);
             p.friendly = npc.friendly; p.hostile = !npc.friendly;
             return nameof(Phase2Move);
         }

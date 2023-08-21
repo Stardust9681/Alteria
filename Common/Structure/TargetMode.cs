@@ -1,4 +1,4 @@
-﻿namespace OtherworldMod.Common.Structure
+﻿namespace Alteria.Common.Structure
 {
     /// <summary>
     /// 

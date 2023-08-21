@@ -1,12 +1,12 @@
-﻿using OtherworldMod.Core.Util;
+﻿using Alteria.Core.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using OtherworldMod.Common.Structure;
+using Alteria.Common.Structure;
 
-namespace OtherworldMod.Common.Interface
+namespace Alteria.Common.Interface
 {
     /// <summary>
     /// The source of a <see cref="TargetCollective.PullTarget(IRadar)"/> call, used to find a valid target (<see cref="IRadar"/>)

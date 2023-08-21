@@ -6,14 +6,14 @@ using Terraria.ModLoader;
 using Terraria.ID;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using static OtherworldMod.Core.Util.Utils;
-using static OtherworldMod.Common.ChangeNPC.Utilities.NPCMethods;
-using static OtherworldMod.Common.ChangeNPC.Utilities.OtherworldNPCSets;
-using OtherworldMod.Core.Util;
-using OtherworldMod.Common.Structure;
-using OtherworldMod.Common.Interface;
+using static Alteria.Core.Util.Utils;
+using static Alteria.Common.ChangeNPC.Utilities.NPCMethods;
+using static Alteria.Common.ChangeNPC.Utilities.AlteriaNPCSets;
+using Alteria.Core.Util;
+using Alteria.Common.Structure;
+using Alteria.Common.Interface;
 
-namespace OtherworldMod.Common.ChangeNPC.AI
+namespace Alteria.Common.ChangeNPC.AI
 {
 #nullable enable
     /// <summary>
@@ -48,7 +48,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
                 return nameof(SlimeJump1);
             }
             //Turn on hitbox, slimes causing contact damage in water is fine by me, and discourages exploits with water buckets
-            OtherworldNPC gNPC = GetNPC_1(npc);
+            AlteriaNPC gNPC = GetNPC_1(npc);
             gNPC.allowContactDmg = true;
             npc.target = PullTarget(npc, out TargetInfo info);
             //Direction to target (account for confusion)
@@ -75,7 +75,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             {
                 return nameof(SlimeWet);
             }
-            OtherworldNPC gNPC = GetNPC_1(npc);
+            AlteriaNPC gNPC = GetNPC_1(npc);
             npc.target = PullTarget(npc, out TargetInfo info);
             //Direction to target (account for confusion)
             int targetDir = info.Position.X < npc.position.X ? -1 : 1 * (npc.confused ? -1 : 1);
@@ -158,7 +158,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             {
                 return nameof(SlimeWet);
             }
-            OtherworldNPC gNPC = GetNPC_1(npc);
+            AlteriaNPC gNPC = GetNPC_1(npc);
             npc.target = PullTarget(npc, out TargetInfo info);
             int targetDir = info.Position.X < npc.position.X ? -1 : 1 * (npc.confused ? -1 : 1);
             if (npc.collideY)
@@ -226,7 +226,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             {
                 return nameof(SlimeWet);
             }
-            OtherworldNPC gNPC = GetNPC_1(npc);
+            AlteriaNPC gNPC = GetNPC_1(npc);
             npc.target = PullTarget(npc, out TargetInfo info);
             int targetDir = info.Position.X < npc.position.X ? -1 : 1 * (npc.confused ? -1 : 1);
             if (npc.collideY)
@@ -295,14 +295,14 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             {
                 return nameof(SlimeWet);
             }
-            OtherworldNPC gNPC = GetNPC_1(npc);
+            AlteriaNPC gNPC = GetNPC_1(npc);
             gNPC.allowContactDmg = false;
             npc.target = PullTarget(npc, out TargetInfo info);
             float dist = AppxDistanceTo(npc, info.Position);
             //If timer is past a value, shoot projectile(s)
             if (timer > 85)
             {
-                Projectile proj = Projectile.NewProjectileDirect(npc.GetSource_FromAI(), npc.Center, npc.DirectionTo(info.Position) * 6f, Main.rand.Next(npc.GetGlobalNPC<OtherworldNPC>().shootProj!), npc.damage / 2, npc.knockBackResist * 2f, Main.myPlayer);
+                Projectile proj = Projectile.NewProjectileDirect(npc.GetSource_FromAI(), npc.Center, npc.DirectionTo(info.Position) * 6f, Main.rand.Next(npc.GetGlobalNPC<AlteriaNPC>().shootProj!), npc.damage / 2, npc.knockBackResist * 2f, Main.myPlayer);
                 proj.friendly = npc.friendly;
                 proj.hostile = !npc.friendly;
 
@@ -330,7 +330,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             {
                 return nameof(SlimeWet);
             }
-            OtherworldNPC gNPC = GetNPC_1(npc);
+            AlteriaNPC gNPC = GetNPC_1(npc);
             gNPC.allowContactDmg = false;
             npc.target = PullTarget(npc, out TargetInfo info);
             float dist = AppxDistanceTo(npc, info.Position);
@@ -338,7 +338,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             {
                 for (int i = 0; i < 4; i++)
                 {
-                    Projectile proj = Projectile.NewProjectileDirect(npc.GetSource_FromAI(), npc.Center, new Vector2(0, -1).RotatedByRandom(1.047f) * Main.rand.NextFloat(3f, 5f), Main.rand.Next(npc.GetGlobalNPC<OtherworldNPC>().shootProj!), npc.damage / 2, npc.knockBackResist * 2f, Main.myPlayer);
+                    Projectile proj = Projectile.NewProjectileDirect(npc.GetSource_FromAI(), npc.Center, new Vector2(0, -1).RotatedByRandom(1.047f) * Main.rand.NextFloat(3f, 5f), Main.rand.Next(npc.GetGlobalNPC<AlteriaNPC>().shootProj!), npc.damage / 2, npc.knockBackResist * 2f, Main.myPlayer);
                     proj.friendly = npc.friendly;
                     proj.hostile = !npc.friendly;
                 }

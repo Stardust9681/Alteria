@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OtherworldMod.Common.Structure
+namespace Alteria.Common.Structure
 {
     public class RigidList<T>
     {

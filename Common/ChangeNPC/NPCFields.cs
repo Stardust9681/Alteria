@@ -6,15 +6,15 @@ using Terraria.ModLoader;
 using Terraria.ID;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using static OtherworldMod.Core.Util.Utils;
-using static OtherworldMod.Common.ChangeNPC.Utilities.OtherworldNPCSets;
-using OtherworldMod.Core.Util;
-using OtherworldMod.Common.Structure;
+using static Alteria.Core.Util.Utils;
+using static Alteria.Common.ChangeNPC.Utilities.AlteriaNPCSets;
+using Alteria.Core.Util;
+using Alteria.Common.Structure;
 
-namespace OtherworldMod.Common.ChangeNPC
+namespace Alteria.Common.ChangeNPC
 {
     //Splitting GlobalX into partial X_Info files, moving to Common.ChangeX
-    public partial class OtherworldNPC : GlobalNPC
+    public partial class AlteriaNPC : GlobalNPC
     {
         //Don't expect these to change during gameplay
         public int[]? shootProj;
@@ -52,35 +52,35 @@ namespace OtherworldMod.Common.ChangeNPC
         {
             if (npc.type == checkType || npc.netID == checkType)
             {
-                npc.GetGlobalNPC<OtherworldNPC>().shootProj = projs;
+                npc.GetGlobalNPC<AlteriaNPC>().shootProj = projs;
             }
         }
         private void SetSpawnedNPCs(NPC npc, int checkType, params int[] npcs)
         {
             if (npc.type == checkType || npc.netID == checkType)
             {
-                npc.GetGlobalNPC<OtherworldNPC>().spawnNPC = npcs;
+                npc.GetGlobalNPC<AlteriaNPC>().spawnNPC = npcs;
             }
         }
         private void SetIgnoreAI(NPC npc, int checkType, bool val)
         {
             if (npc.type == checkType || npc.netID == checkType)
             {
-                npc.GetGlobalNPC<OtherworldNPC>().ignoreAIChanges = val;
+                npc.GetGlobalNPC<AlteriaNPC>().ignoreAIChanges = val;
             }
         }
         private void SetIgnoreWater(NPC npc, int checkType, bool val)
         {
             if (npc.type == checkType || npc.netID == checkType)
             {
-                npc.GetGlobalNPC<OtherworldNPC>().ignoreWater = val;
+                npc.GetGlobalNPC<AlteriaNPC>().ignoreWater = val;
             }
         }
         private void SetIgnoreTiles(NPC npc, int checkType, bool val)
         {
             if (npc.type == checkType || npc.netID == checkType)
             {
-                npc.GetGlobalNPC<OtherworldNPC>().ignoreTiles = val;
+                npc.GetGlobalNPC<AlteriaNPC>().ignoreTiles = val;
             }
         }
 

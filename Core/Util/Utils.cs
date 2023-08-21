@@ -6,7 +6,7 @@ using Terraria;
 using Terraria.ModLoader;
 using Terraria.ID;
 
-namespace OtherworldMod.Core.Util
+namespace Alteria.Core.Util
 {
     public static class Utils
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace OtherworldMod.Common
+namespace Alteria.Common
 {
     public abstract class CallCmd : ModType
     {

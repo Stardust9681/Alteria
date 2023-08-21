@@ -6,31 +6,31 @@ using Terraria.ModLoader;
 using Terraria.ID;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using static OtherworldMod.Core.Util.Utils;
+using static Alteria.Core.Util.Utils;
 using Terraria.DataStructures;
 using Terraria.Utilities;
 using Terraria.GameContent.ItemDropRules;
-using static OtherworldMod.Common.ChangeNPC.Utilities.OtherworldNPCSets;
-using OtherworldMod.Common.ChangeNPC.AI;
+using static Alteria.Common.ChangeNPC.Utilities.AlteriaNPCSets;
+using Alteria.Common.ChangeNPC.AI;
 using Terraria.ModLoader.IO;
 using System.IO;
 using System.Reflection;
-using OtherworldMod.Common.ChangeNPC.Utilities;
+using Alteria.Common.ChangeNPC.Utilities;
 
-namespace OtherworldMod.Common.ChangeNPC
+namespace Alteria.Common.ChangeNPC
 {
     //For Town NPCs:
     //Vine or rope integration into AI?
-    public partial class OtherworldNPC : GlobalNPC
+    public partial class AlteriaNPC : GlobalNPC
     {
         //Whether or not to run new AI (if this is false, dynamic hitbox and NPC grief settings have no effect
-        public bool AIChanges => OtherworldMod.Instance.NPCAIChanges;
+        public bool AIChanges => Alteria.Instance.NPCAIChanges;
 
         //Determine whether or not to use Otherworld's dynamic hitbox setting(s) rather than a constant hitbox
-        public bool DynamicHitbox => OtherworldMod.Instance.NPCDynamicHitboxes;
+        public bool DynamicHitbox => Alteria.Instance.NPCDynamicHitboxes;
 
         //Whether or not NPCs can grief terrain (not all NPCs have this behaviour)
-        public bool NPCGrief => OtherworldMod.Instance.NPCGrief;
+        public bool NPCGrief => Alteria.Instance.NPCGrief;
 
         public override bool InstancePerEntity => true;
 
@@ -41,12 +41,12 @@ namespace OtherworldMod.Common.ChangeNPC
                 if (npc.aiStyle == 2)
                     npc.noGravity = true;
                 if (NPCID.Sets.ActsLikeTownNPC[npc.netID] && npc.aiStyle == NPCAIStyleID.Passive)
-                    npc.GetGlobalNPC<OtherworldNPC>().aggro = 55;
+                    npc.GetGlobalNPC<AlteriaNPC>().aggro = 55;
                 if (npc.type == NPCID.Harpy)
                     npc.noGravity = true;
                 if (npc.type == NPCID.EyeofCthulhu)
                 {
-                    npc.GetGlobalNPC<OtherworldNPC>().spawnNPC = new int[] { NPCID.ServantofCthulhu, NPCID.DemonEye };
+                    npc.GetGlobalNPC<AlteriaNPC>().spawnNPC = new int[] { NPCID.ServantofCthulhu, NPCID.DemonEye };
                 }
 
                 SetVanillaDefaults(npc);
@@ -82,7 +82,7 @@ namespace OtherworldMod.Common.ChangeNPC
         {
             if (DynamicHitbox)
             {
-                if (attacker.GetGlobalNPC<OtherworldNPC>().allowContactDmg)
+                if (attacker.GetGlobalNPC<AlteriaNPC>().allowContactDmg)
                     if (npc.friendly != attacker.friendly) return true;
                     else return base.CanBeHitByNPC(npc, attacker);
                 return false;

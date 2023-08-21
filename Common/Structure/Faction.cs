@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OtherworldMod.Common.Structure
+namespace Alteria.Common.Structure
 {
     [FlagsAttribute]
     public enum Faction : short

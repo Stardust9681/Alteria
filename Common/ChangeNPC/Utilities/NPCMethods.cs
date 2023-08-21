@@ -6,13 +6,13 @@ using Terraria.ModLoader;
 using Terraria.ID;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using static OtherworldMod.Core.Util.Utils;
-using static OtherworldMod.Common.ChangeNPC.Utilities.OtherworldNPCSets;
-using static OtherworldMod.Common.ChangeNPC.AI.AIStyle_001;
-using OtherworldMod.Core.Util;
-using OtherworldMod.Common.Structure;
+using static Alteria.Core.Util.Utils;
+using static Alteria.Common.ChangeNPC.Utilities.AlteriaNPCSets;
+using static Alteria.Common.ChangeNPC.AI.AIStyle_001;
+using Alteria.Core.Util;
+using Alteria.Common.Structure;
 
-namespace OtherworldMod.Common.ChangeNPC.Utilities
+namespace Alteria.Common.ChangeNPC.Utilities
 {
     public static class NPCMethods
     {
@@ -151,7 +151,7 @@ namespace OtherworldMod.Common.ChangeNPC.Utilities
 
         public static bool CanNPCShoot(NPC npc)
         {
-            OtherworldNPC gNPC = npc.GetGlobalNPC<OtherworldNPC>();
+            AlteriaNPC gNPC = npc.GetGlobalNPC<AlteriaNPC>();
             return (gNPC.shootProj != null && gNPC.shootProj.Length > 0 && gNPC.shootProj[0] != 0);
         }
 

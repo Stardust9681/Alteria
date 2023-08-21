@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <Import Project="..\tModLoader.targets" />
   <PropertyGroup>
-    <AssemblyName>OtherworldMod</AssemblyName>
+    <AssemblyName>Alteria</AssemblyName>
     <TargetFramework>net6.0</TargetFramework>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <LangVersion>latest</LangVersion>
@@ -13,5 +13,6 @@
   <ItemGroup>
     <Folder Include="Common\ChangeTile\" />
     <Folder Include="Common\Structure\TargetRadar\" />
+    <Folder Include="Localization\" />
   </ItemGroup>
 </Project>

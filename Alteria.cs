@@ -9,17 +9,17 @@ using System;
 using Microsoft.Xna.Framework.Graphics;
 using System.ComponentModel;
 using System.Reflection;
-using OtherworldMod.Common;
+using Alteria.Common;
 using Terraria.Enums;
-using OtherworldMod.Common.ChangeNPC;
-using static OtherworldMod.Common.ChangeNPC.Utilities.OtherworldNPCSets;
+using Alteria.Common.ChangeNPC;
+using static Alteria.Common.ChangeNPC.Utilities.AlteriaNPCSets;
 using System.IO;
-using OtherworldMod.Common.ChangeNPC.Utilities;
-using OtherworldMod.Core.Util;
+using Alteria.Common.ChangeNPC.Utilities;
+using Alteria.Core.Util;
 
-namespace OtherworldMod
+namespace Alteria
 {
-    public class OtherworldMod : Mod
+    public class Alteria : Mod
     {
         //Tuple as (Requirement{Mod,value,Reason},value)
         //Set as value
@@ -36,7 +36,7 @@ namespace OtherworldMod
         public ConfigData<bool> UseStyleAlts;
         #endregion
 
-        public static OtherworldMod Instance { get; private set; }
+        public static Alteria Instance { get; private set; }
         public override void Load()
         {
             Instance = this;
@@ -50,7 +50,7 @@ namespace OtherworldMod
             Terraria.On_Item.NewItem_IEntitySource_Vector2_Vector2_int_int_bool_int_bool_bool += NewItem5;
             #endregion
 
-            ModContent.GetInstance<OtherworldServerConfig>().SetupConfig();
+            ModContent.GetInstance<AlteriaConfig_Server>().SetupConfig();
         }
         public override void Unload()
         {
@@ -243,7 +243,7 @@ namespace OtherworldMod
                 if (KVPairs[i].key.Equals(name))
                     return KVPairs[i].key;
             }
-            Logging.PublicLogger.Warn($"[OtherworldMod] Could not find config \"{name}\" from {caller.Name}'s request.");
+            Logging.PublicLogger.Warn($"[Alteria] Could not find config \"{name}\" from {caller.Name}'s request.");
             return null;
 
             /*
@@ -258,7 +258,7 @@ namespace OtherworldMod
                 string key = keys[i].ToLower();
                 if (key.Equals(name))
                 {
-                    Terraria.ModLoader.Logging.PublicLogger.Debug($"[OtherworldMod]: Incorrect config key capitalisation, using fallback, '{key}.'");
+                    Terraria.ModLoader.Logging.PublicLogger.Debug($"[Alteria]: Incorrect config key capitalisation, using fallback, '{key}.'");
                     return AllConfig[keys[i]];
                 }
                 if (key.Contains(name))
@@ -266,10 +266,10 @@ namespace OtherworldMod
             }
             if (!maybeKey.Equals(""))
             {
-                Terraria.ModLoader.Logging.PublicLogger.Warn($"[OtherworldMod] Warning from <{caller.Name}>: Could not find config key, name, or index, '{name},' using closest match.");
+                Terraria.ModLoader.Logging.PublicLogger.Warn($"[Alteria] Warning from <{caller.Name}>: Could not find config key, name, or index, '{name},' using closest match.");
                 return AllConfig[maybeKey];
             }
-            Terraria.ModLoader.Logging.PublicLogger.Error($"[OtherworldMod] Warning from <{caller.Name}>: Could not find config key, name, or index, '{name}.' No match found.");
+            Terraria.ModLoader.Logging.PublicLogger.Error($"[Alteria] Warning from <{caller.Name}>: Could not find config key, name, or index, '{name}.' No match found.");
             return null;
             */
         }
@@ -283,8 +283,8 @@ namespace OtherworldMod
         }
     }
 
-    [Label("Combat+ Mod Config (Server)")]
-    public class OtherworldServerConfig : ModConfig
+    [Label("Alteria Config (Server)")]
+    public class AlteriaConfig_Server : ModConfig
     {
         public override ConfigScope Mode => ConfigScope.ServerSide;
 
@@ -315,9 +315,9 @@ namespace OtherworldMod
 
         public void SetupConfig()
         {
-            SetupConfig(OtherworldMod.Instance);
+            SetupConfig(Alteria.Instance);
         }
-        public void SetupConfig(OtherworldMod instance)
+        public void SetupConfig(Alteria instance)
         {
             if (instance != null)
             {
@@ -352,11 +352,11 @@ namespace OtherworldMod
             return false;
         }
 
-        private static OtherworldServerConfig AsThis(ModConfig config) => (OtherworldServerConfig)config;
+        private static AlteriaConfig_Server AsThis(ModConfig config) => (AlteriaConfig_Server)config;
     }
 
-    [Label("Combat+ Mod Config (Client)")]
-    public class OtherworldClientConfig : ModConfig
+    [Label("Alteria Config (Client)")]
+    public class AlteriaConfig_Client : ModConfig
     {
         public override ConfigScope Mode => ConfigScope.ClientSide;
         [DefaultValue(true)]
@@ -364,17 +364,17 @@ namespace OtherworldMod
         public bool altUsestyles;
         public override void OnChanged()
         {
-            if(OtherworldMod.Instance!=null)
-                OtherworldMod.Instance.UseStyleAlts.value = altUsestyles;
+            if(Alteria.Instance!=null)
+                Alteria.Instance.UseStyleAlts.value = altUsestyles;
         }
         public override bool NeedsReload(ModConfig pendingConfig)
         {
-            return OtherworldMod.Instance.UseStyleAlts.value != AsThis(pendingConfig).altUsestyles;
+            return Alteria.Instance.UseStyleAlts.value != AsThis(pendingConfig).altUsestyles;
         }
         public override bool AcceptClientChanges(ModConfig pendingConfig, int whoAmI, ref string message)
         {
             return true;
         }
-        private static OtherworldClientConfig AsThis(ModConfig config) => (OtherworldClientConfig)config;
+        private static AlteriaConfig_Client AsThis(ModConfig config) => (AlteriaConfig_Client)config;
     }
 }

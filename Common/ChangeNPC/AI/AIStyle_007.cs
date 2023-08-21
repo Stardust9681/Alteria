@@ -6,11 +6,11 @@ using Terraria.ModLoader;
 using Terraria.ID;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using static OtherworldMod.Core.Util.Utils;
-using static OtherworldMod.Common.ChangeNPC.Utilities.NPCMethods;
-using static OtherworldMod.Common.ChangeNPC.Utilities.OtherworldNPCSets;
+using static Alteria.Core.Util.Utils;
+using static Alteria.Common.ChangeNPC.Utilities.NPCMethods;
+using static Alteria.Common.ChangeNPC.Utilities.AlteriaNPCSets;
 
-namespace OtherworldMod.Common.ChangeNPC.AI
+namespace Alteria.Common.ChangeNPC.AI
 {
 #nullable enable
     /// <summary>
@@ -62,7 +62,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             int damage = npc.damage;
             float kb = npc.knockBackResist;
             NPCLoader.TownNPCAttackStrength(npc, ref damage, ref kb);
-            int projType = npc.GetGlobalNPC<OtherworldNPC>().shootProj?.FirstOrDefault() ?? 0;
+            int projType = npc.GetGlobalNPC<AlteriaNPC>().shootProj?.FirstOrDefault() ?? 0;
             int delay = time;
             float projSpeed = 0;
             float grav = 0;

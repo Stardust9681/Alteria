@@ -6,12 +6,12 @@ using Terraria.ModLoader;
 using Terraria.ID;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using static OtherworldMod.Core.Util.Utils;
-using static OtherworldMod.Common.ChangeNPC.Utilities.NPCMethods;
-using static OtherworldMod.Common.ChangeNPC.Utilities.OtherworldNPCSets;
-using OtherworldMod.Core.Util;
+using static Alteria.Core.Util.Utils;
+using static Alteria.Common.ChangeNPC.Utilities.NPCMethods;
+using static Alteria.Common.ChangeNPC.Utilities.AlteriaNPCSets;
+using Alteria.Core.Util;
 
-namespace OtherworldMod.Common.ChangeNPC.AI
+namespace Alteria.Common.ChangeNPC.AI
 {
 #nullable enable
     /// <summary>
@@ -39,7 +39,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             if (timer > t)
                 return nameof(Attack1);
 
-            npc.GetGlobalNPC<OtherworldNPC>().allowContactDmg = false;
+            npc.GetGlobalNPC<AlteriaNPC>().allowContactDmg = false;
 
             npc.target = PullTarget(npc, out TargetInfo info);
             float dist = AppxDistanceTo(npc, info.Position);
@@ -73,7 +73,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             if (timer > t)
                 return nameof(Attack1);
 
-            npc.GetGlobalNPC<OtherworldNPC>().allowContactDmg = false;
+            npc.GetGlobalNPC<AlteriaNPC>().allowContactDmg = false;
 
             npc.target = PullTarget(npc, out TargetInfo info);
             float dist = AppxDistanceTo(npc, info.Position);
@@ -109,7 +109,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
 
             if (timer == 45)
                 npc.velocity = npc.DirectionTo(info.Position) * 8f;
-            npc.GetGlobalNPC<OtherworldNPC>().allowContactDmg = npc.velocity.LengthSquared() > 4f;
+            npc.GetGlobalNPC<AlteriaNPC>().allowContactDmg = npc.velocity.LengthSquared() > 4f;
 
             if (dist > npc.lifeMax * 6f && timer > 60)
                 return nameof(Attack2);
@@ -129,7 +129,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             }
             if ((timer+1) % 60 == 0)
             {
-                Projectile p = Projectile.NewProjectileDirect(npc.GetSource_FromAI(), npc.Center, npc.DirectionTo(info.Position) * 5f, Main.rand.Next(npc.GetGlobalNPC<OtherworldNPC>().shootProj), npc.damage / 5, 0, Main.myPlayer);
+                Projectile p = Projectile.NewProjectileDirect(npc.GetSource_FromAI(), npc.Center, npc.DirectionTo(info.Position) * 5f, Main.rand.Next(npc.GetGlobalNPC<AlteriaNPC>().shootProj), npc.damage / 5, 0, Main.myPlayer);
                 p.friendly = npc.friendly;
                 p.hostile = !npc.friendly;
             }

@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 using Terraria.ID;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-namespace OtherworldMod.Common.ChangeItem.Structure
+namespace Alteria.Common.ChangeItem.Structure
 {
     public struct UseStyleData<T>
     {

@@ -6,12 +6,12 @@ using Terraria.ModLoader;
 using Terraria.ID;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using static OtherworldMod.Core.Util.Utils;
-using static OtherworldMod.Common.ChangeNPC.Utilities.NPCMethods;
-using static OtherworldMod.Common.ChangeNPC.Utilities.OtherworldNPCSets;
-using OtherworldMod.Core.Util;
+using static Alteria.Core.Util.Utils;
+using static Alteria.Common.ChangeNPC.Utilities.NPCMethods;
+using static Alteria.Common.ChangeNPC.Utilities.AlteriaNPCSets;
+using Alteria.Core.Util;
 
-namespace OtherworldMod.Common.ChangeNPC.AI
+namespace Alteria.Common.ChangeNPC.AI
 {
 #nullable enable
     public class AIStyle_014 : AIStyleType
@@ -42,7 +42,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             //Direction to target (account for confusion)
             int targetDir = info.Position.X < npc.position.X ? -1 : 1 * (npc.confused ? -1 : 1);
             //Disable contact damage
-            npc.GetGlobalNPC<OtherworldNPC>().allowContactDmg = false;
+            npc.GetGlobalNPC<AlteriaNPC>().allowContactDmg = false;
             //Find and move towards target X position
             float targetX = info.Position.X - (targetDir * 96f);
             if (npc.position.X > targetX)
@@ -93,7 +93,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
                 npc.velocity.Y = 7.4f;
             }
             //Allow contact damage
-            npc.GetGlobalNPC<OtherworldNPC>().allowContactDmg = true;
+            npc.GetGlobalNPC<AlteriaNPC>().allowContactDmg = true;
             //Adjust velocity over time, to slow down and to be more "swoop-like"
             npc.velocity = Vector2.Lerp(npc.velocity, npc.DirectionTo(info.Position) * 5f, .02f);
             //If close enough to target, slow down
@@ -108,7 +108,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
         }
         static string? BatAttack2(NPC npc, int timer)
         {
-            OtherworldNPC gNPC = npc.GetGlobalNPC<OtherworldNPC>();
+            AlteriaNPC gNPC = npc.GetGlobalNPC<AlteriaNPC>();
             //If NPC does not fire projectiles, go back to first move state
             if (gNPC.shootProj == null || gNPC.shootProj.Length == 0 || gNPC.shootProj[0] == 0)
                 return nameof(BatMove1);

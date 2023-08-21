@@ -6,11 +6,11 @@ using Terraria.ModLoader;
 using Terraria.ID;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using OtherworldMod.Common;
-using OtherworldMod.Content;
-using OtherworldMod.Common.ChangePlayer;
+using Alteria.Common;
+using Alteria.Content;
+using Alteria.Common.ChangePlayer;
 
-namespace OtherworldMod.Common.ChangeItem
+namespace Alteria.Common.ChangeItem
 {
     public partial class OtherworldItem : GlobalItem
     {
@@ -37,7 +37,7 @@ namespace OtherworldMod.Common.ChangeItem
         {
             if (item.potion)
             {
-                OtherworldPlayer modPlayer = player.GetModPlayer<OtherworldPlayer>();
+                AlteriaPlayer modPlayer = player.GetModPlayer<AlteriaPlayer>();
                 modPlayer.heal = item.healLife;
                 modPlayer.healTimer = 1;
             }

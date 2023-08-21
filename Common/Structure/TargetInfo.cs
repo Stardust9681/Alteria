@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 
-namespace OtherworldMod.Common.Structure
+namespace Alteria.Common.Structure
 {
     public struct TargetInfo
     {

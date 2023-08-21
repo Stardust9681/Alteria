@@ -6,12 +6,12 @@ using Terraria.ModLoader;
 using Terraria.ID;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using static OtherworldMod.Core.Util.Utils;
-using static OtherworldMod.Common.ChangeNPC.Utilities.NPCMethods;
-using static OtherworldMod.Common.ChangeNPC.Utilities.OtherworldNPCSets;
-using OtherworldMod.Core.Util;
+using static Alteria.Core.Util.Utils;
+using static Alteria.Common.ChangeNPC.Utilities.NPCMethods;
+using static Alteria.Common.ChangeNPC.Utilities.AlteriaNPCSets;
+using Alteria.Core.Util;
 
-namespace OtherworldMod.Common.ChangeNPC.AI
+namespace Alteria.Common.ChangeNPC.AI
 {
 #nullable enable
     /// <summary>
@@ -37,7 +37,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
         }
         static string? EyeDaytime(NPC npc, int timer)
         {
-            npc.GetGlobalNPC<OtherworldNPC>().allowContactDmg = false;
+            npc.GetGlobalNPC<AlteriaNPC>().allowContactDmg = false;
             //Find target
             npc.target = PullTarget(npc, out TargetInfo info);
             //Find target direction
@@ -58,7 +58,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             {
                 return nameof(EyeAttack1);
             }
-            npc.GetGlobalNPC<OtherworldNPC>().allowContactDmg = false;
+            npc.GetGlobalNPC<AlteriaNPC>().allowContactDmg = false;
             npc.velocity.Y -= .048f;
             npc.velocity.X *= .98f;
             return null;
@@ -73,7 +73,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             {
                 return nameof(EyeWet);
             }
-            OtherworldNPC gNPC = GetNPC_1(npc);
+            AlteriaNPC gNPC = GetNPC_1(npc);
             npc.target = PullTarget(npc, out TargetInfo info);
             //bool foundTarget = FindTarget(npc, out Vector2 targetPos);
             float dist = AppxDistanceTo(npc, info.Position);
@@ -93,7 +93,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             {
                 npc.velocity.Y = MathHelper.Lerp(npc.velocity.Y, ((info.Position.Y - npc.Center.Y) * (npc.confused ? -1 : 1)) * .012f, .05f);
             }
-            npc.GetGlobalNPC<OtherworldNPC>().allowContactDmg = targetDir == moveDir && (MathF.Abs(npc.velocity.X) + MathF.Abs(npc.velocity.Y)) > 6.5f;
+            npc.GetGlobalNPC<AlteriaNPC>().allowContactDmg = targetDir == moveDir && (MathF.Abs(npc.velocity.X) + MathF.Abs(npc.velocity.Y)) > 6.5f;
             if (npc.collideX)
             {
                 npc.velocity.X = -npc.oldVelocity.X;
@@ -120,7 +120,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
                 return nameof(EyeWet);
             }
             //bool foundTarget = FindTarget(npc, out Vector2 targetPos);
-            OtherworldNPC gNPC = GetNPC_1(npc);
+            AlteriaNPC gNPC = GetNPC_1(npc);
             npc.target = PullTarget(npc, out TargetInfo info);
             //Disable contact damage on ground
             gNPC.allowContactDmg = false;
@@ -152,7 +152,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             {
                 return nameof(EyeWet);
             }
-            OtherworldNPC gNPC = GetNPC_1(npc);
+            AlteriaNPC gNPC = GetNPC_1(npc);
             gNPC.allowContactDmg = false;
             npc.target = PullTarget(npc, out TargetInfo info);
             if (npc.collideX)
@@ -174,7 +174,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
                 {
                     npc.velocity *= 4f;
                 }
-                npc.GetGlobalNPC<OtherworldNPC>().allowContactDmg = true;
+                npc.GetGlobalNPC<AlteriaNPC>().allowContactDmg = true;
                 if (npc.velocity.LengthSquared() < 49f)
                 {
                     npc.velocity += npc.DirectionTo(info.Position).RotatedByRandom(.262f) * (npc.confused ? -.35f : .35f);

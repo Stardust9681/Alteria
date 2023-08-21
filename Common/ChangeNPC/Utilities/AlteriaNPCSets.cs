@@ -6,11 +6,11 @@ using Terraria.ModLoader;
 using Terraria.ID;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using static OtherworldMod.Core.Util.Utils;
+using static Alteria.Core.Util.Utils;
 
-namespace OtherworldMod.Common.ChangeNPC.Utilities
+namespace Alteria.Common.ChangeNPC.Utilities
 {
-    public static class OtherworldNPCSets
+    public static class AlteriaNPCSets
     {
         //AI Related
         public static AIStyle[] Behaviours = SetBehaviour();

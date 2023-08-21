@@ -6,14 +6,14 @@ using Terraria.ModLoader;
 using Terraria.ID;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using static OtherworldMod.Core.Util.Utils;
-using static OtherworldMod.Common.ChangeNPC.Utilities.NPCMethods;
-using static OtherworldMod.Common.ChangeNPC.Utilities.OtherworldNPCSets;
-using OtherworldMod.Core.Util;
-using OtherworldMod.Common.Interface;
-using OtherworldMod.Common.Structure;
+using static Alteria.Core.Util.Utils;
+using static Alteria.Common.ChangeNPC.Utilities.NPCMethods;
+using static Alteria.Common.ChangeNPC.Utilities.AlteriaNPCSets;
+using Alteria.Core.Util;
+using Alteria.Common.Interface;
+using Alteria.Common.Structure;
 
-namespace OtherworldMod.Common.ChangeNPC.AI
+namespace Alteria.Common.ChangeNPC.AI
 {
     /// <summary>
     /// <see cref="NPCAIStyleID.Creeper"/>
@@ -36,7 +36,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             public float GetWeight(ITargetable target)
             {
                 TargetInfo info = target.GetInfo(this);
-                if (!Source.GetGlobalNPC<OtherworldNPC>().phase.Equals(nameof(Charge)))
+                if (!Source.GetGlobalNPC<AlteriaNPC>().phase.Equals(nameof(Charge)))
                 {
                     if ((info.faction & Info.Faction) != 0)
                     {
@@ -96,12 +96,12 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             //Don't deal contact damage if NPC is too far from the position it should move to
             if (distSq < 3200)
             {
-                npc.GetGlobalNPC<OtherworldNPC>().allowContactDmg = true;
+                npc.GetGlobalNPC<AlteriaNPC>().allowContactDmg = true;
                 npc.velocity *= .34f;
             }
             else
             {
-                npc.GetGlobalNPC<OtherworldNPC>().allowContactDmg = false;
+                npc.GetGlobalNPC<AlteriaNPC>().allowContactDmg = false;
             }
             //npc.position = targetPos;
 
@@ -129,7 +129,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
                 npc.velocity = npc.DirectionTo(info.Position) * 15f;
             else
                 npc.velocity *= .99f;
-            npc.GetGlobalNPC<OtherworldNPC>().allowContactDmg = timer > 45;
+            npc.GetGlobalNPC<AlteriaNPC>().allowContactDmg = timer > 45;
 
             return null;
         }
@@ -145,7 +145,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
                 return nameof(ShieldSmall);
 
             npc.velocity = Vector2.Lerp(npc.velocity, npc.DirectionTo(info.Position) * 6f, .075f);
-            npc.GetGlobalNPC<OtherworldNPC>().allowContactDmg = false;
+            npc.GetGlobalNPC<AlteriaNPC>().allowContactDmg = false;
 
             return null;
         }

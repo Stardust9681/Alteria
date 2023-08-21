@@ -1,4 +1,4 @@
-﻿namespace OtherworldMod.Common.Interface
+﻿namespace Alteria.Common.Interface
 {
     public interface IClonable<T> where T : IClonable<T>
     {

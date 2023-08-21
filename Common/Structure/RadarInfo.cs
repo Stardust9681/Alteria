@@ -8,7 +8,7 @@ using Terraria;
 using Terraria.ModLoader;
 using Terraria.ID;
 
-namespace OtherworldMod.Common.Structure
+namespace Alteria.Common.Structure
 {
     public struct RadarInfo
     {

@@ -6,11 +6,11 @@ using Terraria.ModLoader;
 using Terraria.ID;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using static OtherworldMod.Core.Util.Utils;
+using static Alteria.Core.Util.Utils;
 
-namespace OtherworldMod.Common.ChangePlayer
+namespace Alteria.Common.ChangePlayer
 {
-    public class OtherworldPlayer : ModPlayer
+    public class AlteriaPlayer : ModPlayer
     {
         public short healTimer;
         public int heal;
@@ -22,7 +22,7 @@ namespace OtherworldMod.Common.ChangePlayer
         {
             if (Main.netMode != NetmodeID.SinglePlayer)
             {
-                ModPacket packet = OtherworldMod.Instance.GetPacket(8);
+                ModPacket packet = Alteria.Instance.GetPacket(8);
                 packet.Write(1);
                 packet.Send();
             }

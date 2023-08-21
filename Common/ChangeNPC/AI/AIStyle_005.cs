@@ -6,12 +6,12 @@ using Terraria.ModLoader;
 using Terraria.ID;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using static OtherworldMod.Core.Util.Utils;
-using static OtherworldMod.Common.ChangeNPC.Utilities.NPCMethods;
-using static OtherworldMod.Common.ChangeNPC.Utilities.OtherworldNPCSets;
-using OtherworldMod.Core.Util;
+using static Alteria.Core.Util.Utils;
+using static Alteria.Common.ChangeNPC.Utilities.NPCMethods;
+using static Alteria.Common.ChangeNPC.Utilities.AlteriaNPCSets;
+using Alteria.Core.Util;
 
-namespace OtherworldMod.Common.ChangeNPC.AI
+namespace Alteria.Common.ChangeNPC.AI
 {
 #nullable enable
     /// <summary>
@@ -36,13 +36,13 @@ namespace OtherworldMod.Common.ChangeNPC.AI
                 NPCID.HornetHoney, NPCID.HornetLeafy, NPCID.HornetSpikey, NPCID.HornetStingy, NPCID.Parrot, NPCID.BloodSquid };
         public override void Load()
         {
-            AddAI(FlierMove1, FlierMove2, FlierAttack1, FlierAttack2);
+            AddAI(FlierMove1, FlierMove2, FlierAttack1, FlierAttack2, Idle);
         }
 
         //cw circle around player
         static string? FlierMove1(NPC npc, int timer)
         {
-            OtherworldNPC gNPC = GetNPC_1(npc);
+            AlteriaNPC gNPC = GetNPC_1(npc);
             gNPC.allowContactDmg = false;
             //Find target
             npc.target = PullTarget(npc, out TargetInfo info);
@@ -55,12 +55,10 @@ namespace OtherworldMod.Common.ChangeNPC.AI
                 npc.velocity += offset * .15f;
             npc.rotation = offset.ToRotation() - MathHelper.PiOver2;
             float rotation = (((timer * timer) * .001f) % MathHelper.PiOver2) + (3 * MathHelper.PiOver2);
-            //Main.NewText("1 : " + rotation * 180 / MathHelper.Pi);
             offset = Vector2.UnitX.RotatedBy(rotation);
             Vector2 targetPos = info.Position + (offset * npc.damage * (npc.confused ? -8f : 8f));
-            //Dust.NewDustDirect(targetPos, 1, 1, DustID.GemDiamond).velocity = Vector2.Zero;
-            npc.velocity.X += (npc.position.X > targetPos.X) ? -.06f : .06f;
-            npc.velocity.Y += (npc.position.Y > targetPos.Y) ? -.06f : .06f;
+            npc.velocity.X += (npc.position.X > targetPos.X) ? -.04f : .04f;
+            npc.velocity.Y += (npc.position.Y > targetPos.Y) ? -.04f : .04f;
             if (MathF.Abs(npc.position.X - targetPos.X) < 64)
                 npc.velocity.X *= .97f;
             if (MathF.Abs(npc.position.Y - targetPos.Y) < 64)
@@ -79,7 +77,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
         //ccw circle around player
         static string? FlierMove2(NPC npc, int timer)
         {
-            OtherworldNPC gNPC = GetNPC_1(npc);
+            AlteriaNPC gNPC = GetNPC_1(npc);
             gNPC.allowContactDmg = false;
             //Find target
             npc.target = PullTarget(npc, out TargetInfo info);
@@ -92,12 +90,10 @@ namespace OtherworldMod.Common.ChangeNPC.AI
                 npc.velocity += offset * .15f;
             npc.rotation = offset.ToRotation() - MathHelper.PiOver2;
             float rotation = (-(((timer*timer) * .001f) % MathHelper.PiOver2)) + (3 * MathHelper.PiOver2);
-            //Main.NewText("2 : " + rotation * 180 / MathHelper.Pi);
             offset = Vector2.UnitX.RotatedBy(rotation);
             Vector2 targetPos = info.Position + (offset * npc.damage * (npc.confused ? -8f : 8f));
-            //Dust.NewDustDirect(targetPos, 1, 1, DustID.GemDiamond).velocity = Vector2.Zero;
-            npc.velocity.X += (npc.position.X > targetPos.X) ? -.06f : .06f;
-            npc.velocity.Y += (npc.position.Y > targetPos.Y) ? -.06f : .06f;
+            npc.velocity.X += (npc.position.X > targetPos.X) ? -.04f : .04f;
+            npc.velocity.Y += (npc.position.Y > targetPos.Y) ? -.04f : .04f;
             if (MathF.Abs(npc.position.X - targetPos.X) < 64)
                 npc.velocity.X *= .97f;
             if (MathF.Abs(npc.position.Y - targetPos.Y) < 64)
@@ -115,12 +111,12 @@ namespace OtherworldMod.Common.ChangeNPC.AI
         //move quickly towards player
         static string? FlierAttack1(NPC npc, int timer)
         {
-            OtherworldNPC gNPC = GetNPC_1(npc);
+            AlteriaNPC gNPC = GetNPC_1(npc);
             //Find target
             npc.target = PullTarget(npc, out TargetInfo info);
             float lenSQ = npc.velocity.LengthSquared();
             int targetDir = npc.position.X > info.Position.X ? -1 : 1;
-            npc.GetGlobalNPC<OtherworldNPC>().allowContactDmg = lenSQ > 9f;
+            npc.GetGlobalNPC<AlteriaNPC>().allowContactDmg = lenSQ > 9f;
             if (timer < 20)
             {
                 Vector2 offset = npc.DirectionTo(info.Position);
@@ -132,10 +128,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
             float appxDist = AppxDistanceTo(npc, info.Position);
             if (npc.collideX || npc.collideY || timer > 180 || appxDist > 550)
             {
-                if (targetDir > 0)
-                    return nameof(FlierMove1);
-                else
-                    return nameof(FlierMove2);
+                return nameof(Idle);
             }
             if (appxDist > 350 && targetDir != (npc.velocity.X < 0 ? -1 : 1))
             {
@@ -160,7 +153,7 @@ namespace OtherworldMod.Common.ChangeNPC.AI
                 }
                 if (timer % 60 == 0)
                 {
-                    Projectile p = Projectile.NewProjectileDirect(npc.GetSource_FromAI(), npc.Center, npc.DirectionTo(info.Position) * 5f, Main.rand.Next(npc.GetGlobalNPC<OtherworldNPC>().shootProj), npc.damage / 5, 0, Main.myPlayer);
+                    Projectile p = Projectile.NewProjectileDirect(npc.GetSource_FromAI(), npc.Center, npc.DirectionTo(info.Position) * 5f, Main.rand.Next(npc.GetGlobalNPC<AlteriaNPC>().shootProj), npc.damage / 5, 0, Main.myPlayer);
                     p.friendly = npc.friendly;
                     p.hostile = !npc.friendly;
                     if (timer > 120)
@@ -168,6 +161,22 @@ namespace OtherworldMod.Common.ChangeNPC.AI
                         return nameof(FlierAttack1);
                     }
                 }
+            }
+            return null;
+        }
+
+        static string? Idle(NPC npc, int timer)
+        {
+            npc.target = PullTarget(npc, out TargetInfo info);
+            npc.velocity *= .99f;
+            npc.rotation = (info.Position - npc.position).ToRotation();
+            if (timer > 90)
+            {
+                int targetDir = npc.position.X > info.Position.X ? -1 : 1;
+                if (targetDir > 0)
+                    return nameof(FlierMove1);
+                else
+                    return nameof(FlierMove2);
             }
             return null;
         }

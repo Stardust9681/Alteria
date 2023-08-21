@@ -1,12 +1,12 @@
-﻿using OtherworldMod.Common.Structure;
-using OtherworldMod.Core.Util;
+﻿using Alteria.Common.Structure;
+using Alteria.Core.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OtherworldMod.Common.Interface
+namespace Alteria.Common.Interface
 {
 
     /// <summary>
