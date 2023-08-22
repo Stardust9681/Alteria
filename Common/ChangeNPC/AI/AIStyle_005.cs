@@ -50,15 +50,15 @@ namespace Alteria.Common.ChangeNPC.AI
             float appxDist = AppxDistanceTo(npc, info.Position);
             Vector2 offset = npc.DirectionTo(info.Position);
             if (appxDist < npc.damage * 6f)
-                npc.velocity -= new Vector2(offset.X, (offset.Y + 1) * .5f) * .3f;
+                npc.velocity -= new Vector2(offset.X, (offset.Y + 1) * .5f) * .12f;
             if (appxDist > npc.damage * 16f)
                 npc.velocity += offset * .15f;
             npc.rotation = offset.ToRotation() - MathHelper.PiOver2;
             float rotation = (((timer * timer) * .001f) % MathHelper.PiOver2) + (3 * MathHelper.PiOver2);
             offset = Vector2.UnitX.RotatedBy(rotation);
             Vector2 targetPos = info.Position + (offset * npc.damage * (npc.confused ? -8f : 8f));
-            npc.velocity.X += (npc.position.X > targetPos.X) ? -.04f : .04f;
-            npc.velocity.Y += (npc.position.Y > targetPos.Y) ? -.04f : .04f;
+            npc.velocity.X += (npc.position.X > targetPos.X) ? -.06f : .06f;
+            npc.velocity.Y += (npc.position.Y > targetPos.Y) ? -.06f : .06f;
             if (MathF.Abs(npc.position.X - targetPos.X) < 64)
                 npc.velocity.X *= .97f;
             if (MathF.Abs(npc.position.Y - targetPos.Y) < 64)
@@ -85,15 +85,15 @@ namespace Alteria.Common.ChangeNPC.AI
             float appxDist = AppxDistanceTo(npc, info.Position);
             Vector2 offset = npc.DirectionTo(info.Position);
             if (appxDist < npc.damage * 6f)
-                npc.velocity -= new Vector2(offset.X, (offset.Y+1)*.5f) * .3f;
-            if (appxDist > npc.damage * 16f)
+                npc.velocity -= new Vector2(offset.X, (offset.Y+1)*.5f) * .12f;
+            if (appxDist > npc.damage * 12f)
                 npc.velocity += offset * .15f;
             npc.rotation = offset.ToRotation() - MathHelper.PiOver2;
             float rotation = (-(((timer*timer) * .001f) % MathHelper.PiOver2)) + (3 * MathHelper.PiOver2);
             offset = Vector2.UnitX.RotatedBy(rotation);
             Vector2 targetPos = info.Position + (offset * npc.damage * (npc.confused ? -8f : 8f));
-            npc.velocity.X += (npc.position.X > targetPos.X) ? -.04f : .04f;
-            npc.velocity.Y += (npc.position.Y > targetPos.Y) ? -.04f : .04f;
+            npc.velocity.X += (npc.position.X > targetPos.X) ? -.06f : .06f;
+            npc.velocity.Y += (npc.position.Y > targetPos.Y) ? -.06f : .06f;
             if (MathF.Abs(npc.position.X - targetPos.X) < 64)
                 npc.velocity.X *= .97f;
             if (MathF.Abs(npc.position.Y - targetPos.Y) < 64)
@@ -167,6 +167,7 @@ namespace Alteria.Common.ChangeNPC.AI
 
         static string? Idle(NPC npc, int timer)
         {
+            GetNPC_1(npc).allowContactDmg = false;
             npc.target = PullTarget(npc, out TargetInfo info);
             npc.velocity *= .99f;
             npc.rotation = (info.Position - npc.position).ToRotation();

@@ -79,7 +79,7 @@ namespace Alteria.Common.ChangeNPC.AI
             npc.target = PullTarget(npc, out TargetInfo info);
             //Direction to target (account for confusion)
             int targetDir = info.Position.X < npc.position.X ? -1 : 1 * (npc.confused ? -1 : 1);
-            if (npc.collideY)
+            if (npc.collideY || (npc.velocity.Y < npc.oldVelocity.Y && npc.oldVelocity.Y >= 0))
             {
                 //If npc collided with tiles, moving downwards
                 if (npc.velocity.Y > -.04f)
@@ -161,7 +161,7 @@ namespace Alteria.Common.ChangeNPC.AI
             AlteriaNPC gNPC = GetNPC_1(npc);
             npc.target = PullTarget(npc, out TargetInfo info);
             int targetDir = info.Position.X < npc.position.X ? -1 : 1 * (npc.confused ? -1 : 1);
-            if (npc.collideY)
+            if (npc.collideY || (npc.velocity.Y < npc.oldVelocity.Y && npc.oldVelocity.Y >= 0))
             {
                 if (npc.velocity.Y > -.04f)
                 {
@@ -229,7 +229,7 @@ namespace Alteria.Common.ChangeNPC.AI
             AlteriaNPC gNPC = GetNPC_1(npc);
             npc.target = PullTarget(npc, out TargetInfo info);
             int targetDir = info.Position.X < npc.position.X ? -1 : 1 * (npc.confused ? -1 : 1);
-            if (npc.collideY)
+            if (npc.collideY || (npc.velocity.Y < npc.oldVelocity.Y && npc.oldVelocity.Y >= 0))
             {
                 if (npc.velocity.Y > -.04f)
                 {
