@@ -12,7 +12,7 @@ namespace Alteria.Common.Structure
         {
             Position = Vector2.Zero;
             aggro = 0;
-            faction = Faction.UnivNoFac;
+            faction = Faction.None;
         }
         public TargetInfo(byte aggro, Vector2 position, Faction fac)
         {
@@ -22,14 +22,14 @@ namespace Alteria.Common.Structure
             Initiated = true;
         }
 
-        public void SetVoid(byte aggro = 0, Vector2 position = default, Faction fac = Faction.UnivNoFac)
+        public void SetVoid(byte aggro = 0, Vector2 position = default, Faction fac = Faction.None)
         {
             this.aggro = aggro;
             Position = position;
             faction = fac;
             Initiated = true;
         }
-        public TargetInfo Set(byte aggro = 0, Vector2 position = default, Faction fac = Faction.UnivNoFac)
+        public TargetInfo Set(byte aggro = 0, Vector2 position = default, Faction fac = Faction.None)
         {
             this.SetVoid(aggro, Position, fac);
             return this;

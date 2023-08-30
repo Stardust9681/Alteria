@@ -48,6 +48,11 @@ namespace Alteria.Common.ChangeNPC
                 {
                     npc.GetGlobalNPC<AlteriaNPC>().spawnNPC = new int[] { NPCID.ServantofCthulhu, NPCID.DemonEye };
                 }
+																if (npc.type == NPCID.BrainofCthulhu)
+																{
+																				npc.GetGlobalNPC<AlteriaNPC>().spawnNPC = new int[] { NPCID.Creeper };
+																				npc.GetGlobalNPC<AlteriaNPC>().aggro = 1;
+																}
 
                 SetVanillaDefaults(npc);
             }
@@ -56,17 +61,19 @@ namespace Alteria.Common.ChangeNPC
         {
             if (AIChanges)
             {
+																AlteriaNPC thisNPC = npc.GetGlobalNPC<AlteriaNPC>();
                 if (Behaviours[npc.netID].HasEntry)
                 {
-                    NPCTarget = Behaviours[npc.netID].SetTarget(npc.whoAmI);
-                    NPCRadar = Behaviours[npc.netID].SetRadar(npc.whoAmI);
+																				thisNPC.NPCTarget = Behaviours[npc.netID].SetTarget(npc.whoAmI);
+																				thisNPC.NPCRadar = Behaviours[npc.netID].SetRadar(npc.whoAmI);
                 }
                 else
                 {
-                    Core.Util.TargetCollective.AddTarget(new Core.Util.NPCTarget(npc.whoAmI));
-                    NPCRadar = new Core.Util.NPCRadar(npc.whoAmI);
+																				thisNPC.NPCTarget = new Core.Util.NPCTarget(npc.whoAmI);
+																				thisNPC.NPCRadar = new Core.Util.NPCRadar(npc.whoAmI);
                 }
-            }
+																Core.Util.TargetCollective.AddTarget(thisNPC.NPCTarget);
+												}
         }
         public override bool CanHitPlayer(NPC npc, Player target, ref int cooldownSlot)
         {

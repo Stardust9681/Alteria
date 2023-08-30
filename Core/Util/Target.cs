@@ -46,7 +46,7 @@ namespace Alteria.Core.Util
         }
         public virtual TargetInfo GetInfo(IRadar source)
         {
-            return new TargetInfo(0, Source.Center, Faction.UnivNoFac);
+            return new TargetInfo(0, Source.Center, Faction.None);
         }
     }
 
@@ -278,7 +278,7 @@ namespace Alteria.Core.Util
 
         public virtual TargetInfo GetInfo(IRadar radar)
         {
-            return new TargetInfo(Source.GetGlobalNPC<AlteriaNPC>().aggro, Source.Center, Faction.UnivNoFac | Faction.UnivHostile);
+            return new TargetInfo(Source.GetGlobalNPC<AlteriaNPC>().aggro, Source.Center, Faction.None | Faction.UnivHostile);
         }
         public virtual int GetState()
         {
@@ -320,7 +320,7 @@ namespace Alteria.Core.Util
 
         public TargetInfo GetInfo(IRadar radar)
         {
-            return new TargetInfo(100, Source.position, Faction.UnivNoFac);
+            return new TargetInfo(100, Source.position, Faction.None);
         }
         public int GetState() => 0;
     }
@@ -369,7 +369,17 @@ namespace Alteria.Core.Util
         }
         public virtual float GetWeight(ITargetable target)
         {
-            return (Vector2.DistanceSquared(Info.Position, target.GetInfo(this).Position) * Info.AggroFactor).SafeInvert();
+												if (this.Source.GetGlobalNPC<AlteriaNPC>().NPCTarget == target)
+												{
+																return -1;
+												}
+
+												TargetInfo info = target.GetInfo(this);
+												if (Info.Faction.IsEnemiesWith(info.faction))
+												{
+																return (Vector2.DistanceSquared(Info.Position, target.GetInfo(this).Position) * Info.AggroFactor).SafeInvert();
+												}
+												return -1;
         }
         protected RadarInfo _info;
         public virtual RadarInfo Info
@@ -377,7 +387,7 @@ namespace Alteria.Core.Util
             get
             {
                 _info.Position = Source.position;
-                //_info.Faction = Source.GetGlobalNPC<OtherworldNPC>()
+																_info.Faction = Source.GetGlobalNPC<AlteriaNPC>().NPCTarget.GetInfo(this).faction;
                 return _info;
             }
         }
@@ -509,6 +519,17 @@ namespace Alteria.Core.Util
             return targets.TryGet(index, out target);
         }
 
+								/// <summary>
+								/// Get target index from list
+								/// </summary>
+								/// <param name="target"></param>
+								/// <param name="index"></param>
+								/// <returns></returns>
+								public static bool TryFindTarget(ITargetable target, out int index)
+								{
+												return ((index = targets.IndexOf(target)) != -1);
+								}
+
         /// <summary>
         /// Finds the optimal target for a given <see cref="IRadar"/> radar.
         /// </summary>
@@ -516,11 +537,11 @@ namespace Alteria.Core.Util
         /// <returns>Found target</returns>
         public static ITargetable PullTargetDirect(IRadar radar, out TargetInfo info, float cutoff = 2048)
         {
-            //If no target at index 0 (safer than assuming one will exist at 0)
+            //If no target at index 0
             if (targets.Count == 0)
             {
                 ITargetable def = default(ITargetable);
-                info = new TargetInfo(0, Vector2.Zero, Faction.UnivNoFac);
+                info = new TargetInfo(0, Vector2.Zero, Faction.None);
                 return def;
             }
 
@@ -533,7 +554,7 @@ namespace Alteria.Core.Util
                 if (targets.TryGet(i, out ITargetable target))
                 {
                     float targetWeight = radar.GetWeight(target);
-                    if (targetWeight < 0)// || target.GetState() != 1)
+                    if (targetWeight < 0)
                         continue;
                     if (targetWeight > prevWeight)
                     {
@@ -563,5 +584,17 @@ namespace Alteria.Core.Util
             }
             return count;
         }
+								public static int CountAll(Predicate<ITargetable>? pred = null)
+								{
+												int count = 0;
+												for (int i = 0; i < targets.Count; i++)
+												{
+																if (!targets.TryGet(i, out ITargetable target))
+																				continue;
+																if (pred?.Invoke(target) ?? true)
+																				count++;
+												}
+												return count;
+								}
     }
 }

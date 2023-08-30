@@ -26,9 +26,9 @@ namespace Alteria.Common.Structure
             AggroFactor = 1f;
             IgnoreTiles = true;
             IgnoreLiquids = true;
-            Faction = Faction.UnivNoFac;
+            Faction = Faction.None;
         }
-        public RadarInfo(Vector2 pos = default, bool igMis = false, float aggro = 1f, bool igTile = true, bool igLiq = true, Faction fac = Faction.UnivNoFac)
+        public RadarInfo(Vector2 pos = default, bool igMis = false, float aggro = 1f, bool igTile = true, bool igLiq = true, Faction fac = Faction.None)
         {
             Position = pos;
             IgnoreMisdirect = igMis;

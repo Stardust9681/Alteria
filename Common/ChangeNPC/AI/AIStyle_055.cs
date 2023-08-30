@@ -22,45 +22,12 @@ namespace Alteria.Common.ChangeNPC.AI
     {
         protected override ITargetable SetDefaultTarget(int npcIndex)
         {
-            return new Core.Util.NPCTarget<AIStyle_055>(npcIndex);
+												return new Core.Util.NPCTarget<AIStyle_055>(npcIndex);
         }
         public override void UpdateInfo(ref TargetInfo info, int npcIndex, IRadar radar)
         {
             info.Position = Main.npc[npcIndex].position;
-        }
-        private class CreeperRadar : IRadar, ISourceable<NPC>
-        {
-            public CreeperRadar(int index) => this.index = index;
-            int index;
-            public NPC Source => Main.npc[index];
-            public float GetWeight(ITargetable target)
-            {
-                TargetInfo info = target.GetInfo(this);
-                if (!Source.GetGlobalNPC<AlteriaNPC>().phase.Equals(nameof(Charge)))
-                {
-                    if ((info.faction & Info.Faction) != 0)
-                    {
-                        return (Vector2.DistanceSquared(Info.Position, target.GetInfo(this).Position) * Info.AggroFactor).SafeInvert();
-                    }
-                    return -1;
-                }
-                if ((info.faction & Info.Faction) == 0)
-                {
-                    return (Vector2.DistanceSquared(Info.Position, target.GetInfo(this).Position) * Info.AggroFactor).SafeInvert();
-                }
-                return -1;
-            }
-            public RadarInfo Info
-            {
-                get
-                {
-                    return new RadarInfo(Source.position, true, 0f, true, true, Faction.FlagSupport | Faction.UnivHostile | Faction.UnivNoFac);
-                }
-            }
-        }
-        protected override IRadar SetDefaultRadar(int npcIndex)
-        {
-            return new CreeperRadar(npcIndex);
+												info.faction = Faction.UnivHostile | Faction.FlagSupport;
         }
         protected override int[] ApplicableNPCs => new int[] { NPCID.Creeper };
         public override void Load()
@@ -76,7 +43,31 @@ namespace Alteria.Common.ChangeNPC.AI
             if (timer > t + (npc.whoAmI * 15))
                 return nameof(Charge);
 
-            npc.target = PullTarget(npc, out TargetInfo info);
+												if (!TargetCollective.TryGetTarget((int)npc.ai[1], out ITargetable src))
+												{
+																//If ai[1] is out of bounds...
+																if (npc.ai[1] < 0 || npc.ai[1] > TargetCollective.CountAll())
+																{
+																				try
+																				{
+																								if (TargetCollective.TryFindTarget(Main.npc.First(x => x.active = true && x.aiStyle == NPCAIStyleID.BrainOfCthulhu).GetGlobalNPC<AlteriaNPC>().NPCTarget, out int ai1))
+																								{
+																												npc.ai[1] = ai1;
+																								}
+																								else
+																								{
+																												npc.ai[1] = npc.whoAmI;
+																								}
+																				}
+																				catch
+																				{
+																								npc.ai[1] = npc.whoAmI;
+																				}
+																}
+																return nameof(ShieldSmall);
+												}
+												TargetInfo info = src.GetInfo(GetNPC_1(npc).NPCRadar);
+
             float dist = AppxDistanceTo(npc, info.Position);
 
             if (dist > 800)
@@ -139,9 +130,32 @@ namespace Alteria.Common.ChangeNPC.AI
             if (timer > 120)
                 return nameof(ShieldSmall);
 
-            npc.target = PullTarget(npc, out TargetInfo info);
+												if (!TargetCollective.TryGetTarget((int)npc.ai[1], out ITargetable src))
+												{
+																//If ai[1] is out of bounds...
+																if (npc.ai[1] < 0 || npc.ai[1] > TargetCollective.CountAll())
+																{
+																				try
+																				{
+																								if (TargetCollective.TryFindTarget(Main.npc.First(x => x.active = true && x.aiStyle == NPCAIStyleID.BrainOfCthulhu).GetGlobalNPC<AlteriaNPC>().NPCTarget, out int ai1))
+																								{
+																												npc.ai[1] = ai1;
+																								}
+																								else
+																								{
+																												npc.ai[1] = npc.whoAmI;
+																								}
+																				}
+																				catch
+																				{
+																								npc.ai[1] = npc.whoAmI;
+																				}
+																}
+																return nameof(ShieldSmall);
+												}
+												TargetInfo info = src.GetInfo(GetNPC_1(npc).NPCRadar);
 
-            if (timer > 45 && Vector2.DistanceSquared(npc.position, info.Position) < 57600)
+												if (timer > 45 && Vector2.DistanceSquared(npc.position, info.Position) < 57600)
                 return nameof(ShieldSmall);
 
             npc.velocity = Vector2.Lerp(npc.velocity, npc.DirectionTo(info.Position) * 6f, .075f);
